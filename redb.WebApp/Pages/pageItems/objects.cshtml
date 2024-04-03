@@ -1,0 +1,18 @@
+﻿@page
+@model redb.WebApp.Pages.pageItems.objectsModel
+@{
+    ViewData["Title"] = "Objects";
+}
+@section Scripts {
+    <script type="text/javascript" src="~/js/pageItems/objects.js"></script>
+    <script type="text/javascript" src="~/js/pageItems/properties.js"></script>
+}
+
+@section Styles {
+    <link href="~/css/properties.css" rel="stylesheet" type="text/css" />
+}
+
+<div id="isAtGeneralList" style="display:none"></div>
+<div id="ObjectList"></div>
+<a class="propertiesToggle">Menu Button</a>
+<partial name="_PropertiesPartial" />

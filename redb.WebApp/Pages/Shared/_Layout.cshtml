@@ -1,0 +1,65 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - redb.WebApp</title>
+    <link rel="stylesheet" href="~/css/dx.material.orange.light.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/js/dx.all.js" asp-append-version="true"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script type="text/javascript" src="~/js/pageItems/objects.js" asp-append-version="true"></script>
+</head>
+<body class="dx-viewpo">
+    <div id="modal" SidebarListIndex="@redb.WebApp.Controllers.SidebarList.SidebarListIndex"></div>
+    <div id="root">
+        <dx-popup showTitle="true" title="Dialog" [(visible)]="popupVisible" [deferRendering]="false">
+        </dx-popup>
+        <div class="container">
+            <nav class="sidebar">
+                <div>
+                    <div id="redbLogo" onclick="window.location='/';"></div>
+                    <div class="redbHome">
+                        <p>Version: 1.0.1</p>
+                        <div id="homeList"></div>
+                    </div>
+                    <div class="ListGroup">
+                        <p>General</p>
+                        <div id="generalList"></div>
+                    </div>
+                    <div class="ListGroup">
+                        <p>Global Settings</p>
+                        <div id="globalList"></div>
+                    </div>
+                </div>
+            </nav>
+            <div class="content">
+                <header class="header">
+                    <table>
+                        <tr>
+                            <th><a class="navbar-brand" asp-area="" asp-page="/Index">redb.WebApp</a></th>
+                            <td><a class="nav-link text-dark" asp-area="" asp-page="/Index">Home</a></td>
+                            <td><a class="nav-link text-dark" asp-area="" asp-page="/InfoSystem">Info</a></td>
+                            <partial name="_LoginPartial" />
+                        </tr>
+                    </table>
+                </header>
+                <div class="paper-root">
+                    <span>@ViewData["Title"]</span>
+                </div>
+                <main role="main">
+                    @RenderBody()
+                </main>
+                <footer class="footer">
+                    &copy; 2024 - redb.WebApp - <a href="/Identity/Account/Privace">Privacy</a>
+                </footer>
+            </div>
+        </div>
+    </div>
+
+    @await RenderSectionAsync("Styles", required: false)
+    @await RenderSectionAsync("Scripts", required: false)
+
+</body>
+</html>
