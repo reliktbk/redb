@@ -19,7 +19,7 @@
     }
 
     const switchByName = (e) => {
-        $.post("/Controllers/SidebarList/SetSidebarListIndex?itemIndex=" + e.itemIndex);
+        $.post("/Cnt/SidebarList/SetSidebarListIndex?itemIndex=" + e.itemIndex);
         let name = e.itemData.name.replace(" ", "_");
         switch (name) {
             case "Objects": location.href = '/pageitems/objects'; break;
@@ -43,10 +43,13 @@
     $('#generalList').dxList({
         height: '100%',
         itemTemplate: itemTemplate,
+        scrolling: {
+            mode: "standard" // or "virtual"
+        },
         dataSource: new DevExpress.data.CustomStore({
             load: function () {
                 var d = $.Deferred();
-                return $.getJSON('/Controllers/SidebarList/General')
+                return $.getJSON('/Cnt/SidebarList/General')
                     .done(function (result) {
                         d.resolve(result);
                     })
@@ -68,7 +71,7 @@
         dataSource: new DevExpress.data.CustomStore({
             load: function () {
                 var d = $.Deferred();
-                return $.getJSON('/Controllers/SidebarList/Global_Settings')
+                return $.getJSON('/Cnt/SidebarList/Global_Settings')
                     .done(function (result) {
                         $('body').css('display', 'block');
                         d.resolve(result);
@@ -81,6 +84,25 @@
     });
 });
 
+
+function handler1(e) {
+    e.stopPropagation();
+    $('.properties').addClass('openRSideBar').animate({ right: '0px' });
+    $(this).addClass('openRSideBar');
+    $(this).off("click", handler1).on("click", handler2);
+    openProperties(e.target);
+    $('#modal').show();
+}
+
+function handler2(e) {
+    e.stopPropagation();
+    $('.properties').removeClass('openRSideBar').animate({ right: '-100%' });
+    $('.propertiesToggle').removeClass('openRSideBar');
+    $('.propertiesToggle').off("click", handler2).on("click", handler1);
+    $('#modal').hide();
+}
+
+
 $(document).ready(function () {
     $('#logout').click(function () {
         $('#form-logout').submit();
@@ -88,4 +110,15 @@ $(document).ready(function () {
 
     if (!Boolean(document.getElementById('isAtGeneralList')))
         $('#modal').removeAttr('SidebarListIndex');
+
+    $('body').click(function (event) {
+        if (!$(event.target).closest('.properties.openRSideBar').length) {
+            if ($('.properties').hasClass("openRSideBar")) {
+                $('.properties').removeClass('openRSideBar').animate({ right: '-100%' });
+                $(".propertiesToggle").on("click", handler1);
+                $('#modal').hide();
+            }
+        }
+    });
+
 });

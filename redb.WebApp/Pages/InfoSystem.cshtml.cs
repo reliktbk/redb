@@ -1,17 +1,17 @@
 ﻿using Microsoft.AspNetCore.Mvc.RazorPages;
 using redb.Core;
-using redb.WebApp.ViewModel;
+using redb.WebApp.DataModels;
 using System.Runtime.InteropServices;
 
 namespace redb.WebApp.Pages
 {
     using diInfo = IDictionary<String, String>;
     using static System.Globalization.CultureInfo;
-        public class InfoSystem(IRedbService redbService) : PageModel
+    public class InfoSystem(IRedbService redbService) : PageModel
     {
         //readonly IRedbService _redbService = redbService;
 
-        public InfoSystemView InfoView { get; private set; } = new InfoSystemView(redbService);
+        public DataModels.InfoSystem InfoView { get; private set; } = new DataModels.InfoSystem(redbService);
 
         public diInfo EnvironmentInfo { get; private set; } = new Dictionary<String, String>
         {

@@ -71,7 +71,6 @@ svg {
 #redbLogo {
     border-bottom: 1px solid rgba(215, 215, 215, 0.2);
     background-color: rgba(215, 215, 215, 0.1);
-    width: 256px;
     background-image: url(/img/redb.png);
     height: 100px;
     cursor: pointer;
@@ -93,7 +92,7 @@ svg {
     min-width: 100%;
     min-height: 100%;
     background-color: rgba(200,200,200,.5);
-    z-index: 1;
+    z-index: 1000;
     display: none;
 }
 
@@ -116,10 +115,14 @@ svg {
 }
 
 
-    #logout:hover {
-        background-color: rgba(0, 0, 0, 0.04);
-        color: orange;
-    }
+#ObjectList {
+    max-height: 70vh;
+}
+
+#logout:hover {
+    background-color: rgba(0, 0, 0, 0.04);
+    color: orange;
+}
 
 *, *::before, *::after {
     box-sizing: inherit;
@@ -181,7 +184,7 @@ svg {
 }
 
 .container {
-    display: flex;
+    display: contents;
     min-height: 100vh;
 }
 
@@ -210,6 +213,8 @@ svg {
     flex: 1;
     display: flex;
     flex-direction: column;
+    overflow: auto;
+    height: 100vh;
 }
 
 .sidebar-item {
@@ -223,6 +228,9 @@ svg {
 }
 
 .sidebar {
+    height: 100vh;
+    overflow-y: auto;
+    overflow-x: hidden;
     display: grid;
     width: 256px;
     flex-shrink: 0;
@@ -238,7 +246,7 @@ svg {
 
 .dx-list-item-content {
     font-size: 12px;
-    padding: 5px 9px 5px 16px;
+    padding: 3px 9px 5px 16px;
 }
 
 .dx-list:not(.dx-list-select-decorator-enabled) .dx-list-item.dx-state-focused {
@@ -261,4 +269,3 @@ svg {
     background-color: rgba(130,130,130,.1);
     color: orange;
 }
-

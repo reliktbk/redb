@@ -1,7 +1,7 @@
 ﻿using Microsoft.CodeAnalysis.CSharp.Syntax;
 using redb.Core.Models;
 
-namespace redb.WebApp.ViewModel
+namespace redb.WebApp.DataModels
 {
     public class ObjectItemView
     {

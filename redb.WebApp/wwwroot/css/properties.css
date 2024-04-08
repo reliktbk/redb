@@ -12,7 +12,7 @@
     right: -50%;
     -webkit-box-shadow: -17px 0px 15px -4px rgba(0,0,0,0.1);
     box-shadow: -17px 0px 15px -4px rgba(0,0,0,0.1);
-    z-index: 2;
+    z-index: 1100;
 }
 
 .propertiesHeader {

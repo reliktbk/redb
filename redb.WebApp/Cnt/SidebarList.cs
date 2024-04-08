@@ -4,9 +4,9 @@ using Microsoft.EntityFrameworkCore;
 using redb.Core;
 using redb.WebApp.DataModels;
 
-namespace redb.WebApp.Controllers
+namespace redb.WebApp.Cnt
 {
-    [Route(template: "Controllers/[controller]")]
+    [Route(template: "Cnt/[controller]")]
     [ApiController]
     public class SidebarList(IRedbService redbService) : ControllerBase
     {

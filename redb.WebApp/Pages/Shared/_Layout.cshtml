@@ -9,13 +9,12 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/js/dx.all.js" asp-append-version="true"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
-    <script type="text/javascript" src="~/js/pageItems/objects.js" asp-append-version="true"></script>
+    @* <script type="text/javascript" src="~/js/pageItems/properties.js" asp-append-version="true"></script> *@
+    @* <script type="text/javascript" src="~/js/pageItems/objects.js" asp-append-version="true"></script> *@
 </head>
 <body class="dx-viewpo">
-    <div id="modal" SidebarListIndex="@redb.WebApp.Controllers.SidebarList.SidebarListIndex"></div>
+    <div id="modal" SidebarListIndex="@redb.WebApp.Cnt.SidebarList.SidebarListIndex"></div>
     <div id="root">
-        <dx-popup showTitle="true" title="Dialog" [(visible)]="popupVisible" [deferRendering]="false">
-        </dx-popup>
         <div class="container">
             <nav class="sidebar">
                 <div>

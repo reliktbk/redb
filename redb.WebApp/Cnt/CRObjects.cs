@@ -4,14 +4,13 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using redb.Core;
 using redb.WebApp.DataModels;
-using redb.WebApp.ViewModel;
 
-namespace redb.WebApp.Controllers
+namespace redb.WebApp.Cnt
 {
-    [Route(template: "Controllers/[controller]")]
+    [Route(template: "Cnt/[controller]")]
     [ApiController]
     //[Authorize]
-    public class ObjectItems(IRedbService redbService) : ControllerBase
+    public class CRObjects(IRedbService redbService) : ControllerBase
     {
         readonly IRedbService _redbService = redbService;
 
