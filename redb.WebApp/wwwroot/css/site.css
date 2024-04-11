@@ -26,6 +26,7 @@ addons {
     color: navy;
 }
 
+
 a,
 a:link,
 a:visited,
@@ -244,10 +245,13 @@ svg {
     color: rgba(255, 255, 255, 0.7);
 }
 
+}
+
 .dx-list-item-content {
     font-size: 12px;
     padding: 3px 9px 5px 16px;
 }
+
 
 .dx-list:not(.dx-list-select-decorator-enabled) .dx-list-item.dx-state-focused {
     background-color: rgba(130,130,130,.04);
@@ -259,7 +263,13 @@ svg {
     color: orange;
 }
 
+
     .dx-list:not(.dx-list-select-decorator-enabled) .dx-list-item.dx-list-item-selected.dx-state-hover:not(.dx-state-focused) {
+        background-color: rgba(130,130,130,.04);
+        color: orange;
+    }
+
+    .dx-list:not(.dx-list-select-decorator-enabled) .dx-list-item.dx-state-focused.dx-list-item-selected {
         background-color: rgba(130,130,130,.04);
         color: orange;
     }
@@ -268,4 +278,17 @@ svg {
 .dx-list-item.dx-state-active, .dx-list-item.dx-state-hover {
     background-color: rgba(130,130,130,.1);
     color: orange;
+}
+
+#nodes {
+    float: left;
+    width: 320px;
+}
+
+#info {
+    padding-left: 10px;
+}
+
+.dx-popup-content {
+    padding: 0px;
 }

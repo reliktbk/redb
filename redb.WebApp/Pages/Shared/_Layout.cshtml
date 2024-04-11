@@ -6,14 +6,9 @@
     <title>@ViewData["Title"] - redb.WebApp</title>
     <link rel="stylesheet" href="~/css/dx.material.orange.light.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/js/dx.all.js" asp-append-version="true"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
-    @* <script type="text/javascript" src="~/js/pageItems/properties.js" asp-append-version="true"></script> *@
-    @* <script type="text/javascript" src="~/js/pageItems/objects.js" asp-append-version="true"></script> *@
 </head>
 <body class="dx-viewpo">
-    <div id="modal" SidebarListIndex="@redb.WebApp.Cnt.SidebarList.SidebarListIndex"></div>
+    <div id="modal" SidebarListIndex="@redb.WebApp.Controllers.SidebarList.SidebarListIndex"></div>
     <div id="root">
         <div class="container">
             <nav class="sidebar">
@@ -35,11 +30,21 @@
             </nav>
             <div class="content">
                 <header class="header">
-                    <table>
+                    <table width="100%" height="45">
                         <tr>
-                            <th><a class="navbar-brand" asp-area="" asp-page="/Index">redb.WebApp</a></th>
-                            <td><a class="nav-link text-dark" asp-area="" asp-page="/Index">Home</a></td>
-                            <td><a class="nav-link text-dark" asp-area="" asp-page="/InfoSystem">Info</a></td>
+                            <td align="left" valign="middle">
+                                <table>
+                                    <tr>
+                                        <td>
+                                            <div id="nodes">
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <a id="info" class="nav-link text-dark" asp-area="" asp-page="/InfoSystem">Info</a>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
                             <partial name="_LoginPartial" />
                         </tr>
                     </table>
@@ -56,6 +61,11 @@
             </div>
         </div>
     </div>
+
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/js/dx.all.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
 
     @await RenderSectionAsync("Styles", required: false)
     @await RenderSectionAsync("Scripts", required: false)

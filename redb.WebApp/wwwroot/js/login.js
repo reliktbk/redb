@@ -8,7 +8,7 @@
     $('#dlogin').dxTextBox({
         height: '50px',
         widht: '200px',
-        placeholder: 'type email...',
+        placeholder: 'type user\\email...',
         inputAttr: {
             autofocus: true,
             'autocomplete': "username",
@@ -23,7 +23,7 @@
             'name': "Input.Email",
             'value': ""
         },
-        label: 'email',
+        label: 'user\\email',
         labelMode: 'floating',
     });
 

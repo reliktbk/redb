@@ -11,27 +11,27 @@
         dataSource: new DevExpress.data.CustomStore({
             load: function () {
                 var d = $.Deferred();
-                return $.getJSON('/Cnt/CRObjects/GetAllObjects')
+                return $.getJSON("/Cnt/CRObjects/GetAllObjects")
                     .done(function (result) {
                         d.resolve(result);
                     })
                     .fail(function () {
-                        throw 'Data loading error';
+                        throw "Data loading error";
                     });
             }
         }),
         sorting: {
-            mode: 'multiple',
+            mode: "multiple",
         },
         selection: {
-            mode: 'single',
+            mode: "single",
         },
         columns: [{
             dataField: "id",
             caption: "id",
             fixed: true,
             cellTemplate: function (container, options) {
-                let refProperties = $('<a>', { class: 'propertiesToggle', text: options.data.id, id: options.data.id, type: 'RObjects' });
+                let refProperties = $("<a>", { class: "propertiesToggle", text: options.data.id, id: options.data.id, type: "RObjects" });
                 refProperties.one("click", handler1);
                 container.append(refProperties);
             }

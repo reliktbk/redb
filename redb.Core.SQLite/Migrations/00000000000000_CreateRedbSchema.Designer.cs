@@ -20,7 +20,7 @@ namespace redb.Core.SQLite.Migrations
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.1");
 
-            modelBuilder.Entity("redb.Core.Models._RAvailability", b =>
+            modelBuilder.Entity("redb.Core.Models._RDependence", b =>
             {
                 b.Property<long>("Id")
                     .HasColumnType("bigint")
@@ -38,10 +38,10 @@ namespace redb.Core.SQLite.Migrations
 
                 b.HasIndex("IdScheme2");
 
-                b.HasIndex(new[] { "IdScheme1", "IdScheme2" }, "IX__availabilities__id_scheme_1__id_scheme_2")
+                b.HasIndex(new[] { "IdScheme1", "IdScheme2" }, "IX__dependencies__id_scheme_1__id_scheme_2")
                     .IsUnique();
 
-                b.ToTable("_availabilities", (string)null);
+                b.ToTable("_dependencies", (string)null);
             });
 
             modelBuilder.Entity("redb.Core.Models._RDeletedObject", b =>
@@ -683,14 +683,14 @@ namespace redb.Core.SQLite.Migrations
                 b.ToTable("_values", (string)null);
             });
 
-            modelBuilder.Entity("redb.Core.Models._RAvailability", b =>
+            modelBuilder.Entity("redb.Core.Models._RDependence", b =>
             {
                 b.HasOne("redb.Core.Models._RScheme", "IdScheme1Navigation")
-                    .WithMany("AvailabilityIdScheme1Navigations")
+                    .WithMany("DependenceIdScheme1Navigations")
                     .HasForeignKey("IdScheme1");
 
                 b.HasOne("redb.Core.Models._RScheme", "IdScheme2Navigation")
-                    .WithMany("AvailabilityIdScheme2Navigations")
+                    .WithMany("DependenceIdScheme2Navigations")
                     .HasForeignKey("IdScheme2")
                     .OnDelete(DeleteBehavior.Cascade)
                     .IsRequired();
@@ -879,9 +879,9 @@ namespace redb.Core.SQLite.Migrations
 
             modelBuilder.Entity("redb.Core.Models._RScheme", b =>
             {
-                b.Navigation("AvailabilityIdScheme1Navigations");
+                b.Navigation("DependenceIdScheme1Navigations");
 
-                b.Navigation("AvailabilityIdScheme2Navigations");
+                b.Navigation("DependenceIdScheme2Navigations");
 
                 b.Navigation("Functions");
 

@@ -10533,7 +10533,7 @@ jQuery.fn.extend( {
 		// position:fixed elements are offset from the viewport, which itself always has zero offset
 		if ( jQuery.css( elem, "position" ) === "fixed" ) {
 
-			// Assume position:fixed implies availability of getBoundingClientRect
+			// Assume position:fixed implies dependence of getBoundingClientRect
 			offset = elem.getBoundingClientRect();
 
 		} else {

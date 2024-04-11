@@ -14,9 +14,9 @@ public partial class _RScheme
 
     public string? NameSpace { get; set; }
 
-    public virtual ICollection<_RAvailability> AvailabilityIdScheme1Navigations { get; set; } = new List<_RAvailability>();
+    public virtual ICollection<_RDependence> DependenceIdScheme1Navigations { get; set; } = new List<_RDependence>();
 
-    public virtual ICollection<_RAvailability> AvailabilityIdScheme2Navigations { get; set; } = new List<_RAvailability>();
+    public virtual ICollection<_RDependence> DependenceIdScheme2Navigations { get; set; } = new List<_RDependence>();
 
     public virtual ICollection<_RFunction> Functions { get; set; } = new List<_RFunction>();
 

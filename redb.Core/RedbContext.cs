@@ -15,7 +15,7 @@ public abstract class RedbContext : DbContext
     {
     }
 
-    public virtual DbSet<Models._RAvailability> Availabilities { get; set; }
+    public virtual DbSet<Models._RDependence> Dependencies { get; set; }
 
     public virtual DbSet<Models._RDeletedObject> DeletedObjects { get; set; }
 

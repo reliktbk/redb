@@ -16,6 +16,7 @@ namespace redb.Core
         IQueryable<_RObject> Get_RObjectsByParentId(long? parentId = null);
         IQueryable<_RObject> Get_RObjectsByParentName(string? parentName = null);
         IQueryable<_RObject> Get_AllRObjectsByName(string? name = null);
+        IQueryable<_RFunction> Get_RFunctions();
 
         IQueryable<_RScheme> Get_AllSchemes();
     }

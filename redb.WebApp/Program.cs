@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using redb.Core;
 using redb.Core.Models;
+using System;
 using System.Globalization;
 
 
@@ -12,7 +13,7 @@ namespace redb.WebApp
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             CultureInfo.DefaultThreadCurrentCulture = new CultureInfo("ru-Ru");
 
@@ -26,13 +27,21 @@ namespace redb.WebApp
                 .AddScoped<IRedbService, Core.SQLite.RedbService>()
                 .AddDbContext<Core.SQLite.RedbContext>(options => options.UseLazyLoadingProxies().UseSqlite(RedbConnectionString))
                 .AddDbContext<IdentityDbContext>(options => options.UseSqlite(IdentityConnectionString))
-                .AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
+                .AddDefaultIdentity<IdentityUser>(options => {
+                    options.SignIn.RequireConfirmedAccount = true;
+                    //options.Password.RequireDigit = false;
+                    //options.Password.RequireNonAlphanumeric = false;
+                    //options.Password.RequiredLength = 5;
+                    //options.Password.RequireUppercase = false;
+                })
                 .AddEntityFrameworkStores<IdentityDbContext>();
             builder.Services.AddMvc();
             builder.Services.AddRazorPages(options =>
             {
-                //options.Conventions.AuthorizeFolder("/pageItems");
+                options.Conventions.AuthorizeFolder("/pageItems");
             });
+
+            //CreateRoles(builder.Services.BuildServiceProvider());
 
             WebApplication app = builder.Build();
 
@@ -67,15 +76,69 @@ namespace redb.WebApp
             //}
             #endregion
 
+
             app.UseHttpsRedirection()
                 .UseStaticFiles()
                 .UseRouting()
-                .UseAuthorization();
+                .UseAuthorization()
+                .UseEndpoints(endpoints =>
+                {
+                    endpoints.MapGet("/Identity/Account/Register", context => Task.Factory.StartNew(() => context.Response.Redirect("/Identity/Account/Login", true, true)));
+                    endpoints.MapPost("/Identity/Account/Register", context => Task.Factory.StartNew(() => context.Response.Redirect("/Identity/Account/Login", true, true)));
+                });
+
+
 
             app.MapControllers();
             app.MapRazorPages();
+
             app.Run();
         }
+
+        //static private async void CreateRoles(IServiceProvider serviceProvider)
+        //{
+        //    //initializing custom roles 
+        //    //var RoleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+        //    var UserManager = serviceProvider.GetRequiredService<UserManager<IdentityUser>>();
+        //    //string[] roleNames = { "Admin", "Store-Manager", "Member" };
+        //    //IdentityResult roleResult;
+
+        //    //foreach (var roleName in roleNames)
+        //    //{
+        //    //    var roleExist = await RoleManager.RoleExistsAsync(roleName);
+        //    //    // ensure that the role does not exist
+        //    //    if (!roleExist)
+        //    //    {
+        //    //        //create the roles and seed them to the database: 
+        //    //        roleResult = await RoleManager.CreateAsync(new IdentityRole(roleName));
+        //    //    }
+        //    //}
+
+        //    // find the user with the admin email 
+        //    var _user = await UserManager.FindByEmailAsync("admin@email.com");
+
+        //    // check if the user exists
+        //    if (_user == null)
+        //    {
+        //        //Here you could create the super admin who will maintain the web app
+        //        var poweruser = new IdentityUser
+        //        {
+        //            UserName = "admin",
+        //            Email = "admin@email.com",
+        //            EmailConfirmed = true
+
+        //        };
+        //        string adminPassword = "admin";
+
+        //        var createPowerUser = await UserManager.CreateAsync(poweruser, adminPassword);
+        //        if (createPowerUser.Succeeded)
+        //        {
+        //            //here we tie the new user to the role
+        //            //await UserManager.AddToRoleAsync(poweruser, "Admin");
+
+        //        }
+        //    }
+        //}
     }
 }
 

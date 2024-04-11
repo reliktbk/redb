@@ -31,7 +31,7 @@
         itemTemplate: itemTemplate,
         items: [
             {
-                name: 'Home',
+                name: 'Nodes',
                 path: 'M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z'
             }
         ],
@@ -111,7 +111,7 @@ $(document).ready(function () {
     if (!Boolean(document.getElementById('isAtGeneralList')))
         $('#modal').removeAttr('SidebarListIndex');
 
-    $('body').click(function (event) {
+    $('#modal').click(function (event) {
         if (!$(event.target).closest('.properties.openRSideBar').length) {
             if ($('.properties').hasClass("openRSideBar")) {
                 $('.properties').removeClass('openRSideBar').animate({ right: '-100%' });
@@ -121,4 +121,41 @@ $(document).ready(function () {
         }
     });
 
+});
+
+
+const dataSource = ['16A846BB-163D-44EC-9453-F87827E5CEEC'];
+let list;
+
+$(function () {
+    const stylingMode = 'outlined';
+    const labelMode = 'static';
+    DevExpress.config({
+        editorStylingMode: stylingMode,
+    });
+
+    $("#nodes").dxDropDownBox({
+        acceptCustomValue: true,
+        openOnFieldClick: false,
+        acceptCustomValue: false,
+        value: dataSource[0],
+        dataSource,
+        height: '30px',
+        label: 'nodes',
+        labelMode: 'floating',
+        contentTemplate: function (e) {
+            const $list = $("<div>").dxList({
+                dataSource,
+                selectionMode: "single",
+                onSelectionChanged: function (arg) {
+                    e.component.option("value", arg.addedItems[0]);
+                    e.component.close();
+                }
+            });
+            list = $list.dxList('instance');
+            return $list;
+        },
+    });
+
+    list.selectItem(0);
 });

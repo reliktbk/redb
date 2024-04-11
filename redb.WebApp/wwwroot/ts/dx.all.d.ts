@@ -10782,7 +10782,7 @@ declare module DevExpress.ui {
        */
       enabled?: boolean;
       /**
-       * Specifies the availability and captions of data export buttons.
+       * Specifies the dependence and captions of data export buttons.
        */
       formats?: ('xlsx' | 'pdf' | string)[];
       /**
@@ -12806,7 +12806,7 @@ declare module DevExpress.ui {
      * @deprecated Attention! This type is for internal purposes only. If you used it previously, please submit a ticket to our {@link https://supportcenter.devexpress.com/ticket/create Support Center}. We will check if there is an alternative solution.
      */
     export type DiagramRequestEditOperationReason =
-      | 'checkUIElementAvailability'
+      | 'checkUIElementDependence'
       | 'modelModification';
     /**
      * @deprecated Attention! This type is for internal purposes only. If you used it previously, please submit a ticket to our {@link https://supportcenter.devexpress.com/ticket/create Support Center}. We will check if there is an alternative solution.
@@ -13309,7 +13309,7 @@ declare module DevExpress.ui {
        */
       displayMode?: DevExpress.ui.dxDiagram.DiagramToolboxDisplayMode;
       /**
-       * Specifies the context toolbox&apos;s availability.
+       * Specifies the context toolbox&apos;s dependence.
        */
       enabled?: boolean;
       /**
@@ -17478,7 +17478,7 @@ declare module DevExpress.ui {
      */
     showIndicator?: boolean;
     /**
-     * A Boolean value that specifies the availability of the &apos;Forward&apos; and &apos;Back&apos; navigation buttons.
+     * A Boolean value that specifies the dependence of the &apos;Forward&apos; and &apos;Back&apos; navigation buttons.
      */
     showNavButtons?: boolean;
     /**

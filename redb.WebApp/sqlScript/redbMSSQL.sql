@@ -43,9 +43,9 @@ ALTER TABLE [dbo].[_list_items] DROP CONSTRAINT [FK__list_items__id_objects]
 GO
 ALTER TABLE [dbo].[_functions] DROP CONSTRAINT [FK__functions__schemes]
 GO
-ALTER TABLE [dbo].[_availabilities] DROP CONSTRAINT [FK__availabilities__schemes_2]
+ALTER TABLE [dbo].[_dependencies] DROP CONSTRAINT [FK__dependencies__schemes_2]
 GO
-ALTER TABLE [dbo].[_availabilities] DROP CONSTRAINT [FK__availabilities__schemes_1]
+ALTER TABLE [dbo].[_dependencies] DROP CONSTRAINT [FK__dependencies__schemes_1]
 GO
 ALTER TABLE [dbo].[_users] DROP CONSTRAINT [DF__users__enabled]
 GO
@@ -142,8 +142,8 @@ GO
 /****** Object:  Index [PK__functions]    Script Date: 19.01.2024 15:52:30 ******/
 ALTER TABLE [dbo].[_functions] DROP CONSTRAINT [PK__functions]
 GO
-/****** Object:  Index [IX__availabilities]    Script Date: 19.01.2024 15:52:30 ******/
-ALTER TABLE [dbo].[_availabilities] DROP CONSTRAINT [IX__availabilities]
+/****** Object:  Index [IX__dependencies]    Script Date: 19.01.2024 15:52:30 ******/
+ALTER TABLE [dbo].[_dependencies] DROP CONSTRAINT [IX__dependencies]
 GO
 /****** Object:  Table [dbo].[_values]    Script Date: 19.01.2024 15:52:30 ******/
 IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[_values]') AND type in (N'U'))
@@ -201,20 +201,20 @@ GO
 IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[_deleted_objects]') AND type in (N'U'))
 DROP TABLE [dbo].[_deleted_objects]
 GO
-/****** Object:  Table [dbo].[_availabilities]    Script Date: 19.01.2024 15:52:30 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[_availabilities]') AND type in (N'U'))
-DROP TABLE [dbo].[_availabilities]
+/****** Object:  Table [dbo].[_dependencies]    Script Date: 19.01.2024 15:52:30 ******/
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[_dependencies]') AND type in (N'U'))
+DROP TABLE [dbo].[_dependencies]
 GO
-/****** Object:  Table [dbo].[_availabilities]    Script Date: 19.01.2024 15:52:30 ******/
+/****** Object:  Table [dbo].[_dependencies]    Script Date: 19.01.2024 15:52:30 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE TABLE [dbo].[_availabilities](
+CREATE TABLE [dbo].[_dependencies](
 	[_id] [bigint] NOT NULL,
 	[_id_scheme_1] [bigint] NULL,
 	[_id_scheme_2] [bigint] NOT NULL,
- CONSTRAINT [PK__availabilities] PRIMARY KEY CLUSTERED 
+ CONSTRAINT [PK__dependencies] PRIMARY KEY CLUSTERED 
 (
 	[_id] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
@@ -485,8 +485,8 @@ INSERT INTO _types (_id, _name, _db_type, _type) VALUES (-9223372036854775709, '
 GO
 INSERT [dbo].[_users] ([_id], [_login], [_password], [_name], [_phone], [_email], [_date_register], [_date_dismiss], [_enabled]) VALUES (-9223372036854775800, N'admin', N'', N'admin', NULL, NULL, CAST(N'2023-12-26T01:14:34.410' AS DateTime), NULL, 1)
 GO
-/****** Object:  Index [IX__availabilities]    Script Date: 19.01.2024 15:52:30 ******/
-ALTER TABLE [dbo].[_availabilities] ADD  CONSTRAINT [IX__availabilities] UNIQUE NONCLUSTERED 
+/****** Object:  Index [IX__dependencies]    Script Date: 19.01.2024 15:52:30 ******/
+ALTER TABLE [dbo].[_dependencies] ADD  CONSTRAINT [IX__dependencies] UNIQUE NONCLUSTERED 
 (
 	[_id_scheme_1] ASC,
 	[_id_scheme_2] ASC
@@ -702,17 +702,17 @@ ALTER TABLE [dbo].[_users] ADD  CONSTRAINT [DF__users__date_register]  DEFAULT (
 GO
 ALTER TABLE [dbo].[_users] ADD  CONSTRAINT [DF__users__enabled]  DEFAULT ((1)) FOR [_enabled]
 GO
-ALTER TABLE [dbo].[_availabilities]  WITH CHECK ADD  CONSTRAINT [FK__availabilities__schemes_1] FOREIGN KEY([_id_scheme_1])
+ALTER TABLE [dbo].[_dependencies]  WITH CHECK ADD  CONSTRAINT [FK__dependencies__schemes_1] FOREIGN KEY([_id_scheme_1])
 REFERENCES [dbo].[_schemes] ([_id])
 ON DELETE CASCADE
 GO
-ALTER TABLE [dbo].[_availabilities] CHECK CONSTRAINT [FK__availabilities__schemes_1]
+ALTER TABLE [dbo].[_dependencies] CHECK CONSTRAINT [FK__dependencies__schemes_1]
 GO
-ALTER TABLE [dbo].[_availabilities]  WITH CHECK ADD  CONSTRAINT [FK__availabilities__schemes_2] FOREIGN KEY([_id_scheme_2])
+ALTER TABLE [dbo].[_dependencies]  WITH CHECK ADD  CONSTRAINT [FK__dependencies__schemes_2] FOREIGN KEY([_id_scheme_2])
 REFERENCES [dbo].[_schemes] ([_id])
 ON UPDATE CASCADE
 GO
-ALTER TABLE [dbo].[_availabilities] CHECK CONSTRAINT [FK__availabilities__schemes_2]
+ALTER TABLE [dbo].[_dependencies] CHECK CONSTRAINT [FK__dependencies__schemes_2]
 GO
 ALTER TABLE [dbo].[_functions]  WITH CHECK ADD  CONSTRAINT [FK__functions__schemes] FOREIGN KEY([_id_scheme])
 REFERENCES [dbo].[_schemes] ([_id])

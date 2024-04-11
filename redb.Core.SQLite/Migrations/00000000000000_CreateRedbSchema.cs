@@ -168,7 +168,7 @@ namespace redb.Core.SQLite.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "_availabilities",
+                name: "_dependencies",
                 columns: table => new
                 {
                     _id = table.Column<long>(type: "bigint", nullable: false),
@@ -177,14 +177,14 @@ namespace redb.Core.SQLite.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK__availabilities", x => x._id);
+                    table.PrimaryKey("PK__dependencies", x => x._id);
                     table.ForeignKey(
-                        name: "FK__availabilities__schemes__id_scheme_1",
+                        name: "FK__dependencies__schemes__id_scheme_1",
                         column: x => x._id_scheme_1,
                         principalTable: "_schemes",
                         principalColumn: "_id");
                     table.ForeignKey(
-                        name: "FK__availabilities__schemes__id_scheme_2",
+                        name: "FK__dependencies__schemes__id_scheme_2",
                         column: x => x._id_scheme_2,
                         principalTable: "_schemes",
                         principalColumn: "_id",
@@ -394,14 +394,14 @@ namespace redb.Core.SQLite.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX__availabilities__id_scheme_1__id_scheme_2",
-                table: "_availabilities",
+                name: "IX__dependencies__id_scheme_1__id_scheme_2",
+                table: "_dependencies",
                 columns: new[] { "_id_scheme_1", "_id_scheme_2" },
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX__availabilities__id_scheme_2",
-                table: "_availabilities",
+                name: "IX__dependencies__id_scheme_2",
+                table: "_dependencies",
                 column: "_id_scheme_2");
 
             migrationBuilder.CreateIndex(
@@ -586,7 +586,7 @@ namespace redb.Core.SQLite.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "_availabilities");
+                name: "_dependencies");
 
             migrationBuilder.DropTable(
                 name: "_deleted_objects");

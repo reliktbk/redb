@@ -36,7 +36,10 @@ namespace redb.Core.SQLite
         public IQueryable<_RObject> Get_RObjectsByParentName(string? parentName = null)
             => _redbContext.Objects.Where(o => o.Name == parentName).Join(_redbContext.Objects, o1 => o1.Id, o2 => o2.IdParent, (o1, o2) => o2);
 
-        public IQueryable<_RScheme> Get_AllSchemes()=>_redbContext.Schemes.AsQueryable();
+        public IQueryable<_RScheme> Get_AllSchemes() => _redbContext.Schemes.AsQueryable();
+
+        public IQueryable<_RFunction> Get_RFunctions() => _redbContext.Functions.AsQueryable();
+
     }
 }
 

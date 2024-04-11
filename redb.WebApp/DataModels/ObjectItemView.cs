@@ -1,8 +1,15 @@
 ﻿using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.EntityFrameworkCore.ValueGeneration;
 using redb.Core.Models;
 
 namespace redb.WebApp.DataModels
 {
+
+    public class ObjectItemValueView
+    {
+        public required string Name { get; set; }
+        public string? Value { get; set; }
+    }
     public class ObjectItemView
     {
         public required string Id { get; set; }
@@ -34,23 +41,35 @@ namespace redb.WebApp.DataModels
 
         public required string User { get; set; }
 
-        public static explicit operator ObjectItemView(_RObject robject) => new()
+        public required List<ObjectItemValueView> Properties { get; set; }
+
+
+
+        public static explicit operator ObjectItemView(_RObject robj) => new()
         {
-            Id = robject.Id.ToString(),
-            CodeGuid = robject.CodeGuid,
-            CodeString = robject.CodeString,
-            CodeInt = robject.CodeInt,
-            DateBegin = robject.DateBegin,
-            DateComplete = robject.DateComplete,
-            DateCreate = robject.DateCreate,
-            DateModify = robject.DateModify,
-            Hash = robject.Hash,
-            ParentId = robject.IdParent.ToString(),
-            KeyValue = robject.Key,
-            Name = robject.Name,
-            Note = robject.Note,
-            Scheme = robject.IdSchemeNavigation.Name,
-            User = robject.IdOwnerNavigation.Name
+            Id = robj.Id.ToString(),
+            CodeGuid = robj.CodeGuid,
+            CodeString = robj.CodeString,
+            CodeInt = robj.CodeInt,
+            DateBegin = robj.DateBegin,
+            DateComplete = robj.DateComplete,
+            DateCreate = robj.DateCreate,
+            DateModify = robj.DateModify,
+            Hash = robj.Hash,
+            ParentId = robj.IdParent.ToString(),
+            KeyValue = robj.Key,
+            Name = robj.Name,
+            Note = robj.Note,
+            Scheme = robj.IdSchemeNavigation.Name,
+            User = robj.IdOwnerNavigation.Name,
+            Properties = robj.Values.Select(o => new ObjectItemValueView
+            {
+                Name = o.IdStructureNavigation.Name,
+                Value = ((Func<string?>)(() => o.GetType()
+                    .GetProperty(o.IdStructureNavigation.IdTypeNavigation.DbType ?? throw new NotImplementedException())?
+                    .GetValue(o)?.ToString())).Invoke()
+            })
+            .ToList()
         };
 
     }

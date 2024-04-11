@@ -1,6 +1,6 @@
 DROP TABLE IF EXISTS  _global_identity;
 DROP TABLE IF EXISTS _deleted_objects;
-DROP TABLE IF EXISTS _availabilities;
+DROP TABLE IF EXISTS _dependencies;
 DROP TABLE IF EXISTS _values;
 DROP TABLE IF EXISTS _permissions;
 DROP TABLE IF EXISTS _structures;
@@ -111,7 +111,7 @@ CREATE TABLE _structures(
 ) WITHOUT ROWID;
 
 
-CREATE TABLE _availabilities(
+CREATE TABLE _dependencies(
 	_id bigint NOT NULL,
 	_id_scheme_1 bigint,
 	_id_scheme_2 bigint NOT NULL,
