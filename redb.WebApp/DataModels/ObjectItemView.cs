@@ -43,8 +43,6 @@ namespace redb.WebApp.DataModels
 
         public required List<ObjectItemValueView> Properties { get; set; }
 
-
-
         public static explicit operator ObjectItemView(_RObject robj) => new()
         {
             Id = robj.Id.ToString(),

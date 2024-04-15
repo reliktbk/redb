@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -27,7 +28,8 @@ namespace redb.WebApp
                 .AddScoped<IRedbService, Core.SQLite.RedbService>()
                 .AddDbContext<Core.SQLite.RedbContext>(options => options.UseLazyLoadingProxies().UseSqlite(RedbConnectionString))
                 .AddDbContext<IdentityDbContext>(options => options.UseSqlite(IdentityConnectionString))
-                .AddDefaultIdentity<IdentityUser>(options => {
+                .AddDefaultIdentity<IdentityUser>(options =>
+                {
                     options.SignIn.RequireConfirmedAccount = true;
                     //options.Password.RequireDigit = false;
                     //options.Password.RequireNonAlphanumeric = false;
@@ -41,9 +43,21 @@ namespace redb.WebApp
                 options.Conventions.AuthorizeFolder("/pageItems");
             });
 
+            builder.Services.Configure<ForwardedHeadersOptions>(options =>
+            {
+                options.ForwardedHeaders =
+                    ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
+            });
+
             //CreateRoles(builder.Services.BuildServiceProvider());
 
             WebApplication app = builder.Build();
+            app.Use((context, next) =>
+            {
+                context.Request.Scheme = "https";
+                return next(context);
+            });
+            app.UseForwardedHeaders();
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
@@ -54,8 +68,9 @@ namespace redb.WebApp
             {
                 app.UseExceptionHandler("/Error");
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-                app.UseHsts();
             }
+
+            app.UseHsts();
 
 
             #region example MapGet 
@@ -78,14 +93,22 @@ namespace redb.WebApp
 
 
             app.UseHttpsRedirection()
-                .UseStaticFiles()
-                .UseRouting()
-                .UseAuthorization()
-                .UseEndpoints(endpoints =>
-                {
-                    endpoints.MapGet("/Identity/Account/Register", context => Task.Factory.StartNew(() => context.Response.Redirect("/Identity/Account/Login", true, true)));
-                    endpoints.MapPost("/Identity/Account/Register", context => Task.Factory.StartNew(() => context.Response.Redirect("/Identity/Account/Login", true, true)));
-                });
+               .UseStaticFiles()
+               .UseRouting()
+               .UseAuthorization()
+               .UseEndpoints(endpoints =>
+               {
+                   endpoints.MapGet("/Identity/Account/Register", context => Task.Factory.StartNew(() => context.Response.Redirect("/Identity/Account/Login", true, true)));
+                   endpoints.MapPost("/Identity/Account/Register", context => Task.Factory.StartNew(() => context.Response.Redirect("/Identity/Account/Login", true, true)));
+               });
+
+ 
+            //app.UseForwardedHeaders(new ForwardedHeadersOptions
+            //{
+            //    RequireHeaderSymmetry = false,
+            //    ForwardedHeaders = ForwardedHeaders.All,
+            //});
+
 
 
 

@@ -15,6 +15,7 @@ DROP TABLE IF EXISTS _functions;
 DROP TABLE IF EXISTS _schemes;
 DROP TABLE IF EXISTS _types;
 
+
 CREATE TABLE _types(
 	_id bigint NOT NULL,
 	_name varchar(250) NOT NULL,
@@ -145,15 +146,6 @@ CREATE TABLE _objects(
 	CONSTRAINT FK__objects__users2 FOREIGN KEY (_id_who_change) REFERENCES _users (_id)    
 );
 
-CREATE INDEX IF NOT EXISTS "IX__objects_1" ON _objects (_date_create) WITH (deduplicate_items=True);
-CREATE INDEX IF NOT EXISTS "IX__objects_2" ON _objects (_date_modify) WITH (deduplicate_items=True);
-CREATE INDEX IF NOT EXISTS "IX__objects_3" ON _objects (_code_int) WITH (deduplicate_items=True);
-CREATE INDEX IF NOT EXISTS "IX__objects_4" ON _objects (_code_string) WITH (deduplicate_items=True);
-CREATE INDEX IF NOT EXISTS "IX__objects_5" ON _objects (_name) WITH (deduplicate_items=True);
-CREATE INDEX IF NOT EXISTS "IX__objects_6" ON _objects (_code_guid) WITH (deduplicate_items=True);
-CREATE INDEX IF NOT EXISTS "IX__objects_7" ON _objects (_hash) WITH (deduplicate_items=True);
-
-
 CREATE TABLE _deleted_objects(
 	_id bigint NOT NULL,
 	_date_delete timestamp DEFAULT now() NOT NULL,
@@ -204,13 +196,6 @@ CREATE TABLE _values(
 	CONSTRAINT IX__values_SO UNIQUE (_id_structure,_id_object)
 ); 
 
-CREATE INDEX IF NOT EXISTS "IX_values_String" ON _values (_String) WITH (deduplicate_items=True);
-CREATE INDEX IF NOT EXISTS "IX_values_Long" ON _values (_Long) WITH (deduplicate_items=True);
-CREATE INDEX IF NOT EXISTS "IX_values_Guid" ON _values (_Guid) WITH (deduplicate_items=True);
-CREATE INDEX IF NOT EXISTS "IX_values_Double" ON _values (_Double) WITH (deduplicate_items=True);
-CREATE INDEX IF NOT EXISTS "IX_values_DateTime" ON _values (_DateTime) WITH (deduplicate_items=True);
-CREATE INDEX IF NOT EXISTS "IX_values_Boolean" ON _values (_Boolean) WITH (deduplicate_items=True);
-
 
 CREATE TABLE _permissions(
 	_id bigint NOT NULL,
@@ -241,6 +226,42 @@ CREATE TABLE _functions
 );
 
 
+CREATE INDEX IF NOT EXISTS "IX__functions__schemes" ON _functions (_id_scheme) WITH (deduplicate_items=True);
+CREATE INDEX IF NOT EXISTS "IX__permissions__roles" ON _permissions (_id_role) WITH (deduplicate_items=True);
+CREATE INDEX IF NOT EXISTS "IX__permissions__users" ON _permissions (_id_user) WITH (deduplicate_items=True);
+CREATE INDEX IF NOT EXISTS "IX__values__objects" ON _values (_id_object) WITH (deduplicate_items=True);
+CREATE INDEX IF NOT EXISTS "IX__values__structures" ON _values (_id_structure) WITH (deduplicate_items=True);
+CREATE INDEX IF NOT EXISTS "IX__values__String" ON _values (_String) WITH (deduplicate_items=True);
+CREATE INDEX IF NOT EXISTS "IX__values__Long" ON _values (_Long) WITH (deduplicate_items=True);
+CREATE INDEX IF NOT EXISTS "IX__values__Guid" ON _values (_Guid) WITH (deduplicate_items=True);
+CREATE INDEX IF NOT EXISTS "IX__values__Double" ON _values (_Double) WITH (deduplicate_items=True);
+CREATE INDEX IF NOT EXISTS "IX__values__DateTime" ON _values (_DateTime) WITH (deduplicate_items=True);
+CREATE INDEX IF NOT EXISTS "IX__values__Boolean" ON _values (_Boolean) WITH (deduplicate_items=True);
+CREATE INDEX IF NOT EXISTS "IX__list_items__id_list" ON _list_items (_id_list) WITH (deduplicate_items=True);
+CREATE INDEX IF NOT EXISTS "IX__list_items__objects" ON _list_items (_id_object) WITH (deduplicate_items=True);
+CREATE INDEX IF NOT EXISTS "IX__objects__objects" ON _objects (_id_parent) WITH (deduplicate_items=True);
+CREATE INDEX IF NOT EXISTS "IX__objects__schemes" ON _objects (_id_scheme) WITH (deduplicate_items=True);
+CREATE INDEX IF NOT EXISTS "IX__objects__users1" ON _objects (_id_owner) WITH (deduplicate_items=True);
+CREATE INDEX IF NOT EXISTS "IX__objects__users2" ON _objects (_id_who_change) WITH (deduplicate_items=True);
+CREATE INDEX IF NOT EXISTS "IX__objects__date_create" ON _objects (_date_create) WITH (deduplicate_items=True);
+CREATE INDEX IF NOT EXISTS "IX__objects__date_modify" ON _objects (_date_modify) WITH (deduplicate_items=True);
+CREATE INDEX IF NOT EXISTS "IX__objects__code_int" ON _objects (_code_int) WITH (deduplicate_items=True);
+CREATE INDEX IF NOT EXISTS "IX__objects__code_string" ON _objects (_code_string) WITH (deduplicate_items=True);
+CREATE INDEX IF NOT EXISTS "IX__objects__name" ON _objects (_name) WITH (deduplicate_items=True);
+CREATE INDEX IF NOT EXISTS "IX__objects__code_guid" ON _objects (_code_guid) WITH (deduplicate_items=True);
+CREATE INDEX IF NOT EXISTS "IX__objects__hash" ON _objects (_hash) WITH (deduplicate_items=True);
+CREATE INDEX IF NOT EXISTS "IX__dependencies__schemes_1" ON _dependencies (_id_scheme_1) WITH (deduplicate_items=True); 
+CREATE INDEX IF NOT EXISTS "IX__dependencies__schemes_2" ON _dependencies (_id_scheme_2) WITH (deduplicate_items=True);
+CREATE INDEX IF NOT EXISTS "IX__structures__structures" ON _structures (_id_parent) WITH (deduplicate_items=True);
+CREATE INDEX IF NOT EXISTS "IX__structures__schemes" ON _structures (_id_scheme) WITH (deduplicate_items=True);
+CREATE INDEX IF NOT EXISTS "IX__structures__types" ON _structures (_id_type) WITH (deduplicate_items=True);
+CREATE INDEX IF NOT EXISTS "IX__structures__lists" ON _structures (_id_list) WITH (deduplicate_items=True);
+CREATE INDEX IF NOT EXISTS "IX__schemes__schemes" ON _schemes (_id_parent) WITH (deduplicate_items=True);
+CREATE INDEX IF NOT EXISTS "IX__users_roles__roles" ON _users_roles (_id_role) WITH (deduplicate_items=True);
+CREATE INDEX IF NOT EXISTS "IX__users_roles__users" ON _users_roles (_id_user) WITH (deduplicate_items=True);
+
+
+
 CREATE SEQUENCE global_identity
  AS bigint
  START WITH -9223372036854769999
@@ -248,16 +269,16 @@ CREATE SEQUENCE global_identity
  MINVALUE -9223372036854775808
  MAXVALUE 9223372036854775807;
 
-INSERT INTO _types (_id, _name, _db_type, _type) VALUES (-9223372036854775700, 'String', 'nvarchar(850)', 'string');
-INSERT INTO _types (_id, _name, _db_type, _type) VALUES (-9223372036854775701, 'ByteArray', 'bytearray', 'byte[]');
-INSERT INTO _types (_id, _name, _db_type, _type) VALUES (-9223372036854775702, 'Text', 'text', 'string');
-INSERT INTO _types (_id, _name, _db_type, _type) VALUES (-9223372036854775703, 'Object', 'bigint', '_RObject');
-INSERT INTO _types (_id, _name, _db_type, _type) VALUES (-9223372036854775704, 'Long', 'bigint', 'long');
-INSERT INTO _types (_id, _name, _db_type, _type) VALUES (-9223372036854775705, 'Guid', 'uuid', 'Guid');
-INSERT INTO _types (_id, _name, _db_type, _type) VALUES (-9223372036854775706, 'ListItem', 'bigint', '_RListItem');
-INSERT INTO _types (_id, _name, _db_type, _type) VALUES (-9223372036854775707, 'Double', 'double', 'double');
-INSERT INTO _types (_id, _name, _db_type, _type) VALUES (-9223372036854775708, 'DateTime', 'timestamp', 'DateTime');
-INSERT INTO _types (_id, _name, _db_type, _type) VALUES (-9223372036854775709, 'Boolean', 'bit', 'boolean');
+INSERT INTO _types (_id, _name, _db_type, _type) VALUES (-9223372036854775709, 'Boolean', 'Boolean', 'boolean');
+INSERT INTO _types (_id, _name, _db_type, _type) VALUES (-9223372036854775708, 'DateTime', 'DateTime', 'DateTime');
+INSERT INTO _types (_id, _name, _db_type, _type) VALUES (-9223372036854775707, 'Double', 'Double', 'double');
+INSERT INTO _types (_id, _name, _db_type, _type) VALUES (-9223372036854775706, 'ListItem', 'Long', '_RListItem');
+INSERT INTO _types (_id, _name, _db_type, _type) VALUES (-9223372036854775705, 'Guid', 'Guid', 'Guid');
+INSERT INTO _types (_id, _name, _db_type, _type) VALUES (-9223372036854775704, 'Long', 'Long', 'long');
+INSERT INTO _types (_id, _name, _db_type, _type) VALUES (-9223372036854775703, 'Object', 'Long', '_RObject');
+INSERT INTO _types (_id, _name, _db_type, _type) VALUES (-9223372036854775702, 'Text', 'Text', 'string');
+INSERT INTO _types (_id, _name, _db_type, _type) VALUES (-9223372036854775701, 'ByteArray', 'ByteArray', 'byte[]');
+INSERT INTO _types (_id, _name, _db_type, _type) VALUES (-9223372036854775700, 'String', 'String', 'string');
 
 INSERT INTO _users (_id, _login, _password, _name, _phone, _email, _date_register, _date_dismiss, _enabled) VALUES (-9223372036854775800, 'admin', '', 'admin', NULL, NULL, CAST('2023-12-26T01:14:34.410' AS TimeStamp), NULL, true);
 
@@ -265,27 +286,27 @@ INSERT INTO _users (_id, _login, _password, _name, _phone, _email, _date_registe
 INSERT into _schemes (_id, _id_parent, _name, _alias, _name_space) VALUES (-9223372036854769999, NULL, 'redb.WebApp', 'redB Dashboard', NULL);
 INSERT into _schemes (_id, _id_parent, _name, _alias, _name_space) VALUES (-9223372036854769998, -9223372036854769999, 'redb.WebApp.Sidebar.Group', 'sidebar Group', NULL);
 INSERT into _schemes (_id, _id_parent, _name, _alias, _name_space) VALUES (-9223372036854769997, -9223372036854769998, 'redb.WebApp.Sidebar.Item', 'sidebar Item', NULL);
-INSERT into _structures (_id, _id_parent, _id_scheme, _id_override, _id_type, _id_list, _name, _alias, _order, _readonly, _allow_not_null, _is_array, _is_compress, _store_null, _default_value, _default_editor) VALUES (-9223372036854769996, NULL, -9223372036854769997, NULL, -9223372036854775700, NULL, 'name', 'redb.WebApp.Sidebar.Item.name', NULL, 1, NULL, NULL, NULL, NULL, NULL, NULL);
+INSERT into _structures (_id, _id_parent, _id_scheme, _id_override, _id_type, _id_list, _name, _alias, _order, _readonly, _allow_not_null, _is_array, _is_compress, _store_null, _default_value, _default_editor) VALUES (-9223372036854769996, NULL, -9223372036854769997, NULL, -9223372036854775700, NULL, 'name', 'redb.WebApp.Sidebar.Item.name', NULL, true, NULL, NULL, NULL, NULL, NULL, NULL);
 INSERT into _structures (_id, _id_parent, _id_scheme, _id_override, _id_type, _id_list, _name, _alias, _order, _readonly, _allow_not_null, _is_array, _is_compress, _store_null, _default_value, _default_editor) VALUES (-9223372036854769995, NULL, -9223372036854769997, NULL, -9223372036854775702, NULL, 'path', 'redb.WebApp.Sidebar.Item.path', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
-INSERT into _objects (_id, _id_parent, _id_scheme, _id_owner, _id_who_change, _date_create, _date_modify, _date_begin, _date_complete, _key, _code_int, _code_string, _code_guid, _name, _note, _hash) VALUES (-9223372036854769994, NULL, -9223372036854769999, -9223372036854775800, -9223372036854775800, julianday('2024-02-06T14:48:18.847'), julianday('2024-02-06T14:48:18.847'), NULL, NULL, NULL, NULL, NULL, NULL, 'WebApp', NULL, NULL);
-INSERT into _objects (_id, _id_parent, _id_scheme, _id_owner, _id_who_change, _date_create, _date_modify, _date_begin, _date_complete, _key, _code_int, _code_string, _code_guid, _name, _note, _hash) VALUES (-9223372036854769944, -9223372036854769994, -9223372036854769998, -9223372036854775800, -9223372036854775800, julianday('2024-02-06T19:44:34.133'), julianday('2024-02-06T19:44:34.133'), NULL, NULL, NULL, NULL, NULL, NULL, 'WebApp.Sidebar', NULL, NULL);
-INSERT into _objects (_id, _id_parent, _id_scheme, _id_owner, _id_who_change, _date_create, _date_modify, _date_begin, _date_complete, _key, _code_int, _code_string, _code_guid, _name, _note, _hash) VALUES (-9223372036854769993, -9223372036854769944, -9223372036854769998, -9223372036854775800, -9223372036854775800, julianday('2024-02-06T14:50:53.753'), julianday('2024-02-06T14:50:53.753'), NULL, NULL, NULL, NULL, NULL, NULL, 'WebApp.Sidebar.General', NULL, NULL);
-INSERT into _objects (_id, _id_parent, _id_scheme, _id_owner, _id_who_change, _date_create, _date_modify, _date_begin, _date_complete, _key, _code_int, _code_string, _code_guid, _name, _note, _hash) VALUES (-9223372036854769945, -9223372036854769944, -9223372036854769998, -9223372036854775800, -9223372036854775800, julianday('2024-02-06T19:42:54.410'), julianday('2024-02-06T19:42:54.410'), NULL, NULL, NULL, NULL, NULL, NULL, 'WebApp.Sidebar.Global_Settings', NULL, NULL);
-INSERT into _objects (_id, _id_parent, _id_scheme, _id_owner, _id_who_change, _date_create, _date_modify, _date_begin, _date_complete, _key, _code_int, _code_string, _code_guid, _name, _note, _hash) VALUES (-9223372036854769992, -9223372036854769993, -9223372036854769997, -9223372036854775800, -9223372036854775800, julianday('2024-02-06T14:57:30.190'), julianday('2024-02-06T14:57:30.190'), NULL, NULL, NULL, NULL, NULL, NULL, 'WebApp.Sidebar.General.Dependencies', NULL, NULL);
-INSERT into _objects (_id, _id_parent, _id_scheme, _id_owner, _id_who_change, _date_create, _date_modify, _date_begin, _date_complete, _key, _code_int, _code_string, _code_guid, _name, _note, _hash) VALUES (-9223372036854769991, -9223372036854769993, -9223372036854769997, -9223372036854775800, -9223372036854775800, julianday('2024-02-06T15:20:32.563'), julianday('2024-02-06T15:20:32.563'), NULL, NULL, NULL, NULL, NULL, NULL, 'WebApp.Sidebar.General.Lists', NULL, NULL);
-INSERT into _objects (_id, _id_parent, _id_scheme, _id_owner, _id_who_change, _date_create, _date_modify, _date_begin, _date_complete, _key, _code_int, _code_string, _code_guid, _name, _note, _hash) VALUES (-9223372036854769990, -9223372036854769993, -9223372036854769997, -9223372036854775800, -9223372036854775800, julianday('2024-02-06T15:20:32.563'), julianday('2024-02-06T15:20:32.563'), NULL, NULL, NULL, NULL, NULL, NULL, 'WebApp.Sidebar.General.Objects', NULL, NULL);
-INSERT into _objects (_id, _id_parent, _id_scheme, _id_owner, _id_who_change, _date_create, _date_modify, _date_begin, _date_complete, _key, _code_int, _code_string, _code_guid, _name, _note, _hash) VALUES (-9223372036854769989, -9223372036854769993, -9223372036854769997, -9223372036854775800, -9223372036854775800, julianday('2024-02-06T15:20:32.563'), julianday('2024-02-06T15:20:32.563'), NULL, NULL, NULL, NULL, NULL, NULL, 'WebApp.Sidebar.General.Permissions', NULL, NULL);
-INSERT into _objects (_id, _id_parent, _id_scheme, _id_owner, _id_who_change, _date_create, _date_modify, _date_begin, _date_complete, _key, _code_int, _code_string, _code_guid, _name, _note, _hash) VALUES (-9223372036854769988, -9223372036854769945, -9223372036854769997, -9223372036854775800, -9223372036854775800, julianday('2024-02-06T15:20:32.563'), julianday('2024-02-06T15:20:32.563'), NULL, NULL, NULL, NULL, NULL, NULL, 'WebApp.Sidebar.Global_Settings.Roles', NULL, NULL);
-INSERT into _objects (_id, _id_parent, _id_scheme, _id_owner, _id_who_change, _date_create, _date_modify, _date_begin, _date_complete, _key, _code_int, _code_string, _code_guid, _name, _note, _hash) VALUES (-9223372036854769987, -9223372036854769993, -9223372036854769997, -9223372036854775800, -9223372036854775800, julianday('2024-02-06T15:20:32.563'), julianday('2024-02-06T15:20:32.563'), NULL, NULL, NULL, NULL, NULL, NULL, 'WebApp.Sidebar.General.Schemes', NULL, NULL);
-INSERT into _objects (_id, _id_parent, _id_scheme, _id_owner, _id_who_change, _date_create, _date_modify, _date_begin, _date_complete, _key, _code_int, _code_string, _code_guid, _name, _note, _hash) VALUES (-9223372036854769986, -9223372036854769993, -9223372036854769997, -9223372036854775800, -9223372036854775800, julianday('2024-02-06T15:20:32.563'), julianday('2024-02-06T15:20:32.563'), NULL, NULL, NULL, NULL, NULL, NULL, 'WebApp.Sidebar.General.Structures', NULL, NULL);
-INSERT into _objects (_id, _id_parent, _id_scheme, _id_owner, _id_who_change, _date_create, _date_modify, _date_begin, _date_complete, _key, _code_int, _code_string, _code_guid, _name, _note, _hash) VALUES (-9223372036854769985, -9223372036854769993, -9223372036854769997, -9223372036854775800, -9223372036854775800, julianday('2024-02-06T15:20:32.563'), julianday('2024-02-06T15:20:32.563'), NULL, NULL, NULL, NULL, NULL, NULL, 'WebApp.Sidebar.General.Types', NULL, NULL);
-INSERT into _objects (_id, _id_parent, _id_scheme, _id_owner, _id_who_change, _date_create, _date_modify, _date_begin, _date_complete, _key, _code_int, _code_string, _code_guid, _name, _note, _hash) VALUES (-9223372036854769984, -9223372036854769945, -9223372036854769997, -9223372036854775800, -9223372036854775800, julianday('2024-02-06T15:20:32.563'), julianday('2024-02-06T15:20:32.563'), NULL, NULL, NULL, NULL, NULL, NULL, 'WebApp.Sidebar.Global_Settings.Users', NULL, NULL);
-INSERT into _objects (_id, _id_parent, _id_scheme, _id_owner, _id_who_change, _date_create, _date_modify, _date_begin, _date_complete, _key, _code_int, _code_string, _code_guid, _name, _note, _hash) VALUES (-9223372036854769983, -9223372036854769945, -9223372036854769997, -9223372036854775800, -9223372036854775800, julianday('2024-02-06T15:20:32.563'), julianday('2024-02-06T15:20:32.563'), NULL, NULL, NULL, NULL, NULL, NULL, 'WebApp.Sidebar.Global_Settings.Users_roles', NULL, NULL);
-INSERT into _objects (_id, _id_parent, _id_scheme, _id_owner, _id_who_change, _date_create, _date_modify, _date_begin, _date_complete, _key, _code_int, _code_string, _code_guid, _name, _note, _hash) VALUES (-9223372036854769982, -9223372036854769993, -9223372036854769997, -9223372036854775800, -9223372036854775800, julianday('2024-02-06T15:20:32.563'), julianday('2024-02-06T15:20:32.563'), NULL, NULL, NULL, NULL, NULL, NULL, 'WebApp.Sidebar.General.Values', NULL, NULL);
-INSERT into _objects (_id, _id_parent, _id_scheme, _id_owner, _id_who_change, _date_create, _date_modify, _date_begin, _date_complete, _key, _code_int, _code_string, _code_guid, _name, _note, _hash) VALUES (-9223372036854769981, -9223372036854769993, -9223372036854769997, -9223372036854775800, -9223372036854775800, julianday('2024-02-06T15:20:32.563'), julianday('2024-02-06T15:20:32.563'), NULL, NULL, NULL, NULL, NULL, NULL, 'WebApp.Sidebar.General.Deleted_objects', NULL, NULL);
-INSERT into _objects (_id, _id_parent, _id_scheme, _id_owner, _id_who_change, _date_create, _date_modify, _date_begin, _date_complete, _key, _code_int, _code_string, _code_guid, _name, _note, _hash) VALUES (-9223372036854769980, -9223372036854769993, -9223372036854769997, -9223372036854775800, -9223372036854775800, julianday('2024-02-06T15:20:32.563'), julianday('2024-02-06T15:20:32.563'), NULL, NULL, NULL, NULL, NULL, NULL, 'WebApp.Sidebar.General.Functions', NULL, NULL);
-INSERT into _objects (_id, _id_parent, _id_scheme, _id_owner, _id_who_change, _date_create, _date_modify, _date_begin, _date_complete, _key, _code_int, _code_string, _code_guid, _name, _note, _hash) VALUES (-9223372036854769979, -9223372036854769993, -9223372036854769997, -9223372036854775800, -9223372036854775800, julianday('2024-02-06T15:20:32.563'), julianday('2024-02-06T15:20:32.563'), NULL, NULL, NULL, NULL, NULL, NULL, 'WebApp.Sidebar.General.Links', NULL, NULL);
-INSERT into _objects (_id, _id_parent, _id_scheme, _id_owner, _id_who_change, _date_create, _date_modify, _date_begin, _date_complete, _key, _code_int, _code_string, _code_guid, _name, _note, _hash) VALUES (-9223372036854769978, -9223372036854769993, -9223372036854769997, -9223372036854775800, -9223372036854775800, julianday('2024-02-06T15:20:32.563'), julianday('2024-02-06T15:20:32.563'), NULL, NULL, NULL, NULL, NULL, NULL, 'WebApp.Sidebar.General.List_items', NULL, NULL);
+INSERT into _objects (_id, _id_parent, _id_scheme, _id_owner, _id_who_change, _date_create, _date_modify, _date_begin, _date_complete, _key, _code_int, _code_string, _code_guid, _name, _note, _hash) VALUES (-9223372036854769994, NULL, -9223372036854769999, -9223372036854775800, -9223372036854775800, cast('2024-02-06T14:48:18.847' as timestamp), cast('2024-02-06T14:48:18.847' as timestamp), NULL, NULL, NULL, NULL, NULL, NULL, 'WebApp', NULL, NULL);
+INSERT into _objects (_id, _id_parent, _id_scheme, _id_owner, _id_who_change, _date_create, _date_modify, _date_begin, _date_complete, _key, _code_int, _code_string, _code_guid, _name, _note, _hash) VALUES (-9223372036854769944, -9223372036854769994, -9223372036854769998, -9223372036854775800, -9223372036854775800, cast('2024-02-06T19:44:34.133' as timestamp), cast('2024-02-06T19:44:34.133' as timestamp), NULL, NULL, NULL, NULL, NULL, NULL, 'WebApp.Sidebar', NULL, NULL);
+INSERT into _objects (_id, _id_parent, _id_scheme, _id_owner, _id_who_change, _date_create, _date_modify, _date_begin, _date_complete, _key, _code_int, _code_string, _code_guid, _name, _note, _hash) VALUES (-9223372036854769993, -9223372036854769944, -9223372036854769998, -9223372036854775800, -9223372036854775800, cast('2024-02-06T14:50:53.753' as timestamp), cast('2024-02-06T14:50:53.753' as timestamp), NULL, NULL, NULL, NULL, NULL, NULL, 'WebApp.Sidebar.General', NULL, NULL);
+INSERT into _objects (_id, _id_parent, _id_scheme, _id_owner, _id_who_change, _date_create, _date_modify, _date_begin, _date_complete, _key, _code_int, _code_string, _code_guid, _name, _note, _hash) VALUES (-9223372036854769945, -9223372036854769944, -9223372036854769998, -9223372036854775800, -9223372036854775800, cast('2024-02-06T19:42:54.410' as timestamp), cast('2024-02-06T19:42:54.410' as timestamp), NULL, NULL, NULL, NULL, NULL, NULL, 'WebApp.Sidebar.Global_Settings', NULL, NULL);
+INSERT into _objects (_id, _id_parent, _id_scheme, _id_owner, _id_who_change, _date_create, _date_modify, _date_begin, _date_complete, _key, _code_int, _code_string, _code_guid, _name, _note, _hash) VALUES (-9223372036854769992, -9223372036854769993, -9223372036854769997, -9223372036854775800, -9223372036854775800, cast('2024-02-06T14:57:30.190' as timestamp), cast('2024-02-06T14:57:30.190' as timestamp), NULL, NULL, NULL, NULL, NULL, NULL, 'WebApp.Sidebar.General.Dependencies', NULL, NULL);
+INSERT into _objects (_id, _id_parent, _id_scheme, _id_owner, _id_who_change, _date_create, _date_modify, _date_begin, _date_complete, _key, _code_int, _code_string, _code_guid, _name, _note, _hash) VALUES (-9223372036854769991, -9223372036854769993, -9223372036854769997, -9223372036854775800, -9223372036854775800, cast('2024-02-06T15:20:32.563' as timestamp), cast('2024-02-06T15:20:32.563' as timestamp), NULL, NULL, NULL, NULL, NULL, NULL, 'WebApp.Sidebar.General.Lists', NULL, NULL);
+INSERT into _objects (_id, _id_parent, _id_scheme, _id_owner, _id_who_change, _date_create, _date_modify, _date_begin, _date_complete, _key, _code_int, _code_string, _code_guid, _name, _note, _hash) VALUES (-9223372036854769990, -9223372036854769993, -9223372036854769997, -9223372036854775800, -9223372036854775800, cast('2024-02-06T15:20:32.563' as timestamp), cast('2024-02-06T15:20:32.563' as timestamp), NULL, NULL, NULL, NULL, NULL, NULL, 'WebApp.Sidebar.General.Objects', NULL, NULL);
+INSERT into _objects (_id, _id_parent, _id_scheme, _id_owner, _id_who_change, _date_create, _date_modify, _date_begin, _date_complete, _key, _code_int, _code_string, _code_guid, _name, _note, _hash) VALUES (-9223372036854769989, -9223372036854769993, -9223372036854769997, -9223372036854775800, -9223372036854775800, cast('2024-02-06T15:20:32.563' as timestamp), cast('2024-02-06T15:20:32.563' as timestamp), NULL, NULL, NULL, NULL, NULL, NULL, 'WebApp.Sidebar.General.Permissions', NULL, NULL);
+INSERT into _objects (_id, _id_parent, _id_scheme, _id_owner, _id_who_change, _date_create, _date_modify, _date_begin, _date_complete, _key, _code_int, _code_string, _code_guid, _name, _note, _hash) VALUES (-9223372036854769988, -9223372036854769945, -9223372036854769997, -9223372036854775800, -9223372036854775800, cast('2024-02-06T15:20:32.563' as timestamp), cast('2024-02-06T15:20:32.563' as timestamp), NULL, NULL, NULL, NULL, NULL, NULL, 'WebApp.Sidebar.Global_Settings.Roles', NULL, NULL);
+INSERT into _objects (_id, _id_parent, _id_scheme, _id_owner, _id_who_change, _date_create, _date_modify, _date_begin, _date_complete, _key, _code_int, _code_string, _code_guid, _name, _note, _hash) VALUES (-9223372036854769987, -9223372036854769993, -9223372036854769997, -9223372036854775800, -9223372036854775800, cast('2024-02-06T15:20:32.563' as timestamp), cast('2024-02-06T15:20:32.563' as timestamp), NULL, NULL, NULL, NULL, NULL, NULL, 'WebApp.Sidebar.General.Schemes', NULL, NULL);
+INSERT into _objects (_id, _id_parent, _id_scheme, _id_owner, _id_who_change, _date_create, _date_modify, _date_begin, _date_complete, _key, _code_int, _code_string, _code_guid, _name, _note, _hash) VALUES (-9223372036854769986, -9223372036854769993, -9223372036854769997, -9223372036854775800, -9223372036854775800, cast('2024-02-06T15:20:32.563' as timestamp), cast('2024-02-06T15:20:32.563' as timestamp), NULL, NULL, NULL, NULL, NULL, NULL, 'WebApp.Sidebar.General.Structures', NULL, NULL);
+INSERT into _objects (_id, _id_parent, _id_scheme, _id_owner, _id_who_change, _date_create, _date_modify, _date_begin, _date_complete, _key, _code_int, _code_string, _code_guid, _name, _note, _hash) VALUES (-9223372036854769985, -9223372036854769993, -9223372036854769997, -9223372036854775800, -9223372036854775800, cast('2024-02-06T15:20:32.563' as timestamp), cast('2024-02-06T15:20:32.563' as timestamp), NULL, NULL, NULL, NULL, NULL, NULL, 'WebApp.Sidebar.General.Types', NULL, NULL);
+INSERT into _objects (_id, _id_parent, _id_scheme, _id_owner, _id_who_change, _date_create, _date_modify, _date_begin, _date_complete, _key, _code_int, _code_string, _code_guid, _name, _note, _hash) VALUES (-9223372036854769984, -9223372036854769945, -9223372036854769997, -9223372036854775800, -9223372036854775800, cast('2024-02-06T15:20:32.563' as timestamp), cast('2024-02-06T15:20:32.563' as timestamp), NULL, NULL, NULL, NULL, NULL, NULL, 'WebApp.Sidebar.Global_Settings.Users', NULL, NULL);
+INSERT into _objects (_id, _id_parent, _id_scheme, _id_owner, _id_who_change, _date_create, _date_modify, _date_begin, _date_complete, _key, _code_int, _code_string, _code_guid, _name, _note, _hash) VALUES (-9223372036854769983, -9223372036854769945, -9223372036854769997, -9223372036854775800, -9223372036854775800, cast('2024-02-06T15:20:32.563' as timestamp), cast('2024-02-06T15:20:32.563' as timestamp), NULL, NULL, NULL, NULL, NULL, NULL, 'WebApp.Sidebar.Global_Settings.Users_roles', NULL, NULL);
+INSERT into _objects (_id, _id_parent, _id_scheme, _id_owner, _id_who_change, _date_create, _date_modify, _date_begin, _date_complete, _key, _code_int, _code_string, _code_guid, _name, _note, _hash) VALUES (-9223372036854769982, -9223372036854769993, -9223372036854769997, -9223372036854775800, -9223372036854775800, cast('2024-02-06T15:20:32.563' as timestamp), cast('2024-02-06T15:20:32.563' as timestamp), NULL, NULL, NULL, NULL, NULL, NULL, 'WebApp.Sidebar.General.Values', NULL, NULL);
+INSERT into _objects (_id, _id_parent, _id_scheme, _id_owner, _id_who_change, _date_create, _date_modify, _date_begin, _date_complete, _key, _code_int, _code_string, _code_guid, _name, _note, _hash) VALUES (-9223372036854769981, -9223372036854769993, -9223372036854769997, -9223372036854775800, -9223372036854775800, cast('2024-02-06T15:20:32.563' as timestamp), cast('2024-02-06T15:20:32.563' as timestamp), NULL, NULL, NULL, NULL, NULL, NULL, 'WebApp.Sidebar.General.Deleted_objects', NULL, NULL);
+INSERT into _objects (_id, _id_parent, _id_scheme, _id_owner, _id_who_change, _date_create, _date_modify, _date_begin, _date_complete, _key, _code_int, _code_string, _code_guid, _name, _note, _hash) VALUES (-9223372036854769980, -9223372036854769993, -9223372036854769997, -9223372036854775800, -9223372036854775800, cast('2024-02-06T15:20:32.563' as timestamp), cast('2024-02-06T15:20:32.563' as timestamp), NULL, NULL, NULL, NULL, NULL, NULL, 'WebApp.Sidebar.General.Functions', NULL, NULL);
+INSERT into _objects (_id, _id_parent, _id_scheme, _id_owner, _id_who_change, _date_create, _date_modify, _date_begin, _date_complete, _key, _code_int, _code_string, _code_guid, _name, _note, _hash) VALUES (-9223372036854769979, -9223372036854769993, -9223372036854769997, -9223372036854775800, -9223372036854775800, cast('2024-02-06T15:20:32.563' as timestamp), cast('2024-02-06T15:20:32.563' as timestamp), NULL, NULL, NULL, NULL, NULL, NULL, 'WebApp.Sidebar.General.Links', NULL, NULL);
+INSERT into _objects (_id, _id_parent, _id_scheme, _id_owner, _id_who_change, _date_create, _date_modify, _date_begin, _date_complete, _key, _code_int, _code_string, _code_guid, _name, _note, _hash) VALUES (-9223372036854769978, -9223372036854769993, -9223372036854769997, -9223372036854775800, -9223372036854775800, cast('2024-02-06T15:20:32.563' as timestamp), cast('2024-02-06T15:20:32.563' as timestamp), NULL, NULL, NULL, NULL, NULL, NULL, 'WebApp.Sidebar.General.List_items', NULL, NULL);
 INSERT into _dependencies (_id, _id_scheme_1, _id_scheme_2) VALUES (-9223372036854769947, -9223372036854769999, -9223372036854769998);
 INSERT into _dependencies (_id, _id_scheme_1, _id_scheme_2) VALUES (-9223372036854769946, -9223372036854769998, -9223372036854769997);
 INSERT into _values (_id, _id_structure, _id_object, _String, _Long, _Guid, _Double, _DateTime, _Boolean, _ByteArray, _Text) VALUES (-9223372036854769977, -9223372036854769996, -9223372036854769992, 'Dependencies', NULL, NULL, NULL, NULL, NULL, NULL, NULL);
@@ -318,3 +339,54 @@ INSERT into _values (_id, _id_structure, _id_object, _String, _Long, _Guid, _Dou
 INSERT into _values (_id, _id_structure, _id_object, _String, _Long, _Guid, _Double, _DateTime, _Boolean, _ByteArray, _Text) VALUES (-9223372036854769950, -9223372036854769995, -9223372036854769983, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'm 12 2 c 1.1 0 2 0.9 2 2 s -0.9 2 -2 2 s -2 -0.9 -2 -2 s 0.9 -2 2 -2 z m 9 7 h -6 v 13 h -2 v -6 h -2 v 6 h -2 v -13 h -6 v -2 h 18 v 2 z m -3 3 q 1 10 3 0 z m -12 0 q 2 2 -3 0 z m -2 10 q 4 -8 0 -7 z');
 INSERT into _values (_id, _id_structure, _id_object, _String, _Long, _Guid, _Double, _DateTime, _Boolean, _ByteArray, _Text) VALUES (-9223372036854769949, -9223372036854769996, -9223372036854769982, 'Values', NULL, NULL, NULL, NULL, NULL, NULL, NULL);
 INSERT into _values (_id, _id_structure, _id_object, _String, _Long, _Guid, _Double, _DateTime, _Boolean, _ByteArray, _Text) VALUES (-9223372036854769948, -9223372036854769995, -9223372036854769982, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'm 15.396 2.292 h -10.792 c -0.212 0 -0.385 0.174 -0.385 0.386 v 14.646 c 0 0.212 0.173 0.385 0.385 0.385 h 10.792 c 0.211 0 0.385 -0.173 0.385 -0.385 v -14.647 c 0 -0.212 -0.174 -0.385 -0.385 -0.385 m -0.386 14.646 h -10.02 v -2.698 h 1.609 c 0.156 0.449 0.586 0.771 1.089 0.771 c 0.638 0 1.156 -0.519 1.156 -1.156 s -0.519 -1.156 -1.156 -1.156 c -0.503 0 -0.933 0.321 -1.089 0.771 h -1.609 v -3.083 h 1.609 c 0.156 0.449 0.586 0.771 1.089 0.771 c 0.638 0 1.156 -0.518 1.156 -1.156 c 0 -0.638 -0.519 -1.156 -1.156 -1.156 c -0.503 0 -0.933 0.322 -1.089 0.771 h -1.609 v -3.086 h 1.609 c 0.156 0.449 0.586 0.771 1.089 0.771 c 0.638 0 1.156 -0.519 1.156 -1.156 c 0 -0.638 -0.519 -1.156 -1.156 -1.156 c -0.503 0 -0.933 0.322 -1.089 0.771 h -1.609 v -2.699 h 10.02 v 13.876 z m -7.708 -3.084 c 0 -0.212 0.173 -0.386 0.385 -0.386 s 0.385 0.174 0.385 0.386 s -0.173 0.385 -0.385 0.385 s -0.385 -0.173 -0.385 -0.385 m 0 -3.854 c 0 -0.212 0.173 -0.385 0.385 -0.385 s 0.386 0.173 0.386 0.385 s -0.173 0.385 -0.385 0.385 s -0.386 -0.173 -0.386 -0.385 m 0 -3.854 c 0 -0.212 0.173 -0.386 0.385 -0.386 s 0.385 0.174 0.385 0.386 s -0.173 0.385 -0.384 0.385 s -0.386 -0.173 -0.386 -0.385');
+
+INSERT into _functions (_id, _id_scheme, _language, _name, _body) VALUES (-9223372036854769943, -9223372036854769997, 'js', 'Objects', '
+$(() => {
+
+    $("#ObjectList").dxTreeList({
+        scrolling: {
+            useNative: true,
+            scrollByContent: true,
+            scrollByThumb: true,
+            showScrollbar: "onHover", // or "onScroll" | "always" | "never"
+            mode: "standard" // or "virtual"
+        },
+        dataSource: new DevExpress.data.CustomStore({
+            load: function () {
+                var d = $.Deferred();
+                return $.getJSON("/Cnt/CRObjects/GetAllObjects")
+                    .done(function (result) {
+                        d.resolve(result);
+                    })
+                    .fail(function () {
+                        throw "Data loading error";
+                    });
+            }
+        }),
+        sorting: {
+            mode: "multiple",
+        },
+        selection: {
+            mode: "single",
+        },
+        columns: [{
+            dataField: "id",
+            caption: "id",
+            fixed: true,
+            cellTemplate: function (container, options) {
+                let refProperties = $("<a>", { class: "propertiesToggle", text: options.data.id, id: options.data.id, type: "RObjects" });
+                refProperties.one("click", handler1);
+                container.append(refProperties);
+            }
+        },
+        {
+            dataField: "name",
+            caption: "Name"
+        },
+        {
+            dataField: "parentId",
+            caption: "Parent"
+        }]
+    });
+});
+')
