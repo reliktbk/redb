@@ -1,10 +1,10 @@
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using redb.Core.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using redb.Core;
-using redb.Core.Models;
 using System;
 using System.Globalization;
 
@@ -52,6 +52,7 @@ namespace redb.WebApp
             //CreateRoles(builder.Services.BuildServiceProvider());
 
             WebApplication app = builder.Build();
+            app.Environment.EnvironmentName = "Prodaction";
             app.Use((context, next) =>
             {
                 context.Request.Scheme = "https";
@@ -68,10 +69,8 @@ namespace redb.WebApp
             {
                 app.UseExceptionHandler("/Error");
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+                app.UseHsts();
             }
-
-            app.UseHsts();
-
 
             #region example MapGet 
             //see controller Sidebarlist
