@@ -3,6 +3,7 @@ using System.Runtime.CompilerServices;
 using Microsoft.EntityFrameworkCore;
 using redb.Core;
 using redb.WebApp.DataModels;
+using redb.Core.Models;
 
 namespace redb.WebApp.Controllers
 {
@@ -10,8 +11,8 @@ namespace redb.WebApp.Controllers
     [ApiController]
     public class SidebarList(IRedbService redbService) : ControllerBase
     {
-        private Task<List<SidebarListItem>> sidebarList(String? name)
-                => redbService.Get_RObjectsByParentName($"WebApp.Sidebar.{name}")
+        private Task<List<SidebarListItem>> sidebarList(String? name) => redbService.GetAll<_RObject>()
+                        .Where(o => o.IdParentNavigation != null && o.IdParentNavigation.Name == $"WebApp.Sidebar.{name}")
                         .SelectMany(v => v.Values)
                         .GroupBy(k => k.IdObject)
                         .Select(g => new SidebarListItem

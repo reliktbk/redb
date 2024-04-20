@@ -1,18 +1,19 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using redb.Core;
+using redb.Core.Models;
 
 namespace redb.WebApp.Controllers
 {
-    [Microsoft.AspNetCore.Mvc.Route(template: "Cnt/[controller]")]
-    [Microsoft.AspNetCore.Mvc.ApiController]
+    [Route(template: "Cnt/[controller]")]
+    [ApiController]
     [Authorize]
-    public class CRFunctions(IRedbService redbService) : Microsoft.AspNetCore.Mvc.ControllerBase
+    public class CRFunctions(IRedbService redbService) : ControllerBase
     {
-        [Microsoft.AspNetCore.Mvc.HttpGet("[action]")]
+        [HttpGet("[action]")]
         public IActionResult Details(string sn, string fn) => new ContentResult()
         {
-            Content = redbService.Get_RFunctions()
+            Content = redbService.GetAll<_RFunction>()
                       .Where(f => f.IdSchemeNavigation.Name == sn && f.Name == fn)
                       .Select(o => o.Body).Single(),
             ContentType = "application/javascript",

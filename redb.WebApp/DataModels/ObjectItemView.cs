@@ -4,12 +4,6 @@ using redb.Core.Models;
 
 namespace redb.WebApp.DataModels
 {
-
-    public class ObjectItemValueView
-    {
-        public required string Name { get; set; }
-        public string? Value { get; set; }
-    }
     public class ObjectItemView
     {
         public required string Id { get; set; }
@@ -41,9 +35,9 @@ namespace redb.WebApp.DataModels
 
         public required string User { get; set; }
 
-        public required List<ObjectItemValueView> Properties { get; set; }
+        public required List<PropertyItem> Properties { get; set; }
 
-        public static explicit operator ObjectItemView(_RObject robj) => new()
+        public static implicit operator ObjectItemView?(_RObject? robj) => robj == null ? null : new()
         {
             Id = robj.Id.ToString(),
             CodeGuid = robj.CodeGuid,
@@ -60,7 +54,7 @@ namespace redb.WebApp.DataModels
             Note = robj.Note,
             Scheme = robj.IdSchemeNavigation.Name,
             User = robj.IdOwnerNavigation.Name,
-            Properties = robj.Values.Select(o => new ObjectItemValueView
+            Properties = robj.Values.Select(o => new PropertyItem
             {
                 Name = o.IdStructureNavigation.Name,
                 Value = ((Func<string?>)(() => o.GetType()

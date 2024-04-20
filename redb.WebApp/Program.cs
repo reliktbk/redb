@@ -72,25 +72,6 @@ namespace redb.WebApp
                 app.UseHsts();
             }
 
-            #region example MapGet 
-            //see controller Sidebarlist
-            //{
-            //  app.MapGet("api/SidebarList/{name}", (IRedbService rs, string name) =>
-            //        rs.Get_RObjectsParentsById()
-            //                    .Where(o => o.Name == "WebApp").First()
-            //                    .InverseIdParentNavigation.Where(o => o.Name == "WebApp.Sidebar").First()
-            //                    .InverseIdParentNavigation.Where(o => o.Name == $"WebApp.Sidebar.{name}").First()
-            //                    .InverseIdParentNavigation.SelectMany(v => v.Values).AsQueryable()
-            //                    .GroupBy(k => k.IdObject)
-            //                    .Select(g => new
-            //                    {
-            //                        name = g.Where(s => s.IdStructureNavigation.Name == "name").First().String,
-            //                        path = g.Where(s => s.IdStructureNavigation.Name == "path").First().Text
-            //                    }).OrderBy(o => o.name));
-            //}
-            #endregion
-
-
             app.UseHttpsRedirection()
                .UseStaticFiles()
                .UseRouting()
@@ -102,15 +83,6 @@ namespace redb.WebApp
                });
 
  
-            //app.UseForwardedHeaders(new ForwardedHeadersOptions
-            //{
-            //    RequireHeaderSymmetry = false,
-            //    ForwardedHeaders = ForwardedHeaders.All,
-            //});
-
-
-
-
             app.MapControllers();
             app.MapRazorPages();
 

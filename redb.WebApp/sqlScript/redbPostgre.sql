@@ -148,7 +148,6 @@ CREATE TABLE _objects(
 
 CREATE TABLE _deleted_objects(
 	_id bigint NOT NULL,
-	_date_delete timestamp DEFAULT now() NOT NULL,
 	_id_parent bigint NULL,
 	_id_scheme bigint NOT NULL,
 	_id_owner bigint NOT NULL,
@@ -164,6 +163,7 @@ CREATE TABLE _deleted_objects(
 	_name varchar(250) NULL,
 	_note varchar(1000) NULL,
 	_hash bytea NULL,
+	_date_delete timestamp DEFAULT now() NOT NULL,
 	_values bytea NULL,
     CONSTRAINT PK__deleted_objects PRIMARY KEY (_id)
 );
@@ -261,6 +261,43 @@ CREATE INDEX IF NOT EXISTS "IX__users_roles__roles" ON _users_roles (_id_role) W
 CREATE INDEX IF NOT EXISTS "IX__users_roles__users" ON _users_roles (_id_user) WITH (deduplicate_items=True);
 
 
+CREATE OR REPLACE FUNCTION public.ftr__objects__deleted_objects()
+    RETURNS trigger
+    LANGUAGE 'plpgsql'
+    COST 100
+    VOLATILE NOT LEAKPROOF
+AS $BODY$
+BEGIN
+   insert into _deleted_objects 
+   select *,now(), cast((
+	select cast(json_strip_nulls(json_agg(
+		json_build_object(
+        '_id', _v._id, 
+        '_id_structure', _id_structure,
+        '_id_object', _id_object,
+        '_String',_String,
+        '_Long',_Long,
+        '_Guid',_Guid,
+        '_Double',_Double,
+        '_DateTime',_DateTime,
+        '_Boolean',_Boolean,
+        '_ByteArray',_ByteArray,
+        '_Text',_Text,
+		'_name',_s._name,
+		'_db_type', _t._db_type
+		)
+	)) as text) from _values _v 
+	join _structures _s on _s._id = _v._id_structure
+	join _types _t on _t._id = _s._id_type
+	where _v._id_object=_o._id) as bytea) _values 
+	from _objects _o where _o._id=old._id;   
+	return old;
+END;
+$BODY$;
+CREATE TRIGGER TR__objects__deleted_objects
+BEFORE DELETE ON _objects 
+FOR EACH ROW
+EXECUTE PROCEDURE FTR__objects__deleted_objects();
 
 CREATE SEQUENCE global_identity
  AS bigint
@@ -374,7 +411,7 @@ $(() => {
             caption: "id",
             fixed: true,
             cellTemplate: function (container, options) {
-                let refProperties = $("<a>", { class: "propertiesToggle", text: options.data.id, id: options.data.id, type: "RObjects" });
+                let refProperties = $("<a>", { class: "propertiesToggle", text: options.data.id, id: options.data.id, type: "CRObjects" });
                 refProperties.one("click", handler1);
                 container.append(refProperties);
             }

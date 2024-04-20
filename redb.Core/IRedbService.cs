@@ -8,16 +8,10 @@ namespace redb.Core
         string dbVersion { get; }
         string dbType { get; }
         string dbMigration { get; }
-
         int? dbSize { get; }
 
-        IQueryable<_RObject> Get_AllRObjects();
-        IQueryable<_RObject> Get_RObjectById(long id);
-        IQueryable<_RObject> Get_RObjectsByParentId(long? parentId = null);
-        IQueryable<_RObject> Get_RObjectsByParentName(string? parentName = null);
-        IQueryable<_RObject> Get_AllRObjectsByName(string? name = null);
-        IQueryable<_RFunction> Get_RFunctions();
-
-        IQueryable<_RScheme> Get_AllSchemes();
+        IQueryable<T> GetAll<T>() where T : class;
+        Task<T?> GetById<T>(long id) where T : class;
+        Task<int> DeleteById<T>(long id) where T : class;
     }
 }

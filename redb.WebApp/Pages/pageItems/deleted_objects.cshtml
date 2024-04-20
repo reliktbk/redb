@@ -1,11 +1,12 @@
 ﻿@page
-@model redb.WebApp.Pages.pageItems.objectsModel
+@model redb.WebApp.Pages.pageItems.deleted_objectsModel
 @{
     ViewData["Title"] = "Deleted objects";
 }
 @section Scripts {
     <script type="text/javascript" src="~/js/properties.js"></script>
-    <script type="text/javascript" src="~/Cnt/CRFunctions/details?sn=redb.WebApp.Sidebar.Item&fn=Deleted objects"></script>
+    <script type="text/javascript" src="~/js/deleted_objects.js"></script>
+    @* <script type="text/javascript" src="~/Cnt/CRFunctions/details?sn=redb.WebApp.Sidebar.Item&fn=Deleted_objects"></script> *@
 }
 
 @section Styles {
@@ -13,5 +14,5 @@
 }
 
 <div id="isAtGeneralList" style="display:none"></div>
-<div id="DeletedObjectList"></div>
+<div id="DeletedObjectsList"></div>
 <partial name="_PropertiesPartial" />

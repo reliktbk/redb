@@ -1,6 +1,6 @@
 ﻿$(() => {
 
-    $("#DeletedObjectList").dxTreeList({
+    $("#DeletedObjectsList").dxTreeList({
         scrolling: {
             useNative: true,
             scrollByContent: true,
@@ -11,7 +11,7 @@
         dataSource: new DevExpress.data.CustomStore({
             load: function () {
                 var d = $.Deferred();
-                return $.getJSON("/Cnt/CRDeleteObjects/GetAllObjects")
+                return $.getJSON("/Cnt/CRDeletedObjects/GetAllObjects")
                     .done(function (result) {
                         d.resolve(result);
                     })
@@ -31,7 +31,7 @@
             caption: "id",
             fixed: true,
             cellTemplate: function (container, options) {
-                let refProperties = $("<a>", { class: "propertiesToggle", text: options.data.id, id: options.data.id, type: "RObjects" });
+                let refProperties = $("<a>", { class: "propertiesToggle", text: options.data.id, id: options.data.id, type: "CRDeletedObjects" });
                 refProperties.one("click", handler1);
                 container.append(refProperties);
             }

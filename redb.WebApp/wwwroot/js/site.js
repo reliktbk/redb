@@ -20,9 +20,10 @@
 
     const switchByName = (e) => {
         $.post("/Cnt/SidebarList/SetSidebarListIndex?itemIndex=" + e.itemIndex);
-        let name = e.itemData.name.replace(" ", "_");
+        let name = e.itemData.name.replace(" ", "_").toLowerCase();
         switch (name) {
-            case "Objects": location.href = '/pageitems/objects'; break;
+            case "objects": location.href = '/pageitems/objects'; break;
+            case "deleted_objects": location.href = '/pageitems/deleted_objects'; break;
             default: location.href = '/index'; break;
         }
     }

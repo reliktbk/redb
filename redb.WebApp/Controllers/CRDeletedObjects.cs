@@ -10,11 +10,11 @@ namespace redb.WebApp.Controllers
     [Route(template: "Cnt/[controller]")]
     [ApiController]
     [Authorize]
-    public class CRObjects(IRedbService redbService) : ControllerBase
+    public class CRDeletedObjects(IRedbService redbService) : ControllerBase
     {
         [HttpGet("[action]")]
-        public Task<List<ObjectView>> GetAllObjects() => redbService.GetAll<_RObject>()
-            .Select(o => new ObjectView
+        public Task<List<ObjectView>> GetAllObjects() => redbService.GetAll<_RDeletedObject>().
+            Select(o => new ObjectView
             {
                 Id = o.Id.ToString(),
                 ParentId = o.IdParent.ToString(),
@@ -22,6 +22,6 @@ namespace redb.WebApp.Controllers
             }).ToListAsync();
 
         [HttpGet("[action]")]
-        public async Task<ObjectItemView?> Details(long id) => await redbService.GetById<_RObject>(id);
+        public async Task<DeleteObjectItemView?> Details(long id) => await redbService.GetById<_RDeletedObject>(id);
     }
 }
