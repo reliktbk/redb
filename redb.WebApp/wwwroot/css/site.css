@@ -5,8 +5,7 @@ html {
 
 @font-face {
     font-family: "Freestyle Script";
-    src: local("Freestyle Script"),
-    url("/css/fonts/freestylescript_regular.ttf") format('truetype'),
+    src: local("Freestyle Script"), url("/css/fonts/freestylescript_regular.ttf") format('truetype'),
 }
 
 body {
@@ -84,7 +83,6 @@ svg {
 }
 
 .contentTextIndex {
-    float: left;
     height: 200px;
 }
 
@@ -147,6 +145,31 @@ svg {
     border-image-slice: 1;
 }
 
+.splitter2 {
+    padding-top: 15px;
+    padding-bottom: 15px;
+    border-top: 0px;
+    border-left: 0px;
+    border-right: 0px;
+    border-bottom: 1px solid transparent;
+    border-style: solid;
+    border-image: linear-gradient(to right,rgba(250,250,250,0.8) 0%, rgba(234,239,241,1) 50%, rgba(250,250,250,0.8) 100%);
+    border-image-slice: 1;
+}
+
+
+.display-5 {
+    padding-top: 20px;
+    color: orangered;
+}
+
+.cellCenter {
+    vertical-align: central;
+    text-align: center;
+}
+
+
+
 .tableInfo {
     min-width: 350px;
     display: table;
@@ -208,7 +231,7 @@ svg {
 }
 
 
-.footer {
+footer {
     padding-left: 24px;
     padding-right: 24px;
     background: #eaeff1;
@@ -275,10 +298,10 @@ svg {
         color: orange;
     }
 
-    .dx-list:not(.dx-list-select-decorator-enabled) .dx-list-item.dx-state-focused.dx-list-item-selected {
-        background-color: rgba(130,130,130,.04);
-        color: orange;
-    }
+.dx-list:not(.dx-list-select-decorator-enabled) .dx-list-item.dx-state-focused.dx-list-item-selected {
+    background-color: rgba(130,130,130,.04);
+    color: orange;
+}
 
 
 .dx-list-item.dx-state-active, .dx-list-item.dx-state-hover {

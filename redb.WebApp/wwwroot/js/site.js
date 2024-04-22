@@ -125,8 +125,8 @@ $(document).ready(function () {
 });
 
 
-const dataSource = ['16A846BB-163D-44EC-9453-F87827E5CEEC'];
-let list;
+const nodesSource = [{'Name':'16A846BB-163D-44EC-9453-F87827E5CEEC'}];
+//let list;
 
 $(function () {
     const stylingMode = 'outlined';
@@ -135,28 +135,39 @@ $(function () {
         editorStylingMode: stylingMode,
     });
 
-    $("#nodes").dxDropDownBox({
-        acceptCustomValue: true,
-        openOnFieldClick: false,
-        acceptCustomValue: false,
-        value: dataSource[0],
-        dataSource,
+    $("#nodes").dxSelectBox({
+        displayExpr: 'Name',
+        dataSource: nodesSource,
         height: '30px',
         label: 'nodes',
         labelMode: 'floating',
-        contentTemplate: function (e) {
-            const $list = $("<div>").dxList({
-                dataSource,
-                selectionMode: "single",
-                onSelectionChanged: function (arg) {
-                    e.component.option("value", arg.addedItems[0]);
-                    e.component.close();
-                }
-            });
-            list = $list.dxList('instance');
-            return $list;
-        },
-    });
+        value: nodesSource[0],
+        onValueChanged(data) {
+        }
+    })
 
-    list.selectItem(0);
+//    $("#nodes").dxDropDownBox({
+//        acceptCustomValue: true,
+//        openOnFieldClick: false,
+//        acceptCustomValue: false,
+//        value: dataSource[0],
+//        dataSource,
+//        height: '30px',
+//        label: 'nodes',
+//        labelMode: 'floating',
+//        contentTemplate: function (e) {
+//            const $list = $("<div>").dxList({
+//                dataSource,
+//                selectionMode: "single",
+//                onSelectionChanged: function (arg) {
+//                    e.component.option("value", arg.addedItems[0]);
+//                    e.component.close();
+//                }
+//            });
+//            list = $list.dxList('instance');
+//            return $list;
+//        },
+//    });
+
+//    list.selectItem(0);
 });

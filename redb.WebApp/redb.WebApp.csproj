@@ -9,11 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Remove="wwwroot\js\pageItems\deleted_objects.js" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="wwwroot\js\deleted_objects.js" />
+    <None Include="wwwroot\js\pageItems\deleted_objects.js" />
     <None Include="wwwroot\js\pageItems\objects.js" />
     <None Include="wwwroot\p5redb\p5redb.html" />
     <None Include="wwwroot\p5redb\p5.js" />
