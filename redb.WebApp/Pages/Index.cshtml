@@ -7,41 +7,11 @@
 @section Scripts {
     <script type="text/javascript" src="~/js/index.js"></script>
 }
-<style>
-    header {
-        background-color: white;
-    }
 
-    .paper-root {
-        background-color: white;
-    }
+@section Styles {
+    <link href="~/css/index.css" rel="stylesheet" type="text/css" />
+}
 
-    main {
-        background-color: white;
-    }
-
-    footer {
-        background-color: white;
-    }
-
-    .div_text {
-        position: relative;
-        overflow-x: hidden;
-        overflow-y: hidden;
-        height:200px;
-    }
-
-    .div_toggle {
-        position: absolute;
-        bottom: 0;
-        right: 0;
-        background-color: white;
-    }
-    .idxContent{
-        background-image: url("/img/fdb4.png");
-        background-repeat:no-repeat;
-    }
-</style>
 <div class="idxContent">
     <table>
         <tr>
@@ -69,13 +39,14 @@
                 </div>
             </td>
         </tr>
-@*         <tr>
-            <td colspan="2">
-                <div class="splitter2">
-                </div>
-            </td>
+        @*         <tr>
+        <td colspan="2">
+        <div class="splitter2">
+        </div>
+        </td>
         </tr>
- *@        <tr>
+        *@
+        <tr>
             <td></td>
             <td class="cellCenter"><h1 class="display-5">Databases expanding in breadth</h1></td>
         </tr>
@@ -95,15 +66,16 @@
                 </div>
             </td>
         </tr>
-@*         <tr>
-            <td colspan="2">
-                <div class="splitter2">
-                </div>
-            </td>
+        @*         <tr>
+        <td colspan="2">
+        <div class="splitter2">
+        </div>
+        </td>
         </tr>
- *@        <tr>
+        *@
+        <tr>
             <td></td>
-            <td class="cellCenter"><h1 class="display-5"><redD>redb</redD> - Object-oriented databases</h1></td>
+            <td class="cellCenter"><h1 class="display-5">Object-oriented databases</h1></td>
         </tr>
         <tr>
             <td class="cellCenter">
@@ -118,6 +90,26 @@
                     <p>OODBs also offer support for features such as inheritance, polymorphism, and encapsulation, which are fundamental concepts in object-oriented programming. This provides a more coherent and seamless approach to working with data, as developers can leverage the full power of object-oriented programming directly within the database.</p>
                     <br>Overall, object-oriented databases provide a compelling alternative to traditional relational databases for applications where the object-oriented paradigm is a natural fit. They offer simplicity, efficiency, and consistency in managing data, and are particularly well-suited for applications and systems developed using object-oriented programming languages and models.<br>
                     <br><b><a href="#" id="div_toggle_3" class="div_toggle">[details]</a></b>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td></td>
+            <td class="cellCenter"><h1 class="display-5">Entities and their properties</h1></td>
+        </tr>
+        <tr>
+            <td class="cellCenter">
+                <img class="contentTextIndex" src="img/diagram2.png" />
+            </td>
+            <td>
+                <div id="div_text_4" class="div_text">
+                    <h1>↯ redB Structure</h1>
+                    <p style="text-indent:20px">Sure, the database schema for storing entities, their properties, and types in sql could look something like this:</p>
+                    <pre><code class="hljs sql">sql<br>CREATE TABLE Entities (<br>    entity_id INT PRIMARY KEY,<br>    name VARCHAR(100)<br>);<br><br><span class="hljs-operator"><span class="hljs-keyword">CREATE</span> <span class="hljs-keyword">TABLE</span> Properties (</span><br><span class="hljs-operator">    property_id <span class="hljs-built_in">INT</span> PRIMARY <span class="hljs-keyword">KEY</span>,</span><br><span class="hljs-operator">    <span class="hljs-keyword">name</span> <span class="hljs-built_in">VARCHAR</span>(<span class="hljs-number">100</span>),</span><br><span class="hljs-operator">    type_id <span class="hljs-built_in">INT</span>,</span><br><span class="hljs-operator">    FOREIGN <span class="hljs-keyword">KEY</span> (type_id) <span class="hljs-keyword">REFERENCES</span> Types(type_id)</span><br><span class="hljs-operator">);</span><br><br><span class="hljs-operator"><span class="hljs-keyword">CREATE</span> <span class="hljs-keyword">TABLE</span> Types (</span><br><span class="hljs-operator">    type_id <span class="hljs-built_in">INT</span> PRIMARY <span class="hljs-keyword">KEY</span>,</span><br><span class="hljs-operator">    <span class="hljs-keyword">name</span> <span class="hljs-built_in">VARCHAR</span>(<span class="hljs-number">100</span>)</span><br><span class="hljs-operator">);</span><br></code></pre>
+                    <br><br>In this schema:<br>- The `Entities` table stores the entities with their unique `entity_id` and `name`.<br>- The `Properties` table holds the properties of the entities with unique `property_id`, `name`, and `type_id` where `type_id` is a foreign key referenced to the `Types` table.<br>- The `Types` table contains the data types with unique `type_id` and `name`.<br><br>For example, if you have an entity "Person" and properties "Name", "Age", "Gender", the data could be represented as:<br><br>
+                    <pre><code class="hljs cpp">sql<br>Entities:<br>| entity_id | name   |<br>|-----------|--------|<br>| <span class="hljs-number">1</span>         | Person |<br><br>Properties:<br>| property_id | name   | type_id |<br>|-------------|--------|---------|<br>| <span class="hljs-number">1</span>           | Name   | <span class="hljs-number">1</span>       |<br>| <span class="hljs-number">2</span>           | Age    | <span class="hljs-number">2</span>       |<br>| <span class="hljs-number">3</span>           | Gender | <span class="hljs-number">3</span>       |<br><br>Types:<br>| type_id | name   |<br>|---------|--------|<br>| <span class="hljs-number">1</span>       | String |<br>| <span class="hljs-number">2</span>       | Integer|<br>| <span class="hljs-number">3</span>       | String |<br></code></pre><br><br>This database schema allows you to efficiently manage entities, their properties, and data types in your application.<br>
+                    <p>However, such a scheme binds us to DDL, real types must be converted when searching, it will not be possible to build an index based on real values. Linking to DDL entails rebuilding the code of services with working data: many entities, many tables, many code, many errors. All this is solved in the <redb>redb</redb> structure.</p>
+                    <br><b><a href="#" id="div_toggle_4" class="div_toggle">[details]</a></b>
                 </div>
             </td>
         </tr>

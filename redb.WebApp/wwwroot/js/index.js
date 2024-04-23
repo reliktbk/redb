@@ -1,8 +1,8 @@
 ﻿$(document).ready(function () {
 
     let toogleDivTxt = (e) => {
-        var sh = $(e)[0].scrollHeight.toFixed();
-        var ah = $(e).height().toFixed();
+        let sh = Number($(e)[0].scrollHeight.toFixed());
+        let ah = Number($(e).height().toFixed());
         if (ah < sh) {
             $(e).animate({ "height": sh }, 800);
         }
