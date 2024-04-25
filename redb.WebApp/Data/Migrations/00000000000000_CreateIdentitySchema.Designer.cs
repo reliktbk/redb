@@ -212,7 +212,7 @@ namespace redb.WebApp.Data.Migrations
                         .HasColumnType("nvarchar(128)")
                         .HasMaxLength(128);
 
-                    b.Property<string>("Value")
+                    b.Property<string>("_RValue")
                         .HasColumnType("text");
 
                     b.HasKey("UserId", "LoginProvider", "Name");

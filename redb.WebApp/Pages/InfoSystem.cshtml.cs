@@ -25,8 +25,8 @@ namespace redb.WebApp.Pages
             { "Platform", RuntimeInformation.OSDescription},
             { "Version", Environment.OSVersion.VersionString.ToString()},
             { "Service Pack", String.IsNullOrEmpty(Environment.OSVersion.ServicePack) ? "-" : Environment.OSVersion.ServicePack},
-            { "User Name", Environment.UserName},
-            { "User Domain Name", Environment.UserDomainName},
+            { "_RUser Name", Environment.UserName},
+            { "_RUser Domain Name", Environment.UserDomainName},
         };
 
         public diInfo CultureInfo { get; private set; } = new Dictionary<String, String>

@@ -1,5 +1,4 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Generic;
 
 namespace redb.Core.Models;
@@ -7,6 +6,7 @@ namespace redb.Core.Models;
 public partial class _RValue
 {
     public long Id { get; set; }
+
     public long IdStructure { get; set; }
 
     public long IdObject { get; set; }
@@ -27,7 +27,7 @@ public partial class _RValue
 
     public string? Text { get; set; }
 
-    public virtual _RObject IdObjectNavigation { get; set; } = null!;
+    public virtual _RObject ObjectNavigation { get; set; } = null!;
 
-    public virtual _RStructure IdStructureNavigation { get; set; } = null!;
+    public virtual _RStructure StructureNavigation { get; set; } = null!;
 }

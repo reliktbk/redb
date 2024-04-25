@@ -1,3 +1,7 @@
+#define sql_MSSql
+//#define sql_SQLite
+//#define sql_Postgres
+
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
@@ -8,26 +12,38 @@ using redb.Core;
 using System;
 using System.Globalization;
 
-
-
 namespace redb.WebApp
 {
     public class Program
     {
         public static async Task Main(string[] args)
         {
+#if sql_SQLite
+            const string sqlInstance = "SQLite"; 
+#endif
+#if sql_MSSql
+            const string sqlInstance = "MSSql";
+#endif
             CultureInfo.DefaultThreadCurrentCulture = new CultureInfo("ru-Ru");
 
             WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
-            String IdentityConnectionString = builder.Configuration.GetConnectionString("IdentitySQLiteConnection") ?? throw new InvalidOperationException("Connection string IdentitySQLiteConnection not found.");
-            String RedbConnectionString = builder.Configuration.GetConnectionString("RedbSQLiteConnection") ?? throw new InvalidOperationException("Connection string RedbSQLiteConnection not found.");
+            String IdentityConnectionString = builder.Configuration.GetConnectionString($"Identity{sqlInstance}Connection") ?? throw new InvalidOperationException("Connection string IdentitySQLiteConnection not found.");
+            String RedbConnectionString = builder.Configuration.GetConnectionString($"Redb{sqlInstance}Connection") ?? throw new InvalidOperationException("Connection string RedbSQLiteConnection not found.");
             builder.Services
+#if sql_SQLite
                 .AddScoped<RedbContext, Core.SQLite.RedbContext>()
                 .AddScoped<IRedbService, Core.SQLite.RedbService>()
                 .AddDbContext<Core.SQLite.RedbContext>(options => options.UseLazyLoadingProxies().UseSqlite(RedbConnectionString))
                 .AddDbContext<IdentityDbContext>(options => options.UseSqlite(IdentityConnectionString))
+#endif
+#if sql_MSSql
+                .AddScoped<RedbContext, Core.MSSql.RedbContext>()
+                .AddScoped<IRedbService, Core.MSSql.RedbService>()
+                .AddDbContext<Core.MSSql.RedbContext>(options => options.UseLazyLoadingProxies().UseSqlServer(RedbConnectionString))
+                .AddDbContext<IdentityDbContext>(options => options.UseSqlServer(IdentityConnectionString))
+#endif
                 .AddDefaultIdentity<IdentityUser>(options =>
                 {
                     options.SignIn.RequireConfirmedAccount = true;

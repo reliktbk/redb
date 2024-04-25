@@ -14,11 +14,10 @@ namespace redb.WebApp.Controllers
         public IActionResult Details(string sn, string fn) => new ContentResult()
         {
             Content = redbService.GetAll<_RFunction>()
-                      .Where(f => f.IdSchemeNavigation.Name == sn && f.Name == fn)
+                      .Where(f => f.SchemeNavigation.Name == sn && f.Name == fn)
                       .Select(o => o.Body).Single(),
             ContentType = "application/javascript",
             StatusCode = 200
         };
-    
     }
 }

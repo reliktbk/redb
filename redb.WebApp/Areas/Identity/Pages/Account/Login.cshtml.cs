@@ -114,7 +114,7 @@ namespace redb.WebApp.Identity.Pages
                 var result = await _signInManager.PasswordSignInAsync(Input.Email, Input.Password, Input.RememberMe, lockoutOnFailure: false);
                 if (result.Succeeded)
                 {
-                    _logger.LogInformation("User logged in.");
+                    _logger.LogInformation("_RUser logged in.");
                     return LocalRedirect(returnUrl);
                 }
                 if (result.RequiresTwoFactor)
@@ -123,7 +123,7 @@ namespace redb.WebApp.Identity.Pages
                 }
                 if (result.IsLockedOut)
                 {
-                    _logger.LogWarning("User account locked out.");
+                    _logger.LogWarning("_RUser account locked out.");
                     return RedirectToPage("./Lockout");
                 }
                 else

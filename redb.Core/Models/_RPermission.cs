@@ -6,6 +6,7 @@ namespace redb.Core.Models;
 public partial class _RPermission
 {
     public long Id { get; set; }
+
     public long? IdRole { get; set; }
 
     public long? IdUser { get; set; }
@@ -20,7 +21,7 @@ public partial class _RPermission
 
     public bool? Delete { get; set; }
 
-    public virtual _RRole? IdRoleNavigation { get; set; }
+    public virtual _RRole? RoleNavigation { get; set; }
 
-    public virtual _RUser? IdUserNavigation { get; set; }
+    public virtual _RUser? UserNavigation { get; set; }
 }

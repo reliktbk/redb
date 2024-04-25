@@ -52,13 +52,13 @@ namespace redb.WebApp.DataModels
             KeyValue = robj.Key,
             Name = robj.Name,
             Note = robj.Note,
-            Scheme = robj.IdSchemeNavigation.Name,
-            User = robj.IdOwnerNavigation.Name,
+            Scheme = robj.SchemeNavigation.Name,
+            User = robj.OwnerNavigation.Name,
             Properties = robj.Values.Select(o => new PropertyItem
             {
-                Name = o.IdStructureNavigation.Name,
+                Name = o.StructureNavigation.Name,
                 Value = ((Func<string?>)(() => o.GetType()
-                    .GetProperty(o.IdStructureNavigation.IdTypeNavigation.DbType ?? throw new NotImplementedException())?
+                    .GetProperty(o.StructureNavigation.TypeNavigation.DbType ?? throw new NotImplementedException())?
                     .GetValue(o)?.ToString())).Invoke()
             })
             .ToList()

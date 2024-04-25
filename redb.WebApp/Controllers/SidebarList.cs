@@ -12,13 +12,13 @@ namespace redb.WebApp.Controllers
     public class SidebarList(IRedbService redbService) : ControllerBase
     {
         private Task<List<SidebarListItem>> sidebarList(String? name) => redbService.GetAll<_RObject>()
-                        .Where(o => o.IdParentNavigation != null && o.IdParentNavigation.Name == $"WebApp.Sidebar.{name}")
+                        .Where(o => o.ParentNavigation != null && o.ParentNavigation.Name == $"WebApp.Sidebar.{name}")
                         .SelectMany(v => v.Values)
                         .GroupBy(k => k.IdObject)
                         .Select(g => new SidebarListItem
                         {
-                            name = g.Where(s => s.IdStructureNavigation.Name == "name").First().String,
-                            path = g.Where(s => s.IdStructureNavigation.Name == "path").First().Text
+                            name = g.Where(s => s.StructureNavigation.Name == "name").First().String,
+                            path = g.Where(s => s.StructureNavigation.Name == "path").First().Text
                         }).OrderBy(o => o.name).ToListAsync();
 
         [HttpGet("[action]")]

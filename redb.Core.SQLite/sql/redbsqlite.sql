@@ -69,7 +69,7 @@ CREATE TABLE _users_roles(
     CONSTRAINT PK__users_roles PRIMARY KEY (_id),
     CONSTRAINT IX__users_roles UNIQUE (_id_role, _id_user),
     CONSTRAINT FK__users_roles__roles FOREIGN KEY (_id_role) REFERENCES _roles (_id) ON DELETE CASCADE,
-    CONSTRAINT FK__users_roles__users FOREIGN KEY (_id_user) REFERENCES _roles (_id) ON DELETE CASCADE
+    CONSTRAINT FK__users_roles__users FOREIGN KEY (_id_user) REFERENCES _users (_id) ON DELETE CASCADE
 ) WITHOUT ROWID;
 
 CREATE TABLE _schemes(
@@ -157,7 +157,7 @@ CREATE TABLE _deleted_objects(
 	_date_begin datetime NULL,
 	_date_complete datetime NULL,
 	_key bigint NULL,
-	_code_int int NULL,
+	_code_int bigint NULL,
 	_code_string varchar(250) NULL,
 	_code_guid uuid NULL,
 	_name varchar(250) NULL,
@@ -290,7 +290,7 @@ BEGIN
 	join _types _t on _t._id = _s._id_type
         group by _id_object) as '_v' on _v._id_object=_o._id
          where _o._id = old._id
-END
+END;
 
 
 INSERT INTO _types (_id, _name, _db_type, _type) VALUES (-9223372036854775709, 'Boolean', 'Boolean', 'boolean');
@@ -414,7 +414,7 @@ $(() => {
         }]
     });
 });
-')
+');
 
 
 INSERT into _functions (_id, _id_scheme, _language, _name, _body) VALUES (-9223372036854769939, -9223372036854769997, 'js', 'Deleted_objects', '

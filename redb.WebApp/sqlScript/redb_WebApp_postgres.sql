@@ -171,3 +171,6 @@ BEGIN
 END $EF$;
 COMMIT;
 
+INSERT INTO public."AspNetUsers" ("Id", "UserName", "NormalizedUserName", "Email", "NormalizedEmail", "EmailConfirmed", "PasswordHash", "SecurityStamp", "ConcurrencyStamp", "PhoneNumber", "PhoneNumberConfirmed", "TwoFactorEnabled", "LockoutEnd", "LockoutEnabled", "AccessFailedCount") VALUES ('25e89bd5-74aa-45c7-98d8-a43c1a53374d', 'relikt@bk.ru', 'RELIKT@BK.RU', 'relikt@bk.ru', 'RELIKT@BK.RU', true, 'AQAAAAIAAYagAAAAEOrwhdehPFGlRUGGqjYQ2N43vAfkJazMZfGs2ok/43CzSm1w72GLClNEwPNQ1Zivew==', 'VTNSTYQB4RXJGJLMEMXACTKPLBBKGTGQ', 'bdc6f6d1-1308-4564-ba57-82e42884fc97', NULL, false, false, NULL, true, 0);
+INSERT INTO public."AspNetUsers" ("Id", "UserName", "NormalizedUserName", "Email", "NormalizedEmail", "EmailConfirmed", "PasswordHash", "SecurityStamp", "ConcurrencyStamp", "PhoneNumber", "PhoneNumberConfirmed", "TwoFactorEnabled", "LockoutEnd", "LockoutEnabled", "AccessFailedCount") VALUES ('040b1de7-911e-4fd3-8a58-3e0dbb76e122', 'admin', 'ADMIN', 'admin@email.com', 'ADMIN@EMAIL.COM', true, 'AQAAAAIAAYagAAAAEODF2RGdwhEtw/t2OKv37LOU9pEq2mKp8eaCFm4MEWA8BH+BXecu76LURuPP3fdK5w==', 'GUTY7TCX3ATOSGHLOS2AHS675BHINIR4', '6fbcb79f-7a03-44bc-b442-e19edb2b715f', NULL, false, false, NULL, true, 0);
+INSERT INTO public." __EFMigrationsHistory" ("MigrationId", "ProductVersion") VALUES ('00000000000000_CreateIdentitySchema', '8.0.1');

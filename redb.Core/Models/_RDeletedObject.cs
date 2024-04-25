@@ -25,7 +25,7 @@ public partial class _RDeletedObject
 
     public long? Key { get; set; }
 
-    public int? CodeInt { get; set; }
+    public long? CodeInt { get; set; }
 
     public string? CodeString { get; set; }
 
@@ -36,7 +36,7 @@ public partial class _RDeletedObject
     public string? Note { get; set; }
 
     public byte[]? Hash { get; set; }
-    
+
     public DateTime DateDelete { get; set; }
 
     public byte[]? Values { get; set; }

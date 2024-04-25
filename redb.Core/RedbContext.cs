@@ -15,13 +15,11 @@ public abstract class RedbContext : DbContext
     {
     }
 
-    public virtual DbSet<Models._RDependence> Dependencies { get; set; }
+    public virtual DbSet<Models._RDependency> Dependencies { get; set; }
 
     public virtual DbSet<Models._RDeletedObject> DeletedObjects { get; set; }
 
     public virtual DbSet<Models._RFunction> Functions { get; set; }
-
-    public virtual DbSet<Models._RGlobalIdentity> GlobalIdentities { get; set; }
 
     public virtual DbSet<Models._RLink> Links { get; set; }
 

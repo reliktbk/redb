@@ -6,6 +6,7 @@ namespace redb.Core.Models;
 public partial class _RObject
 {
     public long Id { get; set; }
+
     public long? IdParent { get; set; }
 
     public long IdScheme { get; set; }
@@ -36,15 +37,15 @@ public partial class _RObject
 
     public byte[]? Hash { get; set; }
 
-    public virtual _RUser IdOwnerNavigation { get; set; } = null!;
+    public virtual _RUser OwnerNavigation { get; set; } = null!;
 
-    public virtual _RObject? IdParentNavigation { get; set; }
+    public virtual _RObject? ParentNavigation { get; set; }
 
-    public virtual _RScheme IdSchemeNavigation { get; set; } = null!;
+    public virtual _RScheme SchemeNavigation { get; set; } = null!;
 
-    public virtual _RUser IdWhoChangeNavigation { get; set; } = null!;
+    public virtual _RUser WhoChangeNavigation { get; set; } = null!;
 
-    public virtual ICollection<_RObject> InverseIdParentNavigation { get; set; } = new List<_RObject>();
+    public virtual ICollection<_RObject> InverseParentNavigation { get; set; } = new List<_RObject>();
 
     public virtual ICollection<_RListItem> ListItems { get; set; } = new List<_RListItem>();
 

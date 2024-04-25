@@ -6,6 +6,7 @@ namespace redb.Core.Models;
 public partial class _RStructure
 {
     public long Id { get; set; }
+
     public long? IdParent { get; set; }
 
     public long IdScheme { get; set; }
@@ -36,15 +37,15 @@ public partial class _RStructure
 
     public string? DefaultEditor { get; set; }
 
-    public virtual _RList? IdListNavigation { get; set; }
+    public virtual _RList? ListNavigation { get; set; }
 
-    public virtual _RStructure? IdParentNavigation { get; set; }
+    public virtual _RStructure? ParentNavigation { get; set; }
 
-    public virtual _RScheme IdSchemeNavigation { get; set; } = null!;
+    public virtual _RScheme SchemeNavigation { get; set; } = null!;
 
-    public virtual _RType IdTypeNavigation { get; set; } = null!;
+    public virtual _RType TypeNavigation { get; set; } = null!;
 
-    public virtual ICollection<_RStructure> InverseIdParentNavigation { get; set; } = new List<_RStructure>();
+    public virtual ICollection<_RStructure> InverseParentNavigation { get; set; } = new List<_RStructure>();
 
     public virtual ICollection<_RValue> Values { get; set; } = new List<_RValue>();
 }

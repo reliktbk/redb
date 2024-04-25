@@ -70,7 +70,7 @@ CREATE TABLE _users_roles(
     CONSTRAINT PK__users_roles PRIMARY KEY (_id),
     CONSTRAINT IX__users_roles UNIQUE (_id_role, _id_user),
     CONSTRAINT FK__users_roles__roles FOREIGN KEY (_id_role) REFERENCES _roles (_id) ON DELETE CASCADE,
-    CONSTRAINT FK__users_roles__users FOREIGN KEY (_id_user) REFERENCES _roles (_id) ON DELETE CASCADE
+    CONSTRAINT FK__users_roles__users FOREIGN KEY (_id_user) REFERENCES _users (_id) ON DELETE CASCADE
 );
 
 
@@ -95,7 +95,7 @@ CREATE TABLE _structures(
 	_id_list bigint NULL,
 	_name varchar(250) NOT NULL,
 	_alias varchar(250) NULL,
-	_order int NULL,
+	_order bigint NULL,
 	_readonly boolean NULL,
 	_allow_not_null boolean NULL,
 	_is_array boolean NULL,
@@ -132,7 +132,7 @@ CREATE TABLE _objects(
 	_date_begin timestamp NULL,
 	_date_complete timestamp NULL,
 	_key bigint NULL,
-	_code_int int NULL,
+	_code_int bigint NULL,
 	_code_string varchar(250) NULL,
 	_code_guid uuid NULL,
 	_name varchar(250) NULL,
@@ -157,7 +157,7 @@ CREATE TABLE _deleted_objects(
 	_date_begin timestamp NULL,
 	_date_complete timestamp NULL,
 	_key bigint NULL,
-	_code_int int NULL,
+	_code_int bigint NULL,
 	_code_string varchar(250) NULL,
 	_code_guid uuid NULL,
 	_name varchar(250) NULL,

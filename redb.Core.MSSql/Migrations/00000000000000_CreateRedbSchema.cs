@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace redb.Core.SQLite.Migrations
+namespace redb.Core.MSSql.Migrations
 {
     /// <inheritdoc />
     public partial class CreateRedbSchema : Migration
@@ -11,6 +11,10 @@ namespace redb.Core.SQLite.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.CreateSequence(
+                name: "global_identity",
+                startValue: -9223372036854770000L);
+
             migrationBuilder.CreateTable(
                 name: "_deleted_objects",
                 columns: table => new
@@ -20,35 +24,23 @@ namespace redb.Core.SQLite.Migrations
                     _id_scheme = table.Column<long>(type: "bigint", nullable: false),
                     _id_owner = table.Column<long>(type: "bigint", nullable: false),
                     _id_who_change = table.Column<long>(type: "bigint", nullable: false),
-                    _date_create = table.Column<double>(type: "datetime", nullable: false, defaultValueSql: "julianday(CURRENT_TIMESTAMP)"),
-                    _date_modify = table.Column<double>(type: "datetime", nullable: false, defaultValueSql: "julianday(CURRENT_TIMESTAMP)"),
+                    _date_create = table.Column<DateTime>(type: "datetime", nullable: false),
+                    _date_modify = table.Column<DateTime>(type: "datetime", nullable: false),
                     _date_begin = table.Column<DateTime>(type: "datetime", nullable: true),
                     _date_complete = table.Column<DateTime>(type: "datetime", nullable: true),
                     _key = table.Column<long>(type: "bigint", nullable: true),
                     _code_int = table.Column<long>(type: "bigint", nullable: true),
-                    _code_string = table.Column<string>(type: "varchar (250)", nullable: true),
-                    _code_guid = table.Column<Guid>(type: "uuid", nullable: true),
-                    _name = table.Column<string>(type: "varchar (250)", nullable: true),
-                    _note = table.Column<string>(type: "varchar (1000)", nullable: true),
-                    _hash = table.Column<byte[]>(type: "bytea", nullable: true),
-                    _date_delete = table.Column<double>(type: "datetime", nullable: false, defaultValueSql: "julianday(CURRENT_TIMESTAMP)"),
-                    _values = table.Column<string>(type: "bytea", nullable: true)
+                    _code_string = table.Column<string>(type: "nvarchar(250)", maxLength: 250, nullable: true),
+                    _code_guid = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    _name = table.Column<string>(type: "nvarchar(250)", maxLength: 250, nullable: true),
+                    _note = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: true),
+                    _hash = table.Column<byte[]>(type: "varbinary(32)", maxLength: 32, nullable: true),
+                    _date_delete = table.Column<DateTime>(type: "datetime", nullable: false, defaultValueSql: "(getdate())"),
+                    _values = table.Column<byte[]>(type: "varbinary(max)", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK__deleted_objects", x => x._id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "_global_identity",
-                columns: table => new
-                {
-                    _id = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK__global_identity", x => x._id);
+                    table.PrimaryKey("PK___deleted__DED88B1C45174CE0", x => x._id);
                 });
 
             migrationBuilder.CreateTable(
@@ -69,12 +61,13 @@ namespace redb.Core.SQLite.Migrations
                 columns: table => new
                 {
                     _id = table.Column<long>(type: "bigint", nullable: false),
-                    _name = table.Column<string>(type: "varchar(250)", nullable: false),
-                    _alias = table.Column<string>(type: "varchar(250)", nullable: true)
+                    _name = table.Column<string>(type: "nvarchar(250)", maxLength: 250, nullable: false),
+                    _alias = table.Column<string>(type: "nvarchar(250)", maxLength: 250, nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK__lists", x => x._id);
+                    table.PrimaryKey("PK__lists", x => x._id)
+                        .Annotation("SqlServer:Clustered", false);
                 });
 
             migrationBuilder.CreateTable(
@@ -82,11 +75,12 @@ namespace redb.Core.SQLite.Migrations
                 columns: table => new
                 {
                     _id = table.Column<long>(type: "bigint", nullable: false),
-                    _name = table.Column<string>(type: "varchar(250)", nullable: false)
+                    _name = table.Column<string>(type: "nvarchar(250)", maxLength: 250, nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK__roles", x => x._id);
+                    table.PrimaryKey("PK__roles", x => x._id)
+                        .Annotation("SqlServer:Clustered", false);
                 });
 
             migrationBuilder.CreateTable(
@@ -95,15 +89,15 @@ namespace redb.Core.SQLite.Migrations
                 {
                     _id = table.Column<long>(type: "bigint", nullable: false),
                     _id_parent = table.Column<long>(type: "bigint", nullable: true),
-                    _name = table.Column<string>(type: "varchar(250)", nullable: false),
-                    _alias = table.Column<string>(type: "varchar(250)", nullable: true),
-                    _name_space = table.Column<string>(type: "varchar(1000)", nullable: true)
+                    _name = table.Column<string>(type: "nvarchar(250)", maxLength: 250, nullable: false),
+                    _alias = table.Column<string>(type: "nvarchar(250)", maxLength: 250, nullable: true),
+                    _name_space = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK__schemes", x => x._id);
                     table.ForeignKey(
-                        name: "FK__schemes__schemes__id_parent",
+                        name: "FK__schemes__schemes",
                         column: x => x._id_parent,
                         principalTable: "_schemes",
                         principalColumn: "_id");
@@ -114,9 +108,9 @@ namespace redb.Core.SQLite.Migrations
                 columns: table => new
                 {
                     _id = table.Column<long>(type: "bigint", nullable: false),
-                    _name = table.Column<string>(type: "varchar (250)", nullable: false),
-                    _db_type = table.Column<string>(type: "varchar (250)", nullable: false),
-                    _type = table.Column<string>(type: "varchar (250)", nullable: false)
+                    _name = table.Column<string>(type: "nvarchar(250)", maxLength: 250, nullable: false),
+                    _db_type = table.Column<string>(type: "nvarchar(250)", maxLength: 250, nullable: true),
+                    _type = table.Column<string>(type: "nvarchar(250)", maxLength: 250, nullable: true)
                 },
                 constraints: table =>
                 {
@@ -128,43 +122,18 @@ namespace redb.Core.SQLite.Migrations
                 columns: table => new
                 {
                     _id = table.Column<long>(type: "bigint", nullable: false),
-                    _login = table.Column<string>(type: "varchar(250)", nullable: false),
-                    _password = table.Column<string>(type: "TEXT", nullable: false),
-                    _name = table.Column<string>(type: "varchar(250)", nullable: false),
-                    _phone = table.Column<string>(type: "varchar(250)", nullable: true),
-                    _email = table.Column<string>(type: "varchar(250)", nullable: true),
-                    _date_register = table.Column<double>(type: "datetime", nullable: false, defaultValueSql: "julianday(CURRENT_TIMESTAMP)"),
+                    _login = table.Column<string>(type: "nvarchar(250)", maxLength: 250, nullable: false),
+                    _password = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    _name = table.Column<string>(type: "nvarchar(250)", maxLength: 250, nullable: false),
+                    _phone = table.Column<string>(type: "nvarchar(250)", maxLength: 250, nullable: true),
+                    _email = table.Column<string>(type: "nvarchar(250)", maxLength: 250, nullable: true),
+                    _date_register = table.Column<DateTime>(type: "datetime", nullable: false, defaultValueSql: "(getdate())"),
                     _date_dismiss = table.Column<DateTime>(type: "datetime", nullable: true),
-                    _enabled = table.Column<bool>(type: "boolean", nullable: false, defaultValueSql: "true")
+                    _enabled = table.Column<bool>(type: "bit", nullable: false, defaultValue: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK__users", x => x._id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "_users_roles",
-                columns: table => new
-                {
-                    _id = table.Column<long>(type: "bigint", nullable: false),
-                    _id_role = table.Column<long>(type: "bigint", nullable: false),
-                    _id_user = table.Column<long>(type: "bigint", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK__users_roles", x => x._id);
-                    table.ForeignKey(
-                        name: "FK__users_roles__roles__id_role",
-                        column: x => x._id_role,
-                        principalTable: "_roles",
-                        principalColumn: "_id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK__users_roles__roles__id_user",
-                        column: x => x._id_user,
-                        principalTable: "_roles",
-                        principalColumn: "_id",
-                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -179,16 +148,16 @@ namespace redb.Core.SQLite.Migrations
                 {
                     table.PrimaryKey("PK__dependencies", x => x._id);
                     table.ForeignKey(
-                        name: "FK__dependencies__schemes__id_scheme_1",
+                        name: "FK__dependencies__schemes_1",
                         column: x => x._id_scheme_1,
-                        principalTable: "_schemes",
-                        principalColumn: "_id");
-                    table.ForeignKey(
-                        name: "FK__dependencies__schemes__id_scheme_2",
-                        column: x => x._id_scheme_2,
                         principalTable: "_schemes",
                         principalColumn: "_id",
                         onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK__dependencies__schemes_2",
+                        column: x => x._id_scheme_2,
+                        principalTable: "_schemes",
+                        principalColumn: "_id");
                 });
 
             migrationBuilder.CreateTable(
@@ -197,18 +166,20 @@ namespace redb.Core.SQLite.Migrations
                 {
                     _id = table.Column<long>(type: "bigint", nullable: false),
                     _id_scheme = table.Column<long>(type: "bigint", nullable: false),
-                    _language = table.Column<string>(type: "varchar(50)", nullable: false),
-                    _name = table.Column<string>(type: "varchar(1000)", nullable: false),
-                    _body = table.Column<string>(type: "TEXT", nullable: false)
+                    _language = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    _name = table.Column<string>(type: "nvarchar(400)", maxLength: 400, nullable: false),
+                    _body = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK__functions", x => x._id);
+                    table.PrimaryKey("PK__functions", x => x._id)
+                        .Annotation("SqlServer:Clustered", false);
                     table.ForeignKey(
-                        name: "FK__functions__schemes__id_scheme",
+                        name: "FK__functions__schemes",
                         column: x => x._id_scheme,
                         principalTable: "_schemes",
-                        principalColumn: "_id");
+                        principalColumn: "_id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -221,37 +192,38 @@ namespace redb.Core.SQLite.Migrations
                     _id_override = table.Column<long>(type: "bigint", nullable: true),
                     _id_type = table.Column<long>(type: "bigint", nullable: false),
                     _id_list = table.Column<long>(type: "bigint", nullable: true),
-                    _name = table.Column<string>(type: "varchar(250)", nullable: false),
-                    _alias = table.Column<string>(type: "varchar(250)", nullable: true),
+                    _name = table.Column<string>(type: "nvarchar(250)", maxLength: 250, nullable: false),
+                    _alias = table.Column<string>(type: "nvarchar(250)", maxLength: 250, nullable: true),
                     _order = table.Column<long>(type: "bigint", nullable: true),
-                    _readonly = table.Column<bool>(type: "boolean", nullable: true),
-                    _allow_not_null = table.Column<bool>(type: "boolean", nullable: true),
-                    _is_array = table.Column<bool>(type: "boolean", nullable: true),
-                    _is_compress = table.Column<bool>(type: "boolean", nullable: true),
-                    _store_null = table.Column<bool>(type: "boolean", nullable: true),
-                    _default_value = table.Column<byte[]>(type: "bytea", nullable: true),
-                    _default_editor = table.Column<string>(type: "TEXT", nullable: true)
+                    _readonly = table.Column<bool>(type: "bit", nullable: true),
+                    _allow_not_null = table.Column<bool>(type: "bit", nullable: true),
+                    _is_array = table.Column<bool>(type: "bit", nullable: true),
+                    _is_compress = table.Column<bool>(type: "bit", nullable: true),
+                    _store_null = table.Column<bool>(type: "bit", nullable: true),
+                    _default_value = table.Column<byte[]>(type: "varbinary(max)", nullable: true),
+                    _default_editor = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK__structures", x => x._id);
+                    table.PrimaryKey("PK__structure", x => x._id)
+                        .Annotation("SqlServer:Clustered", false);
                     table.ForeignKey(
-                        name: "FK__structures__lists__id_list",
+                        name: "FK__structures__lists",
                         column: x => x._id_list,
                         principalTable: "_lists",
                         principalColumn: "_id");
                     table.ForeignKey(
-                        name: "FK__structures__schemes__id_scheme",
+                        name: "FK__structures__schemes",
                         column: x => x._id_scheme,
                         principalTable: "_schemes",
                         principalColumn: "_id");
                     table.ForeignKey(
-                        name: "FK__structures__structures__id_parent",
+                        name: "FK__structures__structures",
                         column: x => x._id_parent,
                         principalTable: "_structures",
                         principalColumn: "_id");
                     table.ForeignKey(
-                        name: "FK__structures__types__id_type",
+                        name: "FK__structures__types",
                         column: x => x._id_type,
                         principalTable: "_types",
                         principalColumn: "_id");
@@ -266,40 +238,39 @@ namespace redb.Core.SQLite.Migrations
                     _id_scheme = table.Column<long>(type: "bigint", nullable: false),
                     _id_owner = table.Column<long>(type: "bigint", nullable: false),
                     _id_who_change = table.Column<long>(type: "bigint", nullable: false),
-                    _date_create = table.Column<double>(type: "datetime", nullable: false, defaultValueSql: "julianday(CURRENT_TIMESTAMP)"),
-                    _date_modify = table.Column<double>(type: "datetime", nullable: false, defaultValueSql: "julianday(CURRENT_TIMESTAMP)"),
+                    _date_create = table.Column<DateTime>(type: "datetime", nullable: false, defaultValueSql: "(getdate())"),
+                    _date_modify = table.Column<DateTime>(type: "datetime", nullable: false, defaultValueSql: "(getdate())"),
                     _date_begin = table.Column<DateTime>(type: "datetime", nullable: true),
                     _date_complete = table.Column<DateTime>(type: "datetime", nullable: true),
                     _key = table.Column<long>(type: "bigint", nullable: true),
                     _code_int = table.Column<long>(type: "bigint", nullable: true),
-                    _code_string = table.Column<string>(type: "varchar(250)", nullable: true),
-                    _code_guid = table.Column<Guid>(type: "uuid", nullable: true),
-                    _name = table.Column<string>(type: "varchar(250)", nullable: true),
-                    _note = table.Column<string>(type: "varchar(1000)", nullable: true),
-                    _hash = table.Column<byte[]>(type: "BLOB", nullable: true)
+                    _code_string = table.Column<string>(type: "nvarchar(250)", maxLength: 250, nullable: true),
+                    _code_guid = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    _name = table.Column<string>(type: "nvarchar(250)", maxLength: 250, nullable: true),
+                    _note = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: true),
+                    _hash = table.Column<byte[]>(type: "varbinary(32)", maxLength: 32, nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK__objects", x => x._id);
+                    table.PrimaryKey("PK__objects", x => x._id)
+                        .Annotation("SqlServer:Clustered", false);
                     table.ForeignKey(
-                        name: "FK__objects__objects__id_parent",
+                        name: "FK__objects__objects",
                         column: x => x._id_parent,
                         principalTable: "_objects",
-                        principalColumn: "_id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "_id");
                     table.ForeignKey(
-                        name: "FK__objects__schemes__id_scheme",
+                        name: "FK__objects__schemes",
                         column: x => x._id_scheme,
                         principalTable: "_schemes",
-                        principalColumn: "_id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "_id");
                     table.ForeignKey(
-                        name: "FK__objects__users__id_owner",
+                        name: "FK__objects__users1",
                         column: x => x._id_owner,
                         principalTable: "_users",
                         principalColumn: "_id");
                     table.ForeignKey(
-                        name: "FK__objects__users__id_who_change",
+                        name: "FK__objects__users2",
                         column: x => x._id_who_change,
                         principalTable: "_users",
                         principalColumn: "_id");
@@ -313,22 +284,45 @@ namespace redb.Core.SQLite.Migrations
                     _id_role = table.Column<long>(type: "bigint", nullable: true),
                     _id_user = table.Column<long>(type: "bigint", nullable: true),
                     _id_ref = table.Column<long>(type: "bigint", nullable: false),
-                    _select = table.Column<bool>(type: "boolean", nullable: true),
-                    _insert = table.Column<bool>(type: "boolean", nullable: true),
-                    _update = table.Column<bool>(type: "boolean", nullable: true),
-                    _delete = table.Column<bool>(type: "boolean", nullable: true)
+                    _select = table.Column<bool>(type: "bit", nullable: true),
+                    _insert = table.Column<bool>(type: "bit", nullable: true),
+                    _update = table.Column<bool>(type: "bit", nullable: true),
+                    _delete = table.Column<bool>(type: "bit", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK__permissions", x => x._id);
+                    table.PrimaryKey("PK__object_permissions", x => x._id);
                     table.ForeignKey(
-                        name: "FK__permissions__roles__id_role",
+                        name: "FK__permissions__roles",
+                        column: x => x._id_role,
+                        principalTable: "_roles",
+                        principalColumn: "_id");
+                    table.ForeignKey(
+                        name: "FK__permissions__users",
+                        column: x => x._id_user,
+                        principalTable: "_users",
+                        principalColumn: "_id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "_users_roles",
+                columns: table => new
+                {
+                    _id = table.Column<long>(type: "bigint", nullable: false),
+                    _id_role = table.Column<long>(type: "bigint", nullable: false),
+                    _id_user = table.Column<long>(type: "bigint", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK__users_roles", x => x._id);
+                    table.ForeignKey(
+                        name: "FK__users_roles__roles",
                         column: x => x._id_role,
                         principalTable: "_roles",
                         principalColumn: "_id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK__permissions__users__id_user",
+                        name: "FK__users_roles__users",
                         column: x => x._id_user,
                         principalTable: "_users",
                         principalColumn: "_id",
@@ -341,23 +335,24 @@ namespace redb.Core.SQLite.Migrations
                 {
                     _id = table.Column<long>(type: "bigint", nullable: false),
                     _id_list = table.Column<long>(type: "bigint", nullable: false),
-                    _value = table.Column<string>(type: "varchar(250)", nullable: true),
+                    _value = table.Column<string>(type: "nvarchar(250)", maxLength: 250, nullable: true),
                     _id_object = table.Column<long>(type: "bigint", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK__list_items", x => x._id);
+                    table.PrimaryKey("PK__list_items", x => x._id)
+                        .Annotation("SqlServer:Clustered", false);
                     table.ForeignKey(
-                        name: "FK__list_items__lists__id_list",
+                        name: "FK__list_items__id_objects",
+                        column: x => x._id_object,
+                        principalTable: "_objects",
+                        principalColumn: "_id");
+                    table.ForeignKey(
+                        name: "FK__list_items__lists",
                         column: x => x._id_list,
                         principalTable: "_lists",
                         principalColumn: "_id",
                         onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK__list_items__objects__id_object",
-                        column: x => x._id_object,
-                        principalTable: "_objects",
-                        principalColumn: "_id");
                 });
 
             migrationBuilder.CreateTable(
@@ -367,26 +362,26 @@ namespace redb.Core.SQLite.Migrations
                     _id = table.Column<long>(type: "bigint", nullable: false),
                     _id_structure = table.Column<long>(type: "bigint", nullable: false),
                     _id_object = table.Column<long>(type: "bigint", nullable: false),
-                    _String = table.Column<string>(type: "varchar(850)", nullable: true),
+                    _String = table.Column<string>(type: "nvarchar(850)", maxLength: 850, nullable: true),
                     _Long = table.Column<long>(type: "bigint", nullable: true),
-                    _Guid = table.Column<Guid>(type: "uuid", nullable: true),
+                    _Guid = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     _Double = table.Column<double>(type: "float", nullable: true),
                     _DateTime = table.Column<DateTime>(type: "datetime", nullable: true),
-                    _Boolean = table.Column<bool>(type: "boolean", nullable: true),
-                    _ByteArray = table.Column<byte[]>(type: "bytea", nullable: true),
-                    _Text = table.Column<string>(type: "TEXT", nullable: true)
+                    _Boolean = table.Column<bool>(type: "bit", nullable: true),
+                    _ByteArray = table.Column<byte[]>(type: "varbinary(max)", nullable: true),
+                    _Text = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK__values", x => x._id);
+                    table.PrimaryKey("PK__values", x => x._id)
+                        .Annotation("SqlServer:Clustered", false);
                     table.ForeignKey(
-                        name: "FK__values__objects__id_object",
+                        name: "FK__values__objects",
                         column: x => x._id_object,
                         principalTable: "_objects",
-                        principalColumn: "_id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "_id");
                     table.ForeignKey(
-                        name: "FK__values__structures__id_structure",
+                        name: "FK__values__structures",
                         column: x => x._id_structure,
                         principalTable: "_structures",
                         principalColumn: "_id",
@@ -394,10 +389,11 @@ namespace redb.Core.SQLite.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX__dependencies__id_scheme_1__id_scheme_2",
+                name: "IX__dependencies",
                 table: "_dependencies",
                 columns: new[] { "_id_scheme_1", "_id_scheme_2" },
-                unique: true);
+                unique: true,
+                filter: "[_id_scheme_1] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
                 name: "IX__dependencies__schemes_1",
@@ -410,18 +406,18 @@ namespace redb.Core.SQLite.Migrations
                 column: "_id_scheme_2");
 
             migrationBuilder.CreateIndex(
-                name: "IX__functions__id_scheme__name",
-                table: "_functions",
-                columns: new[] { "_id_scheme", "_name" },
-                unique: true);
-
-            migrationBuilder.CreateIndex(
                 name: "IX__functions__schemes",
                 table: "_functions",
                 column: "_id_scheme");
 
             migrationBuilder.CreateIndex(
-                name: "IX__links__id_1__id_2",
+                name: "IX__functions_scheme_name",
+                table: "_functions",
+                columns: new[] { "_id_scheme", "_name" },
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX__links",
                 table: "_links",
                 columns: new[] { "_id_1", "_id_2" },
                 unique: true);
@@ -492,10 +488,11 @@ namespace redb.Core.SQLite.Migrations
                 column: "_id_who_change");
 
             migrationBuilder.CreateIndex(
-                name: "IX__permissions__id_role__id_user__id_ref__select__insert__update__delete",
+                name: "IX__permissions",
                 table: "_permissions",
-                columns: new[] { "_id_role", "_id_user", "_id_ref", "_select", "_insert", "_update", "_delete" },
-                unique: true);
+                columns: new[] { "_id_ref", "_select", "_insert", "_update", "_delete", "_id_role", "_id_user" },
+                unique: true,
+                filter: "[_select] IS NOT NULL AND [_insert] IS NOT NULL AND [_update] IS NOT NULL AND [_delete] IS NOT NULL AND [_id_role] IS NOT NULL AND [_id_user] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
                 name: "IX__permissions__roles",
@@ -508,13 +505,13 @@ namespace redb.Core.SQLite.Migrations
                 column: "_id_user");
 
             migrationBuilder.CreateIndex(
-                name: "IX__roles__name",
+                name: "IX__roles",
                 table: "_roles",
                 column: "_name",
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX__schemes__name",
+                name: "IX__schemes",
                 table: "_schemes",
                 column: "_name",
                 unique: true);
@@ -525,7 +522,7 @@ namespace redb.Core.SQLite.Migrations
                 column: "_id_parent");
 
             migrationBuilder.CreateIndex(
-                name: "IX__structures__id_scheme__name",
+                name: "IX__structures",
                 table: "_structures",
                 columns: new[] { "_id_scheme", "_name" },
                 unique: true);
@@ -551,7 +548,19 @@ namespace redb.Core.SQLite.Migrations
                 column: "_id_type");
 
             migrationBuilder.CreateIndex(
-                name: "IX__users_roles__id_role__id_user",
+                name: "IX__types",
+                table: "_types",
+                column: "_name",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX__users",
+                table: "_users",
+                column: "_login",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX__users_roles",
                 table: "_users_roles",
                 columns: new[] { "_id_role", "_id_user" },
                 unique: true);
@@ -587,12 +596,6 @@ namespace redb.Core.SQLite.Migrations
                 column: "_Guid");
 
             migrationBuilder.CreateIndex(
-                name: "IX__values__id_structure__id_object",
-                table: "_values",
-                columns: new[] { "_id_structure", "_id_object" },
-                unique: true);
-
-            migrationBuilder.CreateIndex(
                 name: "IX__values__Long",
                 table: "_values",
                 column: "_Long");
@@ -611,6 +614,12 @@ namespace redb.Core.SQLite.Migrations
                 name: "IX__values__structures",
                 table: "_values",
                 column: "_id_structure");
+
+            migrationBuilder.CreateIndex(
+                name: "IX__values_SO",
+                table: "_values",
+                columns: new[] { "_id_structure", "_id_object" },
+                unique: true);
         }
 
         /// <inheritdoc />
@@ -624,9 +633,6 @@ namespace redb.Core.SQLite.Migrations
 
             migrationBuilder.DropTable(
                 name: "_functions");
-
-            migrationBuilder.DropTable(
-                name: "_global_identity");
 
             migrationBuilder.DropTable(
                 name: "_links");
@@ -663,6 +669,9 @@ namespace redb.Core.SQLite.Migrations
 
             migrationBuilder.DropTable(
                 name: "_types");
+
+            migrationBuilder.DropSequence(
+                name: "global_identity");
         }
     }
 }
