@@ -56,6 +56,7 @@ namespace redb.WebApp.DataModels
             User = robj.OwnerNavigation.Name,
             Properties = robj.Values.Select(o => new PropertyItem
             {
+                Id = o.Id.ToString(),
                 Name = o.StructureNavigation.Name,
                 Value = ((Func<string?>)(() => o.GetType()
                     .GetProperty(o.StructureNavigation.TypeNavigation.DbType ?? throw new NotImplementedException())?

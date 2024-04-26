@@ -61,6 +61,7 @@ namespace redb.WebApp.DataModels
             Properties = (JsonConvert.DeserializeObject<List<ValueView>>(Encoding.Default.GetString(rdobj.Values ?? [])) ?? new())
                .Select(o => new PropertyItem
                {
+                   Id = o._id.ToString(),
                    Name = o._name,
                    Value = ((Func<string?>)(() => o.GetType()
                         .GetProperty($"_{o._db_type}" ?? throw new NotImplementedException())?

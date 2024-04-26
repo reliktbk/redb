@@ -39,6 +39,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\redb.Core.MSSql\redb.Core.MSSql.csproj" />
+    <ProjectReference Include="..\redb.Core.Postgres\redb.Core.Postgres.csproj" />
     <ProjectReference Include="..\redb.Core.SQLite\redb.Core.SQLite.csproj" />
   </ItemGroup>
 

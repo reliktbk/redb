@@ -4,11 +4,12 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-
+using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
+using redb.Core.Models;
 
 #nullable disable
 
-namespace redb.Core.SQLite.Migrations
+namespace redb.Core.Postgres.Migrations
 {
     [DbContext(typeof(RedbContext))]
     [Migration("00000000000000_CreateRedbSchema")]
@@ -18,7 +19,15 @@ namespace redb.Core.SQLite.Migrations
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder.HasAnnotation("ProductVersion", "8.0.4");
+            modelBuilder
+                .HasAnnotation("ProductVersion", "8.0.4")
+                .HasAnnotation("Relational:MaxIdentifierLength", 63);
+
+            NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
+
+            modelBuilder.HasSequence("global_identity")
+                .StartsAt(-9223372036854769999L)
+                .HasMin(-9223372036854775808L);
 
             modelBuilder.Entity("redb.Core.Models._RDeletedObject", b =>
                 {
@@ -35,34 +44,35 @@ namespace redb.Core.SQLite.Migrations
                         .HasColumnName("_code_int");
 
                     b.Property<string>("CodeString")
-                        .HasColumnType("varchar (250)")
+                        .HasMaxLength(250)
+                        .HasColumnType("character varying(250)")
                         .HasColumnName("_code_string");
 
                     b.Property<DateTime?>("DateBegin")
-                        .HasColumnType("datetime")
+                        .HasColumnType("timestamp without time zone")
                         .HasColumnName("_date_begin");
 
                     b.Property<DateTime?>("DateComplete")
-                        .HasColumnType("datetime")
+                        .HasColumnType("timestamp without time zone")
                         .HasColumnName("_date_complete");
 
                     b.Property<DateTime>("DateCreate")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime")
+                        .HasColumnType("timestamp without time zone")
                         .HasColumnName("_date_create")
-                        .HasDefaultValueSql("julianday(CURRENT_TIMESTAMP)");
+                        .HasDefaultValueSql("now()");
 
                     b.Property<DateTime>("DateDelete")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime")
+                        .HasColumnType("timestamp without time zone")
                         .HasColumnName("_date_delete")
-                        .HasDefaultValueSql("julianday(CURRENT_TIMESTAMP)");
+                        .HasDefaultValueSql("now()");
 
                     b.Property<DateTime>("DateModify")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime")
+                        .HasColumnType("timestamp without time zone")
                         .HasColumnName("_date_modify")
-                        .HasDefaultValueSql("julianday(CURRENT_TIMESTAMP)");
+                        .HasDefaultValueSql("now()");
 
                     b.Property<byte[]>("Hash")
                         .HasColumnType("bytea")
@@ -89,18 +99,21 @@ namespace redb.Core.SQLite.Migrations
                         .HasColumnName("_key");
 
                     b.Property<string>("Name")
-                        .HasColumnType("varchar (250)")
+                        .HasMaxLength(250)
+                        .HasColumnType("character varying(250)")
                         .HasColumnName("_name");
 
                     b.Property<string>("Note")
-                        .HasColumnType("varchar (1000)")
+                        .HasMaxLength(1000)
+                        .HasColumnType("character varying(1000)")
                         .HasColumnName("_note");
 
                     b.Property<byte[]>("Values")
                         .HasColumnType("bytea")
                         .HasColumnName("_values");
 
-                    b.HasKey("Id");
+                    b.HasKey("Id")
+                        .HasName("pk__deleted_objects");
 
                     b.ToTable("_deleted_objects", (string)null);
                 });
@@ -119,14 +132,17 @@ namespace redb.Core.SQLite.Migrations
                         .HasColumnType("bigint")
                         .HasColumnName("_id_scheme_2");
 
-                    b.HasKey("Id");
+                    b.HasKey("Id")
+                        .HasName("pk__dependencies");
 
-                    b.HasIndex(new[] { "IdScheme1", "IdScheme2" }, "IX__dependencies__id_scheme_1__id_scheme_2")
+                    b.HasIndex(new[] { "IdScheme1" }, "IX__dependencies__schemes_1")
+                        .HasAnnotation("Npgsql:StorageParameter:deduplicate_items", "true");
+
+                    b.HasIndex(new[] { "IdScheme2" }, "IX__dependencies__schemes_2")
+                        .HasAnnotation("Npgsql:StorageParameter:deduplicate_items", "true");
+
+                    b.HasIndex(new[] { "IdScheme1", "IdScheme2" }, "ix__dependencies")
                         .IsUnique();
-
-                    b.HasIndex(new[] { "IdScheme1" }, "IX__dependencies__schemes_1");
-
-                    b.HasIndex(new[] { "IdScheme2" }, "IX__dependencies__schemes_2");
 
                     b.ToTable("_dependencies", (string)null);
                 });
@@ -139,7 +155,7 @@ namespace redb.Core.SQLite.Migrations
 
                     b.Property<string>("Body")
                         .IsRequired()
-                        .HasColumnType("TEXT")
+                        .HasColumnType("text")
                         .HasColumnName("_body");
 
                     b.Property<long>("IdScheme")
@@ -148,34 +164,26 @@ namespace redb.Core.SQLite.Migrations
 
                     b.Property<string>("Language")
                         .IsRequired()
-                        .HasColumnType("varchar(50)")
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)")
                         .HasColumnName("_language");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("varchar(1000)")
+                        .HasMaxLength(1000)
+                        .HasColumnType("character varying(1000)")
                         .HasColumnName("_name");
 
-                    b.HasKey("Id");
+                    b.HasKey("Id")
+                        .HasName("pk__functions");
 
-                    b.HasIndex(new[] { "IdScheme", "Name" }, "IX__functions__id_scheme__name")
+                    b.HasIndex(new[] { "IdScheme" }, "IX__functions__schemes")
+                        .HasAnnotation("Npgsql:StorageParameter:deduplicate_items", "true");
+
+                    b.HasIndex(new[] { "IdScheme", "Name" }, "ix__functions_scheme_name")
                         .IsUnique();
 
-                    b.HasIndex(new[] { "IdScheme" }, "IX__functions__schemes");
-
                     b.ToTable("_functions", (string)null);
-                });
-
-            modelBuilder.Entity("redb.Core.Models.GlobalIdentity", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER")
-                        .HasColumnName("_id");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("_global_identity", (string)null);
                 });
 
             modelBuilder.Entity("redb.Core.Models._RLink", b =>
@@ -192,9 +200,10 @@ namespace redb.Core.SQLite.Migrations
                         .HasColumnType("bigint")
                         .HasColumnName("_id_2");
 
-                    b.HasKey("Id");
+                    b.HasKey("Id")
+                        .HasName("pk__links");
 
-                    b.HasIndex(new[] { "Id1", "Id2" }, "IX__links__id_1__id_2")
+                    b.HasIndex(new[] { "Id1", "Id2" }, "ix__links")
                         .IsUnique();
 
                     b.ToTable("_links", (string)null);
@@ -207,15 +216,18 @@ namespace redb.Core.SQLite.Migrations
                         .HasColumnName("_id");
 
                     b.Property<string>("Alias")
-                        .HasColumnType("varchar(250)")
+                        .HasMaxLength(250)
+                        .HasColumnType("character varying(250)")
                         .HasColumnName("_alias");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("varchar(250)")
+                        .HasMaxLength(250)
+                        .HasColumnType("character varying(250)")
                         .HasColumnName("_name");
 
-                    b.HasKey("Id");
+                    b.HasKey("Id")
+                        .HasName("pk__lists");
 
                     b.ToTable("_lists", (string)null);
                 });
@@ -235,14 +247,18 @@ namespace redb.Core.SQLite.Migrations
                         .HasColumnName("_id_object");
 
                     b.Property<string>("_RValue")
-                        .HasColumnType("varchar(250)")
+                        .HasMaxLength(250)
+                        .HasColumnType("character varying(250)")
                         .HasColumnName("_value");
 
-                    b.HasKey("Id");
+                    b.HasKey("Id")
+                        .HasName("pk__list_items");
 
-                    b.HasIndex(new[] { "IdList" }, "IX__list_items__id_list");
+                    b.HasIndex(new[] { "IdList" }, "IX__list_items__id_list")
+                        .HasAnnotation("Npgsql:StorageParameter:deduplicate_items", "true");
 
-                    b.HasIndex(new[] { "IdObject" }, "IX__list_items__objects");
+                    b.HasIndex(new[] { "IdObject" }, "IX__list_items__objects")
+                        .HasAnnotation("Npgsql:StorageParameter:deduplicate_items", "true");
 
                     b.ToTable("_list_items", (string)null);
                 });
@@ -262,31 +278,32 @@ namespace redb.Core.SQLite.Migrations
                         .HasColumnName("_code_int");
 
                     b.Property<string>("CodeString")
-                        .HasColumnType("varchar(250)")
+                        .HasMaxLength(250)
+                        .HasColumnType("character varying(250)")
                         .HasColumnName("_code_string");
 
                     b.Property<DateTime?>("DateBegin")
-                        .HasColumnType("datetime")
+                        .HasColumnType("timestamp without time zone")
                         .HasColumnName("_date_begin");
 
                     b.Property<DateTime?>("DateComplete")
-                        .HasColumnType("datetime")
+                        .HasColumnType("timestamp without time zone")
                         .HasColumnName("_date_complete");
 
                     b.Property<DateTime>("DateCreate")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime")
+                        .HasColumnType("timestamp without time zone")
                         .HasColumnName("_date_create")
-                        .HasDefaultValueSql("julianday(CURRENT_TIMESTAMP)");
+                        .HasDefaultValueSql("now()");
 
                     b.Property<DateTime>("DateModify")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime")
+                        .HasColumnType("timestamp without time zone")
                         .HasColumnName("_date_modify")
-                        .HasDefaultValueSql("julianday(CURRENT_TIMESTAMP)");
+                        .HasDefaultValueSql("now()");
 
                     b.Property<byte[]>("Hash")
-                        .HasColumnType("BLOB")
+                        .HasColumnType("bytea")
                         .HasColumnName("_hash");
 
                     b.Property<long>("IdOwner")
@@ -310,36 +327,50 @@ namespace redb.Core.SQLite.Migrations
                         .HasColumnName("_key");
 
                     b.Property<string>("Name")
-                        .HasColumnType("varchar(250)")
+                        .HasMaxLength(250)
+                        .HasColumnType("character varying(250)")
                         .HasColumnName("_name");
 
                     b.Property<string>("Note")
-                        .HasColumnType("varchar(1000)")
+                        .HasMaxLength(1000)
+                        .HasColumnType("character varying(1000)")
                         .HasColumnName("_note");
 
-                    b.HasKey("Id");
+                    b.HasKey("Id")
+                        .HasName("pk__objects");
 
-                    b.HasIndex(new[] { "CodeGuid" }, "IX__objects__code_guid");
+                    b.HasIndex(new[] { "CodeGuid" }, "IX__objects__code_guid")
+                        .HasAnnotation("Npgsql:StorageParameter:deduplicate_items", "true");
 
-                    b.HasIndex(new[] { "CodeInt" }, "IX__objects__code_int");
+                    b.HasIndex(new[] { "CodeInt" }, "IX__objects__code_int")
+                        .HasAnnotation("Npgsql:StorageParameter:deduplicate_items", "true");
 
-                    b.HasIndex(new[] { "CodeString" }, "IX__objects__code_string");
+                    b.HasIndex(new[] { "CodeString" }, "IX__objects__code_string")
+                        .HasAnnotation("Npgsql:StorageParameter:deduplicate_items", "true");
 
-                    b.HasIndex(new[] { "DateCreate" }, "IX__objects__date_create");
+                    b.HasIndex(new[] { "DateCreate" }, "IX__objects__date_create")
+                        .HasAnnotation("Npgsql:StorageParameter:deduplicate_items", "true");
 
-                    b.HasIndex(new[] { "DateModify" }, "IX__objects__date_modify");
+                    b.HasIndex(new[] { "DateModify" }, "IX__objects__date_modify")
+                        .HasAnnotation("Npgsql:StorageParameter:deduplicate_items", "true");
 
-                    b.HasIndex(new[] { "Hash" }, "IX__objects__hash");
+                    b.HasIndex(new[] { "Hash" }, "IX__objects__hash")
+                        .HasAnnotation("Npgsql:StorageParameter:deduplicate_items", "true");
 
-                    b.HasIndex(new[] { "Name" }, "IX__objects__name");
+                    b.HasIndex(new[] { "Name" }, "IX__objects__name")
+                        .HasAnnotation("Npgsql:StorageParameter:deduplicate_items", "true");
 
-                    b.HasIndex(new[] { "IdParent" }, "IX__objects__objects");
+                    b.HasIndex(new[] { "IdParent" }, "IX__objects__objects")
+                        .HasAnnotation("Npgsql:StorageParameter:deduplicate_items", "true");
 
-                    b.HasIndex(new[] { "IdScheme" }, "IX__objects__schemes");
+                    b.HasIndex(new[] { "IdScheme" }, "IX__objects__schemes")
+                        .HasAnnotation("Npgsql:StorageParameter:deduplicate_items", "true");
 
-                    b.HasIndex(new[] { "IdOwner" }, "IX__objects__users1");
+                    b.HasIndex(new[] { "IdOwner" }, "IX__objects__users1")
+                        .HasAnnotation("Npgsql:StorageParameter:deduplicate_items", "true");
 
-                    b.HasIndex(new[] { "IdWhoChange" }, "IX__objects__users2");
+                    b.HasIndex(new[] { "IdWhoChange" }, "IX__objects__users2")
+                        .HasAnnotation("Npgsql:StorageParameter:deduplicate_items", "true");
 
                     b.ToTable("_objects", (string)null);
                 });
@@ -378,14 +409,17 @@ namespace redb.Core.SQLite.Migrations
                         .HasColumnType("boolean")
                         .HasColumnName("_update");
 
-                    b.HasKey("Id");
+                    b.HasKey("Id")
+                        .HasName("pk__object_permissions");
 
-                    b.HasIndex(new[] { "IdRole", "IdUser", "IdRef", "Select", "Insert", "Update", "Delete" }, "IX__permissions__id_role__id_user__id_ref__select__insert__update__delete")
+                    b.HasIndex(new[] { "IdRole" }, "IX__permissions__roles")
+                        .HasAnnotation("Npgsql:StorageParameter:deduplicate_items", "true");
+
+                    b.HasIndex(new[] { "IdUser" }, "IX__permissions__users")
+                        .HasAnnotation("Npgsql:StorageParameter:deduplicate_items", "true");
+
+                    b.HasIndex(new[] { "IdRole", "IdUser", "IdRef", "Select", "Insert", "Update", "Delete" }, "ix__permissions")
                         .IsUnique();
-
-                    b.HasIndex(new[] { "IdRole" }, "IX__permissions__roles");
-
-                    b.HasIndex(new[] { "IdUser" }, "IX__permissions__users");
 
                     b.ToTable("_permissions", (string)null);
                 });
@@ -398,12 +432,14 @@ namespace redb.Core.SQLite.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("varchar(250)")
+                        .HasMaxLength(250)
+                        .HasColumnType("character varying(250)")
                         .HasColumnName("_name");
 
-                    b.HasKey("Id");
+                    b.HasKey("Id")
+                        .HasName("pk__roles");
 
-                    b.HasIndex(new[] { "Name" }, "IX__roles__name")
+                    b.HasIndex(new[] { "Name" }, "ix__roles")
                         .IsUnique();
 
                     b.ToTable("_roles", (string)null);
@@ -416,7 +452,8 @@ namespace redb.Core.SQLite.Migrations
                         .HasColumnName("_id");
 
                     b.Property<string>("Alias")
-                        .HasColumnType("varchar(250)")
+                        .HasMaxLength(250)
+                        .HasColumnType("character varying(250)")
                         .HasColumnName("_alias");
 
                     b.Property<long?>("IdParent")
@@ -425,19 +462,23 @@ namespace redb.Core.SQLite.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("varchar(250)")
+                        .HasMaxLength(250)
+                        .HasColumnType("character varying(250)")
                         .HasColumnName("_name");
 
                     b.Property<string>("NameSpace")
-                        .HasColumnType("varchar(1000)")
+                        .HasMaxLength(1000)
+                        .HasColumnType("character varying(1000)")
                         .HasColumnName("_name_space");
 
-                    b.HasKey("Id");
+                    b.HasKey("Id")
+                        .HasName("pk__schemes");
 
-                    b.HasIndex(new[] { "Name" }, "IX__schemes__name")
+                    b.HasIndex(new[] { "IdParent" }, "IX__schemes__schemes")
+                        .HasAnnotation("Npgsql:StorageParameter:deduplicate_items", "true");
+
+                    b.HasIndex(new[] { "Name" }, "ix__schemes")
                         .IsUnique();
-
-                    b.HasIndex(new[] { "IdParent" }, "IX__schemes__schemes");
 
                     b.ToTable("_schemes", (string)null);
                 });
@@ -449,7 +490,8 @@ namespace redb.Core.SQLite.Migrations
                         .HasColumnName("_id");
 
                     b.Property<string>("Alias")
-                        .HasColumnType("varchar(250)")
+                        .HasMaxLength(250)
+                        .HasColumnType("character varying(250)")
                         .HasColumnName("_alias");
 
                     b.Property<bool?>("AllowNotNull")
@@ -457,7 +499,7 @@ namespace redb.Core.SQLite.Migrations
                         .HasColumnName("_allow_not_null");
 
                     b.Property<string>("DefaultEditor")
-                        .HasColumnType("TEXT")
+                        .HasColumnType("text")
                         .HasColumnName("_default_editor");
 
                     b.Property<byte[]>("DefaultValue")
@@ -494,7 +536,8 @@ namespace redb.Core.SQLite.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("varchar(250)")
+                        .HasMaxLength(250)
+                        .HasColumnType("character varying(250)")
                         .HasColumnName("_name");
 
                     b.Property<long?>("Order")
@@ -509,18 +552,23 @@ namespace redb.Core.SQLite.Migrations
                         .HasColumnType("boolean")
                         .HasColumnName("_store_null");
 
-                    b.HasKey("Id");
+                    b.HasKey("Id")
+                        .HasName("pk__structure");
 
-                    b.HasIndex(new[] { "IdScheme", "Name" }, "IX__structures__id_scheme__name")
+                    b.HasIndex(new[] { "IdList" }, "IX__structures__lists")
+                        .HasAnnotation("Npgsql:StorageParameter:deduplicate_items", "true");
+
+                    b.HasIndex(new[] { "IdScheme" }, "IX__structures__schemes")
+                        .HasAnnotation("Npgsql:StorageParameter:deduplicate_items", "true");
+
+                    b.HasIndex(new[] { "IdParent" }, "IX__structures__structures")
+                        .HasAnnotation("Npgsql:StorageParameter:deduplicate_items", "true");
+
+                    b.HasIndex(new[] { "IdType" }, "IX__structures__types")
+                        .HasAnnotation("Npgsql:StorageParameter:deduplicate_items", "true");
+
+                    b.HasIndex(new[] { "IdScheme", "Name" }, "ix__structures")
                         .IsUnique();
-
-                    b.HasIndex(new[] { "IdList" }, "IX__structures__lists");
-
-                    b.HasIndex(new[] { "IdScheme" }, "IX__structures__schemes");
-
-                    b.HasIndex(new[] { "IdParent" }, "IX__structures__structures");
-
-                    b.HasIndex(new[] { "IdType" }, "IX__structures__types");
 
                     b.ToTable("_structures", (string)null);
                 });
@@ -532,21 +580,23 @@ namespace redb.Core.SQLite.Migrations
                         .HasColumnName("_id");
 
                     b.Property<string>("DbType")
-                        .IsRequired()
-                        .HasColumnType("varchar (250)")
+                        .HasMaxLength(250)
+                        .HasColumnType("character varying(250)")
                         .HasColumnName("_db_type");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("varchar (250)")
+                        .HasMaxLength(250)
+                        .HasColumnType("character varying(250)")
                         .HasColumnName("_name");
 
                     b.Property<string>("Type1")
-                        .IsRequired()
-                        .HasColumnType("varchar (250)")
+                        .HasMaxLength(250)
+                        .HasColumnType("character varying(250)")
                         .HasColumnName("_type");
 
-                    b.HasKey("Id");
+                    b.HasKey("Id")
+                        .HasName("pk__types");
 
                     b.ToTable("_types", (string)null);
                 });
@@ -558,46 +608,50 @@ namespace redb.Core.SQLite.Migrations
                         .HasColumnName("_id");
 
                     b.Property<DateTime?>("DateDismiss")
-                        .HasColumnType("datetime")
+                        .HasColumnType("timestamp without time zone")
                         .HasColumnName("_date_dismiss");
 
                     b.Property<DateTime>("DateRegister")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime")
+                        .HasColumnType("timestamp without time zone")
                         .HasColumnName("_date_register")
-                        .HasDefaultValueSql("julianday(CURRENT_TIMESTAMP)");
+                        .HasDefaultValueSql("now()");
 
                     b.Property<string>("Email")
-                        .HasColumnType("varchar(250)")
+                        .HasMaxLength(250)
+                        .HasColumnType("character varying(250)")
                         .HasColumnName("_email");
 
                     b.Property<bool>("Enabled")
-                        .IsRequired()
                         .ValueGeneratedOnAdd()
                         .HasColumnType("boolean")
-                        .HasColumnName("_enabled")
-                        .HasDefaultValueSql("true");
+                        .HasDefaultValue(true)
+                        .HasColumnName("_enabled");
 
                     b.Property<string>("Login")
                         .IsRequired()
-                        .HasColumnType("varchar(250)")
+                        .HasMaxLength(250)
+                        .HasColumnType("character varying(250)")
                         .HasColumnName("_login");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("varchar(250)")
+                        .HasMaxLength(250)
+                        .HasColumnType("character varying(250)")
                         .HasColumnName("_name");
 
                     b.Property<string>("Password")
                         .IsRequired()
-                        .HasColumnType("TEXT")
+                        .HasColumnType("text")
                         .HasColumnName("_password");
 
                     b.Property<string>("Phone")
-                        .HasColumnType("varchar(250)")
+                        .HasMaxLength(250)
+                        .HasColumnType("character varying(250)")
                         .HasColumnName("_phone");
 
-                    b.HasKey("Id");
+                    b.HasKey("Id")
+                        .HasName("pk__users");
 
                     b.ToTable("_users", (string)null);
                 });
@@ -616,14 +670,17 @@ namespace redb.Core.SQLite.Migrations
                         .HasColumnType("bigint")
                         .HasColumnName("_id_user");
 
-                    b.HasKey("Id");
+                    b.HasKey("Id")
+                        .HasName("pk__users_roles");
 
-                    b.HasIndex(new[] { "IdRole", "IdUser" }, "IX__users_roles__id_role__id_user")
+                    b.HasIndex(new[] { "IdRole" }, "IX__users_roles__roles")
+                        .HasAnnotation("Npgsql:StorageParameter:deduplicate_items", "true");
+
+                    b.HasIndex(new[] { "IdUser" }, "IX__users_roles__users")
+                        .HasAnnotation("Npgsql:StorageParameter:deduplicate_items", "true");
+
+                    b.HasIndex(new[] { "IdRole", "IdUser" }, "ix__users_roles")
                         .IsUnique();
-
-                    b.HasIndex(new[] { "IdRole" }, "IX__users_roles__roles");
-
-                    b.HasIndex(new[] { "IdUser" }, "IX__users_roles__users");
 
                     b.ToTable("_users_roles", (string)null);
                 });
@@ -636,23 +693,32 @@ namespace redb.Core.SQLite.Migrations
 
                     b.Property<bool?>("Boolean")
                         .HasColumnType("boolean")
-                        .HasColumnName("_Boolean");
+                        .HasColumnName("_boolean");
 
                     b.Property<byte[]>("ByteArray")
                         .HasColumnType("bytea")
-                        .HasColumnName("_ByteArray");
+                        .HasColumnName("_bytearray");
 
                     b.Property<DateTime?>("DateTime")
-                        .HasColumnType("datetime")
-                        .HasColumnName("_DateTime");
+                        .HasColumnType("timestamp without time zone")
+                        .HasColumnName("_datetime");
+
+
+                    //b.Property<byte[]>("ByteArray")
+                    //    .HasColumnType("bytea")
+                    //    .HasColumnName("_bytearray");
+
+                    //b.Property<DateTime?>("DateTime")
+                    //    .HasColumnType("timestamp without time zone")
+                    //    .HasColumnName("_datetime");
 
                     b.Property<double?>("Double")
-                        .HasColumnType("float")
-                        .HasColumnName("_Double");
+                        .HasColumnType("double precision")
+                        .HasColumnName("_double");
 
                     b.Property<Guid?>("Guid")
                         .HasColumnType("uuid")
-                        .HasColumnName("_Guid");
+                        .HasColumnName("_guid");
 
                     b.Property<long>("IdObject")
                         .HasColumnType("bigint")
@@ -664,36 +730,46 @@ namespace redb.Core.SQLite.Migrations
 
                     b.Property<long?>("Long")
                         .HasColumnType("bigint")
-                        .HasColumnName("_Long");
+                        .HasColumnName("_long");
 
                     b.Property<string>("String")
-                        .HasColumnType("varchar(850)")
-                        .HasColumnName("_String");
+                        .HasMaxLength(850)
+                        .HasColumnType("character varying(850)")
+                        .HasColumnName("_string");
 
                     b.Property<string>("Text")
-                        .HasColumnType("TEXT")
-                        .HasColumnName("_Text");
+                        .HasColumnType("text")
+                        .HasColumnName("_text");
 
-                    b.HasKey("Id");
+                    b.HasKey("Id")
+                        .HasName("pk__values");
 
-                    b.HasIndex(new[] { "Boolean" }, "IX__values__Boolean");
+                    b.HasIndex(new[] { "Boolean" }, "IX__values__Boolean")
+                        .HasAnnotation("Npgsql:StorageParameter:deduplicate_items", "true");
 
-                    b.HasIndex(new[] { "DateTime" }, "IX__values__DateTime");
+                    b.HasIndex(new[] { "DateTime" }, "IX__values__DateTime")
+                        .HasAnnotation("Npgsql:StorageParameter:deduplicate_items", "true");
 
-                    b.HasIndex(new[] { "Double" }, "IX__values__Double");
+                    b.HasIndex(new[] { "Double" }, "IX__values__Double")
+                        .HasAnnotation("Npgsql:StorageParameter:deduplicate_items", "true");
 
-                    b.HasIndex(new[] { "Guid" }, "IX__values__Guid");
+                    b.HasIndex(new[] { "Guid" }, "IX__values__Guid")
+                        .HasAnnotation("Npgsql:StorageParameter:deduplicate_items", "true");
 
-                    b.HasIndex(new[] { "Long" }, "IX__values__Long");
+                    b.HasIndex(new[] { "Long" }, "IX__values__Long")
+                        .HasAnnotation("Npgsql:StorageParameter:deduplicate_items", "true");
 
-                    b.HasIndex(new[] { "String" }, "IX__values__String");
+                    b.HasIndex(new[] { "String" }, "IX__values__String")
+                        .HasAnnotation("Npgsql:StorageParameter:deduplicate_items", "true");
 
-                    b.HasIndex(new[] { "IdStructure", "IdObject" }, "IX__values__id_structure__id_object")
+                    b.HasIndex(new[] { "IdObject" }, "IX__values__objects")
+                        .HasAnnotation("Npgsql:StorageParameter:deduplicate_items", "true");
+
+                    b.HasIndex(new[] { "IdStructure" }, "IX__values__structures")
+                        .HasAnnotation("Npgsql:StorageParameter:deduplicate_items", "true");
+
+                    b.HasIndex(new[] { "IdStructure", "IdObject" }, "ix__values_so")
                         .IsUnique();
-
-                    b.HasIndex(new[] { "IdObject" }, "IX__values__objects");
-
-                    b.HasIndex(new[] { "IdStructure" }, "IX__values__structures");
 
                     b.ToTable("_values", (string)null);
                 });
@@ -702,13 +778,15 @@ namespace redb.Core.SQLite.Migrations
                 {
                     b.HasOne("redb.Core.Models._RScheme", "Scheme1Navigation")
                         .WithMany("DependencyScheme1Navigations")
-                        .HasForeignKey("IdScheme1");
+                        .HasForeignKey("IdScheme1")
+                        .HasConstraintName("fk__dependencies__schemes_1");
 
                     b.HasOne("redb.Core.Models._RScheme", "Scheme2Navigation")
                         .WithMany("DependencyScheme2Navigations")
                         .HasForeignKey("IdScheme2")
                         .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .IsRequired()
+                        .HasConstraintName("fk__dependencies__schemes_2");
 
                     b.Navigation("Scheme1Navigation");
 
@@ -720,7 +798,8 @@ namespace redb.Core.SQLite.Migrations
                     b.HasOne("redb.Core.Models._RScheme", "SchemeNavigation")
                         .WithMany("Functions")
                         .HasForeignKey("IdScheme")
-                        .IsRequired();
+                        .IsRequired()
+                        .HasConstraintName("fk__functions__schemes");
 
                     b.Navigation("SchemeNavigation");
                 });
@@ -731,11 +810,13 @@ namespace redb.Core.SQLite.Migrations
                         .WithMany("ListItems")
                         .HasForeignKey("IdList")
                         .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .IsRequired()
+                        .HasConstraintName("fk__list_items__id_list");
 
                     b.HasOne("redb.Core.Models._RObject", "ObjectNavigation")
                         .WithMany("ListItems")
-                        .HasForeignKey("IdObject");
+                        .HasForeignKey("IdObject")
+                        .HasConstraintName("fk__list_items__objects");
 
                     b.Navigation("ListNavigation");
 
@@ -747,23 +828,27 @@ namespace redb.Core.SQLite.Migrations
                     b.HasOne("redb.Core.Models._RUser", "OwnerNavigation")
                         .WithMany("ObjectOwnerNavigations")
                         .HasForeignKey("IdOwner")
-                        .IsRequired();
+                        .IsRequired()
+                        .HasConstraintName("fk__objects__users1");
 
                     b.HasOne("redb.Core.Models._RObject", "ParentNavigation")
                         .WithMany("InverseParentNavigation")
                         .HasForeignKey("IdParent")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .HasConstraintName("fk__objects__objects");
 
                     b.HasOne("redb.Core.Models._RScheme", "SchemeNavigation")
                         .WithMany("Objects")
                         .HasForeignKey("IdScheme")
                         .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .IsRequired()
+                        .HasConstraintName("fk__objects__schemes");
 
                     b.HasOne("redb.Core.Models._RUser", "WhoChangeNavigation")
                         .WithMany("ObjectWhoChangeNavigations")
                         .HasForeignKey("IdWhoChange")
-                        .IsRequired();
+                        .IsRequired()
+                        .HasConstraintName("fk__objects__users2");
 
                     b.Navigation("OwnerNavigation");
 
@@ -779,12 +864,14 @@ namespace redb.Core.SQLite.Migrations
                     b.HasOne("redb.Core.Models._RRole", "RoleNavigation")
                         .WithMany("Permissions")
                         .HasForeignKey("IdRole")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .HasConstraintName("fk__permissions__roles");
 
                     b.HasOne("redb.Core.Models._RUser", "UserNavigation")
                         .WithMany("Permissions")
                         .HasForeignKey("IdUser")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .HasConstraintName("fk__permissions__users");
 
                     b.Navigation("RoleNavigation");
 
@@ -795,7 +882,8 @@ namespace redb.Core.SQLite.Migrations
                 {
                     b.HasOne("redb.Core.Models._RScheme", "ParentNavigation")
                         .WithMany("InverseParentNavigation")
-                        .HasForeignKey("IdParent");
+                        .HasForeignKey("IdParent")
+                        .HasConstraintName("fk__schemes__schemes");
 
                     b.Navigation("ParentNavigation");
                 });
@@ -804,21 +892,25 @@ namespace redb.Core.SQLite.Migrations
                 {
                     b.HasOne("redb.Core.Models._RList", "ListNavigation")
                         .WithMany("Structures")
-                        .HasForeignKey("IdList");
+                        .HasForeignKey("IdList")
+                        .HasConstraintName("fk__structures__lists");
 
                     b.HasOne("redb.Core.Models._RStructure", "ParentNavigation")
                         .WithMany("InverseParentNavigation")
-                        .HasForeignKey("IdParent");
+                        .HasForeignKey("IdParent")
+                        .HasConstraintName("fk__structures__structures");
 
                     b.HasOne("redb.Core.Models._RScheme", "SchemeNavigation")
                         .WithMany("Structures")
                         .HasForeignKey("IdScheme")
-                        .IsRequired();
+                        .IsRequired()
+                        .HasConstraintName("fk__structures__schemes");
 
                     b.HasOne("redb.Core.Models._RType", "TypeNavigation")
                         .WithMany("Structures")
                         .HasForeignKey("IdType")
-                        .IsRequired();
+                        .IsRequired()
+                        .HasConstraintName("fk__structures__types");
 
                     b.Navigation("ListNavigation");
 
@@ -836,14 +928,14 @@ namespace redb.Core.SQLite.Migrations
                         .HasForeignKey("IdRole")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
-                        .HasConstraintName("FK__users_roles__roles");
+                        .HasConstraintName("fk__users_roles__roles");
 
                     b.HasOne("redb.Core.Models._RUser", "UserNavigation")
                         .WithMany("UsersRoles")
                         .HasForeignKey("IdUser")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
-                        .HasConstraintName("FK__users_roles__users");
+                        .HasConstraintName("fk__users_roles__users");
 
                     b.Navigation("RoleNavigation");
 
@@ -856,13 +948,15 @@ namespace redb.Core.SQLite.Migrations
                         .WithMany("Values")
                         .HasForeignKey("IdObject")
                         .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .IsRequired()
+                        .HasConstraintName("fk__values__objects");
 
                     b.HasOne("redb.Core.Models._RStructure", "StructureNavigation")
                         .WithMany("Values")
                         .HasForeignKey("IdStructure")
                         .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .IsRequired()
+                        .HasConstraintName("fk__values__structures");
 
                     b.Navigation("ObjectNavigation");
 
@@ -926,6 +1020,8 @@ namespace redb.Core.SQLite.Migrations
                     b.Navigation("ObjectWhoChangeNavigations");
 
                     b.Navigation("Permissions");
+
+                    b.Navigation("UsersRoles");
                 });
 #pragma warning restore 612, 618
         }

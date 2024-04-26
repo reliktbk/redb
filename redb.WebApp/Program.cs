@@ -1,7 +1,3 @@
-#define sql_MSSql
-//#define sql_SQLite
-//#define sql_Postgres
-
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
@@ -11,6 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using redb.Core;
 using System;
 using System.Globalization;
+using System.Data;
 
 namespace redb.WebApp
 {
@@ -18,12 +15,10 @@ namespace redb.WebApp
     {
         public static async Task Main(string[] args)
         {
-#if sql_SQLite
-            const string sqlInstance = "SQLite"; 
-#endif
-#if sql_MSSql
-            const string sqlInstance = "MSSql";
-#endif
+            String? DB_TYPE = Environment.GetEnvironmentVariable("DB_TYPE")?.ToLower();
+            String sqlInstance = "SQLite";
+            sqlInstance = "MSSql".ToLower().Equals(DB_TYPE) ? "MSSql" : "Postgres".ToLower().Equals(DB_TYPE) ? "Postgres" : "SQLite";
+
             CultureInfo.DefaultThreadCurrentCulture = new CultureInfo("ru-Ru");
 
             WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
@@ -31,20 +26,45 @@ namespace redb.WebApp
             // Add services to the container.
             String IdentityConnectionString = builder.Configuration.GetConnectionString($"Identity{sqlInstance}Connection") ?? throw new InvalidOperationException("Connection string IdentitySQLiteConnection not found.");
             String RedbConnectionString = builder.Configuration.GetConnectionString($"Redb{sqlInstance}Connection") ?? throw new InvalidOperationException("Connection string RedbSQLiteConnection not found.");
+            switch (sqlInstance)
+            {
+                case "SQLite":
+                    builder.Services
+                        .AddScoped<RedbContext, Core.SQLite.RedbContext>()
+                        .AddScoped<IRedbService, Core.SQLite.RedbService>()
+                        .AddDbContext<Core.SQLite.RedbContext>(options =>
+                        {
+                            options.UseLazyLoadingProxies().UseSqlite(RedbConnectionString);
+                            options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
+                        })
+                        .AddDbContext<IdentityDbContext>(options => options.UseSqlite(IdentityConnectionString));
+                    break;
+                case "MSSql":
+                    builder.Services
+                        .AddScoped<RedbContext, Core.MSSql.RedbContext>()
+                        .AddScoped<IRedbService, Core.MSSql.RedbService>()
+                        .AddDbContext<Core.MSSql.RedbContext>(options =>
+                        {
+                            options.UseLazyLoadingProxies().UseSqlServer(RedbConnectionString);
+                            options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
+                        })
+                        .AddDbContext<IdentityDbContext>(options => options.UseSqlServer(IdentityConnectionString));
+                    break;
+                case "Postgres":
+                    builder.Services
+                        .AddScoped<RedbContext, Core.Postgres.RedbContext>()
+                        .AddScoped<IRedbService, Core.Postgres.RedbService>()
+                        .AddDbContext<Core.Postgres.RedbContext>(options =>
+                        {
+                            options.UseLazyLoadingProxies().UseNpgsql(RedbConnectionString);
+                            options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
+                        })
+                        .AddDbContext<IdentityDbContext>(options => options.UseNpgsql(IdentityConnectionString));
+                    break;
+            }
+
             builder.Services
-#if sql_SQLite
-                .AddScoped<RedbContext, Core.SQLite.RedbContext>()
-                .AddScoped<IRedbService, Core.SQLite.RedbService>()
-                .AddDbContext<Core.SQLite.RedbContext>(options => options.UseLazyLoadingProxies().UseSqlite(RedbConnectionString))
-                .AddDbContext<IdentityDbContext>(options => options.UseSqlite(IdentityConnectionString))
-#endif
-#if sql_MSSql
-                .AddScoped<RedbContext, Core.MSSql.RedbContext>()
-                .AddScoped<IRedbService, Core.MSSql.RedbService>()
-                .AddDbContext<Core.MSSql.RedbContext>(options => options.UseLazyLoadingProxies().UseSqlServer(RedbConnectionString))
-                .AddDbContext<IdentityDbContext>(options => options.UseSqlServer(IdentityConnectionString))
-#endif
-                .AddDefaultIdentity<IdentityUser>(options =>
+               .AddDefaultIdentity<IdentityUser>(options =>
                 {
                     options.SignIn.RequireConfirmedAccount = true;
                     //options.Password.RequireDigit = false;
@@ -98,7 +118,7 @@ namespace redb.WebApp
                    endpoints.MapPost("/Identity/Account/Register", context => Task.Factory.StartNew(() => context.Response.Redirect("/Identity/Account/Login", true, true)));
                });
 
- 
+
             app.MapControllers();
             app.MapRazorPages();
 

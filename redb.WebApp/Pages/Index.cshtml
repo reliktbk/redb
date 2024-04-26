@@ -35,7 +35,7 @@
                     <p>6. Stored Procedures and Triggers: Avoid using system-specific stored procedures and triggers. If there is a need to use them, ensure that they are implemented in a manner that is compatible across MSSQL, PostgreSQL, and SQLite...</p>
                     <br>By following these guidelines and being aware of the differences and limitations of each database system, it is possible to create a database schema and queries that can be used seamlessly across MSSQL, PostgreSQL, and SQLite and etc.
                     <br>Additionally, the use of an ORM <strong>(Object-Relational Mapping)</strong> framework or a database abstraction layer can also help in achieving compatibility across different database systems.<br>
-                    <br><b><a href="#" id="div_toggle_1" class="div_toggle">[details]</a></b>
+                    <br><redb><a href="#" id="div_toggle_1" class="div_toggle">[details]</a></redb>
                 </div>
             </td>
         </tr>
@@ -62,7 +62,7 @@
                     <p>Databases that expand horizontally often have built-in support for sharding, replication, or distributed architectures that allow them to effectively distribute and manage data across multiple instances or nodes. Examples of horizontally expanding databases include various NoSQL databases, distributed key-value stores, and some NewSQL databases.</p>
                     <p>In addition, "expanding in breadth" might also refer to databases that are able to accommodate a wider variety of data types, data structures, or functionality, such as supporting different types of unstructured or semi-structured data, handling varying workloads, or integrating new features without needing a major overhaul of the database architecture.</p>
                     <br>Overall, databases that expand horizontally or in breadth are designed to provide scalability, flexibility, and agility in handling increasing data volumes and diversified needs, making them well-suited for modern, dynamic, and growing data environments.<strong>This is provided by a very simple relational database "redb", consisting of only a dozen tables.</strong><br>
-                    <br><b><a href="#" id="div_toggle_2" class="div_toggle">[details]</a></b>
+                    <br><redb><a href="#" id="div_toggle_2" class="div_toggle">[details]</a></redb>
                 </div>
             </td>
         </tr>
@@ -89,7 +89,7 @@
                     <p>In an OODB, data is typically organized as objects, with attributes and methods, similar to how objects are represented in object-oriented programming languages like Java or C++. This allows for more natural and intuitive representation of complex data structures, which is particularly beneficial for applications that deal with intricate relationships and behaviors.</p>
                     <p>OODBs also offer support for features such as inheritance, polymorphism, and encapsulation, which are fundamental concepts in object-oriented programming. This provides a more coherent and seamless approach to working with data, as developers can leverage the full power of object-oriented programming directly within the database.</p>
                     <br>Overall, object-oriented databases provide a compelling alternative to traditional relational databases for applications where the object-oriented paradigm is a natural fit. They offer simplicity, efficiency, and consistency in managing data, and are particularly well-suited for applications and systems developed using object-oriented programming languages and models.<br>
-                    <br><b><a href="#" id="div_toggle_3" class="div_toggle">[details]</a></b>
+                    <br><redb><a href="#" id="div_toggle_3" class="div_toggle">[details]</a></redb>
                 </div>
             </td>
         </tr>
@@ -109,7 +109,7 @@
                     <br><br>In this schema:<br>- The `Entities` table stores the entities with their unique `entity_id` and `name`.<br>- The `Properties` table holds the properties of the entities with unique `property_id`, `name`, and `type_id` where `type_id` is a foreign key referenced to the `Types` table.<br>- The `Types` table contains the data types with unique `type_id` and `name`.<br><br>For example, if you have an entity "Person" and properties "Name", "Age", "Gender", the data could be represented as:<br><br>
                     <pre><code class="hljs cpp">sql<br>Entities:<br>| entity_id | name   |<br>|-----------|--------|<br>| <span class="hljs-number">1</span>         | Person |<br><br>Properties:<br>| property_id | name   | type_id |<br>|-------------|--------|---------|<br>| <span class="hljs-number">1</span>           | Name   | <span class="hljs-number">1</span>       |<br>| <span class="hljs-number">2</span>           | Age    | <span class="hljs-number">2</span>       |<br>| <span class="hljs-number">3</span>           | Gender | <span class="hljs-number">3</span>       |<br><br>Types:<br>| type_id | name   |<br>|---------|--------|<br>| <span class="hljs-number">1</span>       | String |<br>| <span class="hljs-number">2</span>       | Integer|<br>| <span class="hljs-number">3</span>       | String |<br></code></pre><br><br>This database schema allows you to efficiently manage entities, their properties, and data types in your application.<br>
                     <p>However, such a scheme binds us to DDL, real types must be converted when searching, it will not be possible to build an index based on real values. Linking to DDL entails rebuilding the code of services with working data: many entities, many tables, many code, many errors. All this is solved in the <redb>redb</redb> structure.</p>
-                    <br><b><a href="#" id="div_toggle_4" class="div_toggle">[details]</a></b>
+                    <br><redb><a href="#" id="div_toggle_4" class="div_toggle">[details]</a></redb>
                 </div>
             </td>
         </tr>

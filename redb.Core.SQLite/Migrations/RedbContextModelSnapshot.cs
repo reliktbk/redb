@@ -46,19 +46,19 @@ namespace redb.Core.SQLite.Migrations
                         .HasColumnType("datetime")
                         .HasColumnName("_date_complete");
 
-                    b.Property<double>("DateCreate")
+                    b.Property<DateTime>("DateCreate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime")
                         .HasColumnName("_date_create")
                         .HasDefaultValueSql("julianday(CURRENT_TIMESTAMP)");
 
-                    b.Property<double>("DateDelete")
+                    b.Property<DateTime>("DateDelete")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime")
                         .HasColumnName("_date_delete")
                         .HasDefaultValueSql("julianday(CURRENT_TIMESTAMP)");
 
-                    b.Property<double>("DateModify")
+                    b.Property<DateTime>("DateModify")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime")
                         .HasColumnName("_date_modify")
@@ -96,7 +96,7 @@ namespace redb.Core.SQLite.Migrations
                         .HasColumnType("varchar (1000)")
                         .HasColumnName("_note");
 
-                    b.Property<string>("Values")
+                    b.Property<byte[]>("Values")
                         .HasColumnType("bytea")
                         .HasColumnName("_values");
 
@@ -273,13 +273,13 @@ namespace redb.Core.SQLite.Migrations
                         .HasColumnType("datetime")
                         .HasColumnName("_date_complete");
 
-                    b.Property<double>("DateCreate")
+                    b.Property<DateTime>("DateCreate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime")
                         .HasColumnName("_date_create")
                         .HasDefaultValueSql("julianday(CURRENT_TIMESTAMP)");
 
-                    b.Property<double>("DateModify")
+                    b.Property<DateTime>("DateModify")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime")
                         .HasColumnName("_date_modify")
@@ -561,7 +561,7 @@ namespace redb.Core.SQLite.Migrations
                         .HasColumnType("datetime")
                         .HasColumnName("_date_dismiss");
 
-                    b.Property<double>("DateRegister")
+                    b.Property<DateTime>("DateRegister")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime")
                         .HasColumnName("_date_register")
@@ -571,7 +571,7 @@ namespace redb.Core.SQLite.Migrations
                         .HasColumnType("varchar(250)")
                         .HasColumnName("_email");
 
-                    b.Property<bool?>("Enabled")
+                    b.Property<bool>("Enabled")
                         .IsRequired()
                         .ValueGeneratedOnAdd()
                         .HasColumnType("boolean")
@@ -889,9 +889,7 @@ namespace redb.Core.SQLite.Migrations
                 {
                     b.Navigation("Permissions");
 
-                    b.Navigation("UsersRoleIdRoleNavigations");
-
-                    b.Navigation("UsersRoleIdUserNavigations");
+                    b.Navigation("UsersRoles");
                 });
 
             modelBuilder.Entity("redb.Core.Models._RScheme", b =>

@@ -1,12 +1,13 @@
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
 USER root
 WORKDIR /app
+ENV DB_TYPE=Postgres
 EXPOSE 8080
 EXPOSE 8081
-#RUN apt-get -y update 
-#RUN apt-get -y install curl 
-#RUN apt-get install -y iputils-ping 
-#RUN apt-get install -y telnet 
+RUN apt-get -y update 
+RUN apt-get -y install curl 
+RUN apt-get install -y iputils-ping 
+RUN apt-get install -y telnet 
 
 
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build

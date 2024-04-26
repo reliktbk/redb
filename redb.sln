@@ -9,7 +9,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "redb.Core", "redb.Core\redb
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "redb.Core.SQLite", "redb.Core.SQLite\redb.Core.SQLite.csproj", "{825F9A55-20B9-4CBE-8ED4-8914C501C2FF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "redb.Core.MSSql", "redb.Core.MSSql\redb.Core.MSSql.csproj", "{76CEAD36-EA8A-47DC-A77D-91810243B59A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "redb.Core.MSSql", "redb.Core.MSSql\redb.Core.MSSql.csproj", "{76CEAD36-EA8A-47DC-A77D-91810243B59A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "redb.Core.Postgres", "redb.Core.Postgres\redb.Core.Postgres.csproj", "{810B8E43-58FD-4080-BFA9-DC93256FC4C8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{76CEAD36-EA8A-47DC-A77D-91810243B59A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{76CEAD36-EA8A-47DC-A77D-91810243B59A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{76CEAD36-EA8A-47DC-A77D-91810243B59A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{810B8E43-58FD-4080-BFA9-DC93256FC4C8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{810B8E43-58FD-4080-BFA9-DC93256FC4C8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{810B8E43-58FD-4080-BFA9-DC93256FC4C8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{810B8E43-58FD-4080-BFA9-DC93256FC4C8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
