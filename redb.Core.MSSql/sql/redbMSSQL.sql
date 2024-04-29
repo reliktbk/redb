@@ -1,6 +1,9 @@
 USE [redb]
 GO
-/****** Object:  StoredProcedure [dbo].[sp_GetChildObjects]    Script Date: 15.04.2024 14:03:44 ******/
+/****** Object:  Trigger [TR__objects__deleted_objects]    Script Date: 29.04.2024 13:21:00 ******/
+DROP TRIGGER [dbo].[TR__objects__deleted_objects]
+GO
+/****** Object:  StoredProcedure [dbo].[sp_GetChildObjects]    Script Date: 29.04.2024 13:21:00 ******/
 DROP PROCEDURE [dbo].[sp_GetChildObjects]
 GO
 ALTER TABLE [dbo].[_permissions] DROP CONSTRAINT [CK__permissions_users_roles]
@@ -55,224 +58,292 @@ ALTER TABLE [dbo].[_objects] DROP CONSTRAINT [DF__objects__date_modify]
 GO
 ALTER TABLE [dbo].[_objects] DROP CONSTRAINT [DF__objects__date_create]
 GO
-/****** Object:  Index [IX__values_SO]    Script Date: 15.04.2024 14:03:44 ******/
+ALTER TABLE [dbo].[_deleted_objects] DROP CONSTRAINT [DF__deleted_objects__date_delete]
+GO
+/****** Object:  Index [IX__values_SO]    Script Date: 29.04.2024 13:21:00 ******/
 DROP INDEX [IX__values_SO] ON [dbo].[_values]
 GO
-/****** Object:  Index [IX__values__structures]    Script Date: 15.04.2024 14:03:44 ******/
+/****** Object:  Index [IX__values__structures]    Script Date: 29.04.2024 13:21:00 ******/
 DROP INDEX [IX__values__structures] ON [dbo].[_values]
 GO
-/****** Object:  Index [IX__values__String]    Script Date: 15.04.2024 14:03:44 ******/
+/****** Object:  Index [IX__values__String]    Script Date: 29.04.2024 13:21:00 ******/
 DROP INDEX [IX__values__String] ON [dbo].[_values]
 GO
-/****** Object:  Index [IX__values__objects]    Script Date: 15.04.2024 14:03:44 ******/
+/****** Object:  Index [IX__values__objects]    Script Date: 29.04.2024 13:21:00 ******/
 DROP INDEX [IX__values__objects] ON [dbo].[_values]
 GO
-/****** Object:  Index [IX__values__Long]    Script Date: 15.04.2024 14:03:44 ******/
+/****** Object:  Index [IX__values__Long]    Script Date: 29.04.2024 13:21:00 ******/
 DROP INDEX [IX__values__Long] ON [dbo].[_values]
 GO
-/****** Object:  Index [IX__values__Guid]    Script Date: 15.04.2024 14:03:44 ******/
+/****** Object:  Index [IX__values__Guid]    Script Date: 29.04.2024 13:21:00 ******/
 DROP INDEX [IX__values__Guid] ON [dbo].[_values]
 GO
-/****** Object:  Index [IX__values__Double]    Script Date: 15.04.2024 14:03:44 ******/
+/****** Object:  Index [IX__values__Double]    Script Date: 29.04.2024 13:21:00 ******/
 DROP INDEX [IX__values__Double] ON [dbo].[_values]
 GO
-/****** Object:  Index [IX__values__DateTime]    Script Date: 15.04.2024 14:03:44 ******/
+/****** Object:  Index [IX__values__DateTime]    Script Date: 29.04.2024 13:21:00 ******/
 DROP INDEX [IX__values__DateTime] ON [dbo].[_values]
 GO
-/****** Object:  Index [IX__values__Boolean]    Script Date: 15.04.2024 14:03:44 ******/
+/****** Object:  Index [IX__values__Boolean]    Script Date: 29.04.2024 13:21:00 ******/
 DROP INDEX [IX__values__Boolean] ON [dbo].[_values]
 GO
-/****** Object:  Index [PK__values]    Script Date: 15.04.2024 14:03:44 ******/
+/****** Object:  Index [PK__values]    Script Date: 29.04.2024 13:21:00 ******/
 ALTER TABLE [dbo].[_values] DROP CONSTRAINT [PK__values]
 GO
-/****** Object:  Index [IX__users_roles__users]    Script Date: 15.04.2024 14:03:44 ******/
+/****** Object:  Index [IX__users_roles__users]    Script Date: 29.04.2024 13:21:00 ******/
 DROP INDEX [IX__users_roles__users] ON [dbo].[_users_roles]
 GO
-/****** Object:  Index [IX__users_roles__roles]    Script Date: 15.04.2024 14:03:44 ******/
+/****** Object:  Index [IX__users_roles__roles]    Script Date: 29.04.2024 13:21:00 ******/
 DROP INDEX [IX__users_roles__roles] ON [dbo].[_users_roles]
 GO
-/****** Object:  Index [IX__users_roles]    Script Date: 15.04.2024 14:03:44 ******/
+/****** Object:  Index [IX__users_roles]    Script Date: 29.04.2024 13:21:00 ******/
 DROP INDEX [IX__users_roles] ON [dbo].[_users_roles]
 GO
-/****** Object:  Index [IX__users]    Script Date: 15.04.2024 14:03:44 ******/
+/****** Object:  Index [PK__users_roles]    Script Date: 29.04.2024 13:21:00 ******/
+ALTER TABLE [dbo].[_users_roles] DROP CONSTRAINT [PK__users_roles]
+GO
+/****** Object:  Index [IX__users]    Script Date: 29.04.2024 13:21:00 ******/
 DROP INDEX [IX__users] ON [dbo].[_users]
 GO
-/****** Object:  Index [IX__types]    Script Date: 15.04.2024 14:03:44 ******/
+/****** Object:  Index [PK__users]    Script Date: 29.04.2024 13:21:00 ******/
+ALTER TABLE [dbo].[_users] DROP CONSTRAINT [PK__users]
+GO
+/****** Object:  Index [IX__types]    Script Date: 29.04.2024 13:21:00 ******/
 DROP INDEX [IX__types] ON [dbo].[_types]
 GO
-/****** Object:  Index [IX__structures__types]    Script Date: 15.04.2024 14:03:44 ******/
+/****** Object:  Index [PK__types]    Script Date: 29.04.2024 13:21:00 ******/
+ALTER TABLE [dbo].[_types] DROP CONSTRAINT [PK__types]
+GO
+/****** Object:  Index [IX__structures__types]    Script Date: 29.04.2024 13:21:00 ******/
 DROP INDEX [IX__structures__types] ON [dbo].[_structures]
 GO
-/****** Object:  Index [IX__structures__structures]    Script Date: 15.04.2024 14:03:44 ******/
+/****** Object:  Index [IX__structures__structures]    Script Date: 29.04.2024 13:21:00 ******/
 DROP INDEX [IX__structures__structures] ON [dbo].[_structures]
 GO
-/****** Object:  Index [IX__structures__schemes]    Script Date: 15.04.2024 14:03:44 ******/
+/****** Object:  Index [IX__structures__schemes]    Script Date: 29.04.2024 13:21:00 ******/
 DROP INDEX [IX__structures__schemes] ON [dbo].[_structures]
 GO
-/****** Object:  Index [IX__structures__lists]    Script Date: 15.04.2024 14:03:44 ******/
+/****** Object:  Index [IX__structures__lists]    Script Date: 29.04.2024 13:21:00 ******/
 DROP INDEX [IX__structures__lists] ON [dbo].[_structures]
 GO
-/****** Object:  Index [IX__structures]    Script Date: 15.04.2024 14:03:44 ******/
+/****** Object:  Index [IX__structures]    Script Date: 29.04.2024 13:21:00 ******/
 DROP INDEX [IX__structures] ON [dbo].[_structures]
 GO
-/****** Object:  Index [PK__structure]    Script Date: 15.04.2024 14:03:44 ******/
+/****** Object:  Index [PK__structure]    Script Date: 29.04.2024 13:21:00 ******/
 ALTER TABLE [dbo].[_structures] DROP CONSTRAINT [PK__structure]
 GO
-/****** Object:  Index [IX__schemes__schemes]    Script Date: 15.04.2024 14:03:44 ******/
+/****** Object:  Index [IX__schemes__schemes]    Script Date: 29.04.2024 13:21:00 ******/
 DROP INDEX [IX__schemes__schemes] ON [dbo].[_schemes]
 GO
-/****** Object:  Index [IX__schemes]    Script Date: 15.04.2024 14:03:44 ******/
+/****** Object:  Index [IX__schemes]    Script Date: 29.04.2024 13:21:00 ******/
 DROP INDEX [IX__schemes] ON [dbo].[_schemes]
 GO
-/****** Object:  Index [IX__roles]    Script Date: 15.04.2024 14:03:44 ******/
+/****** Object:  Index [PK__schemes]    Script Date: 29.04.2024 13:21:00 ******/
+ALTER TABLE [dbo].[_schemes] DROP CONSTRAINT [PK__schemes]
+GO
+/****** Object:  Index [IX__roles]    Script Date: 29.04.2024 13:21:00 ******/
 DROP INDEX [IX__roles] ON [dbo].[_roles]
 GO
-/****** Object:  Index [PK__roles]    Script Date: 15.04.2024 14:03:44 ******/
+/****** Object:  Index [PK__roles]    Script Date: 29.04.2024 13:21:00 ******/
 ALTER TABLE [dbo].[_roles] DROP CONSTRAINT [PK__roles]
 GO
-/****** Object:  Index [IX__permissions__users]    Script Date: 15.04.2024 14:03:44 ******/
+/****** Object:  Index [IX__permissions__users]    Script Date: 29.04.2024 13:21:00 ******/
 DROP INDEX [IX__permissions__users] ON [dbo].[_permissions]
 GO
-/****** Object:  Index [IX__permissions__roles]    Script Date: 15.04.2024 14:03:44 ******/
+/****** Object:  Index [IX__permissions__roles]    Script Date: 29.04.2024 13:21:00 ******/
 DROP INDEX [IX__permissions__roles] ON [dbo].[_permissions]
 GO
-/****** Object:  Index [IX__permissions]    Script Date: 15.04.2024 14:03:44 ******/
+/****** Object:  Index [IX__permissions]    Script Date: 29.04.2024 13:21:00 ******/
 DROP INDEX [IX__permissions] ON [dbo].[_permissions]
 GO
-/****** Object:  Index [IX__objects__users2]    Script Date: 15.04.2024 14:03:44 ******/
+/****** Object:  Index [PK__object_permissions]    Script Date: 29.04.2024 13:21:00 ******/
+ALTER TABLE [dbo].[_permissions] DROP CONSTRAINT [PK__object_permissions]
+GO
+/****** Object:  Index [IX__objects__users2]    Script Date: 29.04.2024 13:21:00 ******/
 DROP INDEX [IX__objects__users2] ON [dbo].[_objects]
 GO
-/****** Object:  Index [IX__objects__users1]    Script Date: 15.04.2024 14:03:44 ******/
+/****** Object:  Index [IX__objects__users1]    Script Date: 29.04.2024 13:21:00 ******/
 DROP INDEX [IX__objects__users1] ON [dbo].[_objects]
 GO
-/****** Object:  Index [IX__objects__schemes]    Script Date: 15.04.2024 14:03:44 ******/
+/****** Object:  Index [IX__objects__schemes]    Script Date: 29.04.2024 13:21:00 ******/
 DROP INDEX [IX__objects__schemes] ON [dbo].[_objects]
 GO
-/****** Object:  Index [IX__objects__objects]    Script Date: 15.04.2024 14:03:44 ******/
+/****** Object:  Index [IX__objects__objects]    Script Date: 29.04.2024 13:21:00 ******/
 DROP INDEX [IX__objects__objects] ON [dbo].[_objects]
 GO
-/****** Object:  Index [IX__objects__name]    Script Date: 15.04.2024 14:03:44 ******/
+/****** Object:  Index [IX__objects__name]    Script Date: 29.04.2024 13:21:00 ******/
 DROP INDEX [IX__objects__name] ON [dbo].[_objects]
 GO
-/****** Object:  Index [IX__objects__hash]    Script Date: 15.04.2024 14:03:44 ******/
+/****** Object:  Index [IX__objects__hash]    Script Date: 29.04.2024 13:21:00 ******/
 DROP INDEX [IX__objects__hash] ON [dbo].[_objects]
 GO
-/****** Object:  Index [IX__objects__date_modify]    Script Date: 15.04.2024 14:03:44 ******/
+/****** Object:  Index [IX__objects__date_modify]    Script Date: 29.04.2024 13:21:00 ******/
 DROP INDEX [IX__objects__date_modify] ON [dbo].[_objects]
 GO
-/****** Object:  Index [IX__objects__date_create]    Script Date: 15.04.2024 14:03:44 ******/
+/****** Object:  Index [IX__objects__date_create]    Script Date: 29.04.2024 13:21:00 ******/
 DROP INDEX [IX__objects__date_create] ON [dbo].[_objects]
 GO
-/****** Object:  Index [IX__objects__code_string]    Script Date: 15.04.2024 14:03:44 ******/
+/****** Object:  Index [IX__objects__code_string]    Script Date: 29.04.2024 13:21:00 ******/
 DROP INDEX [IX__objects__code_string] ON [dbo].[_objects]
 GO
-/****** Object:  Index [IX__objects__code_int]    Script Date: 15.04.2024 14:03:44 ******/
+/****** Object:  Index [IX__objects__code_int]    Script Date: 29.04.2024 13:21:00 ******/
 DROP INDEX [IX__objects__code_int] ON [dbo].[_objects]
 GO
-/****** Object:  Index [IX__objects__code_guid]    Script Date: 15.04.2024 14:03:44 ******/
+/****** Object:  Index [IX__objects__code_guid]    Script Date: 29.04.2024 13:21:00 ******/
 DROP INDEX [IX__objects__code_guid] ON [dbo].[_objects]
 GO
-/****** Object:  Index [PK__objects]    Script Date: 15.04.2024 14:03:44 ******/
+/****** Object:  Index [PK__objects]    Script Date: 29.04.2024 13:21:00 ******/
 ALTER TABLE [dbo].[_objects] DROP CONSTRAINT [PK__objects]
 GO
-/****** Object:  Index [PK__lists]    Script Date: 15.04.2024 14:03:44 ******/
+/****** Object:  Index [PK__lists]    Script Date: 29.04.2024 13:21:00 ******/
 ALTER TABLE [dbo].[_lists] DROP CONSTRAINT [PK__lists]
 GO
-/****** Object:  Index [IX__list_items__objects]    Script Date: 15.04.2024 14:03:44 ******/
+/****** Object:  Index [IX__list_items__objects]    Script Date: 29.04.2024 13:21:00 ******/
 DROP INDEX [IX__list_items__objects] ON [dbo].[_list_items]
 GO
-/****** Object:  Index [IX__list_items__id_list]    Script Date: 15.04.2024 14:03:44 ******/
+/****** Object:  Index [IX__list_items__id_list]    Script Date: 29.04.2024 13:21:00 ******/
 DROP INDEX [IX__list_items__id_list] ON [dbo].[_list_items]
 GO
-/****** Object:  Index [PK__list_items]    Script Date: 15.04.2024 14:03:44 ******/
+/****** Object:  Index [PK__list_items]    Script Date: 29.04.2024 13:21:00 ******/
 ALTER TABLE [dbo].[_list_items] DROP CONSTRAINT [PK__list_items]
 GO
-/****** Object:  Index [IX__links]    Script Date: 15.04.2024 14:03:44 ******/
+/****** Object:  Index [IX__links]    Script Date: 29.04.2024 13:21:00 ******/
 DROP INDEX [IX__links] ON [dbo].[_links]
 GO
-/****** Object:  Index [IX__functions__schemes]    Script Date: 15.04.2024 14:03:44 ******/
+/****** Object:  Index [PK__links]    Script Date: 29.04.2024 13:21:00 ******/
+ALTER TABLE [dbo].[_links] DROP CONSTRAINT [PK__links]
+GO
+/****** Object:  Index [IX__functions__schemes]    Script Date: 29.04.2024 13:21:00 ******/
 DROP INDEX [IX__functions__schemes] ON [dbo].[_functions]
 GO
-/****** Object:  Index [IX__functions_scheme_name]    Script Date: 15.04.2024 14:03:44 ******/
+/****** Object:  Index [IX__functions_scheme_name]    Script Date: 29.04.2024 13:21:00 ******/
 ALTER TABLE [dbo].[_functions] DROP CONSTRAINT [IX__functions_scheme_name]
 GO
-/****** Object:  Index [PK__functions]    Script Date: 15.04.2024 14:03:44 ******/
+/****** Object:  Index [PK__functions]    Script Date: 29.04.2024 13:21:00 ******/
 ALTER TABLE [dbo].[_functions] DROP CONSTRAINT [PK__functions]
 GO
-/****** Object:  Index [IX__dependencies__schemes_2]    Script Date: 15.04.2024 14:03:44 ******/
+/****** Object:  Index [IX__dependencies__schemes_2]    Script Date: 29.04.2024 13:21:00 ******/
 DROP INDEX [IX__dependencies__schemes_2] ON [dbo].[_dependencies]
 GO
-/****** Object:  Index [IX__dependencies__schemes_1]    Script Date: 15.04.2024 14:03:44 ******/
+/****** Object:  Index [IX__dependencies__schemes_1]    Script Date: 29.04.2024 13:21:00 ******/
 DROP INDEX [IX__dependencies__schemes_1] ON [dbo].[_dependencies]
 GO
-/****** Object:  Index [IX__dependencies]    Script Date: 15.04.2024 14:03:44 ******/
+/****** Object:  Index [IX__dependencies]    Script Date: 29.04.2024 13:21:00 ******/
 ALTER TABLE [dbo].[_dependencies] DROP CONSTRAINT [IX__dependencies]
 GO
-/****** Object:  Table [dbo].[_values]    Script Date: 15.04.2024 14:03:44 ******/
+/****** Object:  Index [PK__dependencies]    Script Date: 29.04.2024 13:21:00 ******/
+ALTER TABLE [dbo].[_dependencies] DROP CONSTRAINT [PK__dependencies]
+GO
+/****** Object:  Index [PK___deleted__DED88B1C45174CE0]    Script Date: 29.04.2024 13:21:00 ******/
+ALTER TABLE [dbo].[_deleted_objects] DROP CONSTRAINT [PK___deleted__DED88B1C45174CE0]
+GO
+/****** Object:  Table [dbo].[_values]    Script Date: 29.04.2024 13:21:00 ******/
 IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[_values]') AND type in (N'U'))
 DROP TABLE [dbo].[_values]
 GO
-/****** Object:  Table [dbo].[_users_roles]    Script Date: 15.04.2024 14:03:44 ******/
+/****** Object:  Table [dbo].[_users_roles]    Script Date: 29.04.2024 13:21:00 ******/
 IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[_users_roles]') AND type in (N'U'))
 DROP TABLE [dbo].[_users_roles]
 GO
-/****** Object:  Table [dbo].[_users]    Script Date: 15.04.2024 14:03:44 ******/
+/****** Object:  Table [dbo].[_users]    Script Date: 29.04.2024 13:21:00 ******/
 IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[_users]') AND type in (N'U'))
 DROP TABLE [dbo].[_users]
 GO
-/****** Object:  Table [dbo].[_types]    Script Date: 15.04.2024 14:03:44 ******/
+/****** Object:  Table [dbo].[_types]    Script Date: 29.04.2024 13:21:00 ******/
 IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[_types]') AND type in (N'U'))
 DROP TABLE [dbo].[_types]
 GO
-/****** Object:  Table [dbo].[_structures]    Script Date: 15.04.2024 14:03:44 ******/
+/****** Object:  Table [dbo].[_structures]    Script Date: 29.04.2024 13:21:00 ******/
 IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[_structures]') AND type in (N'U'))
 DROP TABLE [dbo].[_structures]
 GO
-/****** Object:  Table [dbo].[_schemes]    Script Date: 15.04.2024 14:03:44 ******/
+/****** Object:  Table [dbo].[_schemes]    Script Date: 29.04.2024 13:21:00 ******/
 IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[_schemes]') AND type in (N'U'))
 DROP TABLE [dbo].[_schemes]
 GO
-/****** Object:  Table [dbo].[_roles]    Script Date: 15.04.2024 14:03:44 ******/
+/****** Object:  Table [dbo].[_roles]    Script Date: 29.04.2024 13:21:00 ******/
 IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[_roles]') AND type in (N'U'))
 DROP TABLE [dbo].[_roles]
 GO
-/****** Object:  Table [dbo].[_permissions]    Script Date: 15.04.2024 14:03:44 ******/
+/****** Object:  Table [dbo].[_permissions]    Script Date: 29.04.2024 13:21:00 ******/
 IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[_permissions]') AND type in (N'U'))
 DROP TABLE [dbo].[_permissions]
 GO
-/****** Object:  Table [dbo].[_objects]    Script Date: 15.04.2024 14:03:44 ******/
+/****** Object:  Table [dbo].[_objects]    Script Date: 29.04.2024 13:21:00 ******/
 IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[_objects]') AND type in (N'U'))
 DROP TABLE [dbo].[_objects]
 GO
-/****** Object:  Table [dbo].[_lists]    Script Date: 15.04.2024 14:03:44 ******/
+/****** Object:  Table [dbo].[_lists]    Script Date: 29.04.2024 13:21:00 ******/
 IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[_lists]') AND type in (N'U'))
 DROP TABLE [dbo].[_lists]
 GO
-/****** Object:  Table [dbo].[_list_items]    Script Date: 15.04.2024 14:03:44 ******/
+/****** Object:  Table [dbo].[_list_items]    Script Date: 29.04.2024 13:21:00 ******/
 IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[_list_items]') AND type in (N'U'))
 DROP TABLE [dbo].[_list_items]
 GO
-/****** Object:  Table [dbo].[_links]    Script Date: 15.04.2024 14:03:44 ******/
+/****** Object:  Table [dbo].[_links]    Script Date: 29.04.2024 13:21:00 ******/
 IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[_links]') AND type in (N'U'))
 DROP TABLE [dbo].[_links]
 GO
-/****** Object:  Table [dbo].[_functions]    Script Date: 15.04.2024 14:03:44 ******/
+/****** Object:  Table [dbo].[_functions]    Script Date: 29.04.2024 13:21:00 ******/
 IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[_functions]') AND type in (N'U'))
 DROP TABLE [dbo].[_functions]
 GO
-/****** Object:  Table [dbo].[_dependencies]    Script Date: 15.04.2024 14:03:44 ******/
+/****** Object:  Table [dbo].[_dependencies]    Script Date: 29.04.2024 13:21:00 ******/
 IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[_dependencies]') AND type in (N'U'))
 DROP TABLE [dbo].[_dependencies]
 GO
-/****** Object:  Table [dbo].[_deleted_objects]    Script Date: 15.04.2024 14:03:44 ******/
+/****** Object:  Table [dbo].[_deleted_objects]    Script Date: 29.04.2024 13:21:00 ******/
 IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[_deleted_objects]') AND type in (N'U'))
 DROP TABLE [dbo].[_deleted_objects]
 GO
-/****** Object:  Table [dbo].[__EFMigrationsHistory]    Script Date: 15.04.2024 14:03:44 ******/
+/****** Object:  Table [dbo].[__EFMigrationsHistory]    Script Date: 29.04.2024 13:21:00 ******/
 IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[__EFMigrationsHistory]') AND type in (N'U'))
 DROP TABLE [dbo].[__EFMigrationsHistory]
 GO
-/****** Object:  Table [dbo].[__EFMigrationsHistory]    Script Date: 15.04.2024 14:03:44 ******/
+/****** Object:  UserDefinedFunction [dbo].[ToUTF8]    Script Date: 29.04.2024 13:21:00 ******/
+DROP FUNCTION [dbo].[ToUTF8]
+GO
+/****** Object:  UserDefinedFunction [dbo].[ToUTF8]    Script Date: 29.04.2024 13:21:00 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+create   function [dbo].[ToUTF8](@s nvarchar(max))
+returns varbinary(max)
+as
+begin
+    declare @i int = 1, @n int = datalength(@s)/2, @r varbinary(max) = 0x, @c int, @c2 int, @d varbinary(4)
+    while @i <= @n
+    begin
+        set @c = unicode(substring(@s, @i, 1))
+        if (@c & 0xFC00) = 0xD800
+        begin
+            set @i += 1
+            if @i > @n
+                return cast(cast('Malformed UTF-16 - two nchar sequence cut short' as int) as varbinary)
+            set @c2 = unicode(substring(@s, @i, 1))
+            if (@c2 & 0xFC00) <> 0xDC00
+                return cast(cast('Malformed UTF-16 - continuation missing in a two nchar sequence' as int) as varbinary)
+            set @c = (((@c & 0x3FF) * 0x400) | (@c2 & 0x3FF)) + 0x10000
+        end
+
+        if @c < 0x80
+            set @d = cast(@c as binary(1))
+        if @c >= 0x80 and @c < 0x800 
+            set @d = cast(((@c * 4) & 0xFF00) | (@c & 0x3F) | 0xC080 as binary(2))
+        if @c >= 0x800 and @c < 0x10000
+            set @d = cast(((@c * 0x10) & 0xFF0000) | ((@c * 4) & 0x3F00) | (@c & 0x3F) | 0xe08080 as binary(3))
+        if @c >= 0x10000
+            set @d = cast(((@c * 0x40) & 0xFF000000) | ((@c * 0x10) & 0x3F0000) | ((@c * 4) & 0x3F00) | (@c & 0x3F) | 0xf0808080 as binary(4))
+            
+        set @r += @d
+        set @i += 1
+    end
+    return @r
+end
+GO
+/****** Object:  Table [dbo].[__EFMigrationsHistory]    Script Date: 29.04.2024 13:21:00 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -286,7 +357,7 @@ CREATE TABLE [dbo].[__EFMigrationsHistory](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[_deleted_objects]    Script Date: 15.04.2024 14:03:44 ******/
+/****** Object:  Table [dbo].[_deleted_objects]    Script Date: 29.04.2024 13:21:00 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -302,20 +373,17 @@ CREATE TABLE [dbo].[_deleted_objects](
 	[_date_begin] [datetime] NULL,
 	[_date_complete] [datetime] NULL,
 	[_key] [bigint] NULL,
-	[_code_int] [int] NULL,
+	[_code_int] [bigint] NULL,
 	[_code_string] [nvarchar](250) NULL,
 	[_code_guid] [uniqueidentifier] NULL,
 	[_name] [nvarchar](250) NULL,
 	[_note] [nvarchar](1000) NULL,
 	[_hash] [varbinary](32) NULL,
-	[_values] [varbinary](1) NULL,
-PRIMARY KEY CLUSTERED 
-(
-	[_id] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
-) ON [PRIMARY]
+	[_date_delete] [datetime] NOT NULL,
+	[_values] [varbinary](max) NULL
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[_dependencies]    Script Date: 15.04.2024 14:03:44 ******/
+/****** Object:  Table [dbo].[_dependencies]    Script Date: 29.04.2024 13:21:00 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -323,14 +391,10 @@ GO
 CREATE TABLE [dbo].[_dependencies](
 	[_id] [bigint] NOT NULL,
 	[_id_scheme_1] [bigint] NULL,
-	[_id_scheme_2] [bigint] NOT NULL,
- CONSTRAINT [PK__dependencies] PRIMARY KEY CLUSTERED 
-(
-	[_id] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+	[_id_scheme_2] [bigint] NOT NULL
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[_functions]    Script Date: 15.04.2024 14:03:44 ******/
+/****** Object:  Table [dbo].[_functions]    Script Date: 29.04.2024 13:21:00 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -343,7 +407,7 @@ CREATE TABLE [dbo].[_functions](
 	[_body] [nvarchar](max) NOT NULL
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[_links]    Script Date: 15.04.2024 14:03:44 ******/
+/****** Object:  Table [dbo].[_links]    Script Date: 29.04.2024 13:21:00 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -351,14 +415,10 @@ GO
 CREATE TABLE [dbo].[_links](
 	[_id] [bigint] NOT NULL,
 	[_id_1] [bigint] NOT NULL,
-	[_id_2] [bigint] NOT NULL,
- CONSTRAINT [PK__links] PRIMARY KEY CLUSTERED 
-(
-	[_id] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+	[_id_2] [bigint] NOT NULL
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[_list_items]    Script Date: 15.04.2024 14:03:44 ******/
+/****** Object:  Table [dbo].[_list_items]    Script Date: 29.04.2024 13:21:00 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -370,7 +430,7 @@ CREATE TABLE [dbo].[_list_items](
 	[_id_object] [bigint] NULL
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[_lists]    Script Date: 15.04.2024 14:03:44 ******/
+/****** Object:  Table [dbo].[_lists]    Script Date: 29.04.2024 13:21:00 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -381,7 +441,7 @@ CREATE TABLE [dbo].[_lists](
 	[_alias] [nvarchar](250) NULL
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[_objects]    Script Date: 15.04.2024 14:03:44 ******/
+/****** Object:  Table [dbo].[_objects]    Script Date: 29.04.2024 13:21:00 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -397,7 +457,7 @@ CREATE TABLE [dbo].[_objects](
 	[_date_begin] [datetime] NULL,
 	[_date_complete] [datetime] NULL,
 	[_key] [bigint] NULL,
-	[_code_int] [int] NULL,
+	[_code_int] [bigint] NULL,
 	[_code_string] [nvarchar](250) NULL,
 	[_code_guid] [uniqueidentifier] NULL,
 	[_name] [nvarchar](250) NULL,
@@ -405,7 +465,7 @@ CREATE TABLE [dbo].[_objects](
 	[_hash] [varbinary](32) NULL
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[_permissions]    Script Date: 15.04.2024 14:03:44 ******/
+/****** Object:  Table [dbo].[_permissions]    Script Date: 29.04.2024 13:21:00 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -418,14 +478,10 @@ CREATE TABLE [dbo].[_permissions](
 	[_select] [bit] NULL,
 	[_insert] [bit] NULL,
 	[_update] [bit] NULL,
-	[_delete] [bit] NULL,
- CONSTRAINT [PK__object_permissions] PRIMARY KEY CLUSTERED 
-(
-	[_id] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+	[_delete] [bit] NULL
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[_roles]    Script Date: 15.04.2024 14:03:44 ******/
+/****** Object:  Table [dbo].[_roles]    Script Date: 29.04.2024 13:21:00 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -435,7 +491,7 @@ CREATE TABLE [dbo].[_roles](
 	[_name] [nvarchar](250) NOT NULL
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[_schemes]    Script Date: 15.04.2024 14:03:44 ******/
+/****** Object:  Table [dbo].[_schemes]    Script Date: 29.04.2024 13:21:00 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -445,14 +501,10 @@ CREATE TABLE [dbo].[_schemes](
 	[_id_parent] [bigint] NULL,
 	[_name] [nvarchar](250) NOT NULL,
 	[_alias] [nvarchar](250) NULL,
-	[_name_space] [nvarchar](1000) NULL,
- CONSTRAINT [PK__schemes] PRIMARY KEY CLUSTERED 
-(
-	[_id] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+	[_name_space] [nvarchar](1000) NULL
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[_structures]    Script Date: 15.04.2024 14:03:44 ******/
+/****** Object:  Table [dbo].[_structures]    Script Date: 29.04.2024 13:21:00 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -466,7 +518,7 @@ CREATE TABLE [dbo].[_structures](
 	[_id_list] [bigint] NULL,
 	[_name] [nvarchar](250) NOT NULL,
 	[_alias] [nvarchar](250) NULL,
-	[_order] [int] NULL,
+	[_order] [bigint] NULL,
 	[_readonly] [bit] NULL,
 	[_allow_not_null] [bit] NULL,
 	[_is_array] [bit] NULL,
@@ -476,7 +528,7 @@ CREATE TABLE [dbo].[_structures](
 	[_default_editor] [nvarchar](max) NULL
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[_types]    Script Date: 15.04.2024 14:03:44 ******/
+/****** Object:  Table [dbo].[_types]    Script Date: 29.04.2024 13:21:00 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -485,14 +537,10 @@ CREATE TABLE [dbo].[_types](
 	[_id] [bigint] NOT NULL,
 	[_name] [nvarchar](250) NOT NULL,
 	[_db_type] [nvarchar](250) NULL,
-	[_type] [nvarchar](250) NULL,
- CONSTRAINT [PK__types] PRIMARY KEY CLUSTERED 
-(
-	[_id] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+	[_type] [nvarchar](250) NULL
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[_users]    Script Date: 15.04.2024 14:03:44 ******/
+/****** Object:  Table [dbo].[_users]    Script Date: 29.04.2024 13:21:00 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -506,14 +554,10 @@ CREATE TABLE [dbo].[_users](
 	[_email] [nvarchar](250) NULL,
 	[_date_register] [datetime] NOT NULL,
 	[_date_dismiss] [datetime] NULL,
-	[_enabled] [bit] NOT NULL,
- CONSTRAINT [PK__users] PRIMARY KEY CLUSTERED 
-(
-	[_id] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+	[_enabled] [bit] NOT NULL
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[_users_roles]    Script Date: 15.04.2024 14:03:44 ******/
+/****** Object:  Table [dbo].[_users_roles]    Script Date: 29.04.2024 13:21:00 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -521,14 +565,10 @@ GO
 CREATE TABLE [dbo].[_users_roles](
 	[_id] [bigint] NOT NULL,
 	[_id_role] [bigint] NOT NULL,
-	[_id_user] [bigint] NOT NULL,
- CONSTRAINT [PK__users_roles] PRIMARY KEY CLUSTERED 
-(
-	[_id] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+	[_id_user] [bigint] NOT NULL
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[_values]    Script Date: 15.04.2024 14:03:44 ******/
+/****** Object:  Table [dbo].[_values]    Script Date: 29.04.2024 13:21:00 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -547,7 +587,9 @@ CREATE TABLE [dbo].[_values](
 	[_Text] [nvarchar](max) NULL
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
-INSERT [dbo].[__EFMigrationsHistory] ([MigrationId], [ProductVersion]) VALUES (N'00000000000000_CreateIdentitySchema', N'8.0.1')
+INSERT [dbo].[__EFMigrationsHistory] ([MigrationId], [ProductVersion]) VALUES (N'00000000000000_CreateRedbSchema', N'8.0.1')
+GO
+INSERT [dbo].[_deleted_objects] ([_id], [_id_parent], [_id_scheme], [_id_owner], [_id_who_change], [_date_create], [_date_modify], [_date_begin], [_date_complete], [_key], [_code_int], [_code_string], [_code_guid], [_name], [_note], [_hash], [_date_delete], [_values]) VALUES (-9223372036854769942, NULL, -9223372036854769999, -9223372036854775800, -9223372036854775800, CAST(N'8636-03-15T02:48:18.847' AS DateTime), CAST(N'8636-03-15T02:48:18.847' AS DateTime), NULL, NULL, NULL, NULL, NULL, NULL, N'temp', NULL, NULL, CAST(N'2024-04-25T19:30:16.927' AS DateTime), 0x5B7B225F6964223A2D393232333337323033363835343736393934312C225F69645F737472756374757265223A2D393232333337323033363835343736393939362C225F69645F6F626A656374223A2D393232333337323033363835343736393934322C225F537472696E67223A22446570656E64656E63696573222C225F6E616D65223A226E616D65222C225F64625F74797065223A22537472696E67227D2C7B225F6964223A2D393232333337323033363835343736393934302C225F69645F737472756374757265223A2D393232333337323033363835343736393939352C225F69645F6F626A656374223A2D393232333337323033363835343736393934322C225F54657874223A224D2034203139206820362076202D322048203420762032205A204D20323020352048203420762032206820313620562035205A206D202D332036204820342076203220682031332E3235206320312E312030203220302E39203220322073202D302E392032202D32203220482031352076202D32206C202D332033206C203320332076202D3220682032206320322E323120302034202D312E37392034202D342073202D312E3739202D34202D34202D34205A222C225F6E616D65223A2270617468222C225F64625F74797065223A2254657874227D5D)
 GO
 INSERT [dbo].[_dependencies] ([_id], [_id_scheme_1], [_id_scheme_2]) VALUES (-9223372036854769947, -9223372036854769999, -9223372036854769998)
 GO
@@ -587,7 +629,7 @@ $(() => {
             caption: "id",
             fixed: true,
             cellTemplate: function (container, options) {
-                let refProperties = $("<a>", { class: "propertiesToggle", text: options.data.id, id: options.data.id, type: "RObjects" });
+                let refProperties = $("<a>", { class: "propertiesToggle", text: options.data.id, id: options.data.id, type: "CRObjects" });
                 refProperties.one("click", handler1);
                 container.append(refProperties);
             }
@@ -603,6 +645,56 @@ $(() => {
     });
 });
 ')
+GO
+INSERT [dbo].[_functions] ([_id], [_id_scheme], [_language], [_name], [_body]) VALUES (-9223372036854769939, -9223372036854769997, N'js', N'Deleted_objects', N'
+$(() => {
+
+    $("#DeletedObjectsList").dxTreeList({
+        scrolling: {
+            useNative: true,
+            scrollByContent: true,
+            scrollByThumb: true,
+            showScrollbar: "onHover", // or "onScroll" | "always" | "never"
+            mode: "standard" // or "virtual"
+        },
+        dataSource: new DevExpress.data.CustomStore({
+            load: function () {
+                var d = $.Deferred();
+                return $.getJSON("/Cnt/CRDeletedObjects/GetAllObjects")
+                    .done(function (result) {
+                        d.resolve(result);
+                    })
+                    .fail(function () {
+                        throw "Data loading error";
+                    });
+            }
+        }),
+        sorting: {
+            mode: "multiple",
+        },
+        selection: {
+            mode: "single",
+        },
+        columns: [{
+            dataField: "id",
+            caption: "id",
+            fixed: true,
+            cellTemplate: function (container, options) {
+                let refProperties = $("<a>", { class: "propertiesToggle", text: options.data.id, id: options.data.id, type: "CRDeletedObjects" });
+                refProperties.one("click", handler1);
+                container.append(refProperties);
+            }
+        },
+        {
+            dataField: "name",
+            caption: "Name"
+        },
+        {
+            dataField: "parentId",
+            caption: "Parent"
+        }]
+    });
+});')
 GO
 INSERT [dbo].[_objects] ([_id], [_id_parent], [_id_scheme], [_id_owner], [_id_who_change], [_date_create], [_date_modify], [_date_begin], [_date_complete], [_key], [_code_int], [_code_string], [_code_guid], [_name], [_note], [_hash]) VALUES (-9223372036854769994, NULL, -9223372036854769999, -9223372036854775800, -9223372036854775800, CAST(N'2024-02-06T14:48:18.847' AS DateTime), CAST(N'2024-02-06T14:48:18.847' AS DateTime), NULL, NULL, NULL, NULL, NULL, NULL, N'WebApp', NULL, NULL)
 GO
@@ -740,26 +832,38 @@ INSERT [dbo].[_values] ([_id], [_id_structure], [_id_object], [_String], [_Long]
 GO
 INSERT [dbo].[_values] ([_id], [_id_structure], [_id_object], [_String], [_Long], [_Guid], [_Double], [_DateTime], [_Boolean], [_ByteArray], [_Text]) VALUES (-9223372036854769948, -9223372036854769995, -9223372036854769982, NULL, NULL, NULL, NULL, NULL, NULL, NULL, N'm 15.396 2.292 h -10.792 c -0.212 0 -0.385 0.174 -0.385 0.386 v 14.646 c 0 0.212 0.173 0.385 0.385 0.385 h 10.792 c 0.211 0 0.385 -0.173 0.385 -0.385 v -14.647 c 0 -0.212 -0.174 -0.385 -0.385 -0.385 m -0.386 14.646 h -10.02 v -2.698 h 1.609 c 0.156 0.449 0.586 0.771 1.089 0.771 c 0.638 0 1.156 -0.519 1.156 -1.156 s -0.519 -1.156 -1.156 -1.156 c -0.503 0 -0.933 0.321 -1.089 0.771 h -1.609 v -3.083 h 1.609 c 0.156 0.449 0.586 0.771 1.089 0.771 c 0.638 0 1.156 -0.518 1.156 -1.156 c 0 -0.638 -0.519 -1.156 -1.156 -1.156 c -0.503 0 -0.933 0.322 -1.089 0.771 h -1.609 v -3.086 h 1.609 c 0.156 0.449 0.586 0.771 1.089 0.771 c 0.638 0 1.156 -0.519 1.156 -1.156 c 0 -0.638 -0.519 -1.156 -1.156 -1.156 c -0.503 0 -0.933 0.322 -1.089 0.771 h -1.609 v -2.699 h 10.02 v 13.876 z m -7.708 -3.084 c 0 -0.212 0.173 -0.386 0.385 -0.386 s 0.385 0.174 0.385 0.386 s -0.173 0.385 -0.385 0.385 s -0.385 -0.173 -0.385 -0.385 m 0 -3.854 c 0 -0.212 0.173 -0.385 0.385 -0.385 s 0.386 0.173 0.386 0.385 s -0.173 0.385 -0.385 0.385 s -0.386 -0.173 -0.386 -0.385 m 0 -3.854 c 0 -0.212 0.173 -0.386 0.385 -0.386 s 0.385 0.174 0.385 0.386 s -0.173 0.385 -0.384 0.385 s -0.386 -0.173 -0.386 -0.385')
 GO
-/****** Object:  Index [IX__dependencies]    Script Date: 15.04.2024 14:03:45 ******/
+/****** Object:  Index [PK___deleted__DED88B1C45174CE0]    Script Date: 29.04.2024 13:21:01 ******/
+ALTER TABLE [dbo].[_deleted_objects] ADD  CONSTRAINT [PK___deleted__DED88B1C45174CE0] PRIMARY KEY NONCLUSTERED 
+(
+	[_id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+GO
+/****** Object:  Index [PK__dependencies]    Script Date: 29.04.2024 13:21:01 ******/
+ALTER TABLE [dbo].[_dependencies] ADD  CONSTRAINT [PK__dependencies] PRIMARY KEY NONCLUSTERED 
+(
+	[_id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+GO
+/****** Object:  Index [IX__dependencies]    Script Date: 29.04.2024 13:21:01 ******/
 ALTER TABLE [dbo].[_dependencies] ADD  CONSTRAINT [IX__dependencies] UNIQUE NONCLUSTERED 
 (
 	[_id_scheme_1] ASC,
 	[_id_scheme_2] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 GO
-/****** Object:  Index [IX__dependencies__schemes_1]    Script Date: 15.04.2024 14:03:45 ******/
+/****** Object:  Index [IX__dependencies__schemes_1]    Script Date: 29.04.2024 13:21:01 ******/
 CREATE NONCLUSTERED INDEX [IX__dependencies__schemes_1] ON [dbo].[_dependencies]
 (
 	[_id_scheme_1] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 GO
-/****** Object:  Index [IX__dependencies__schemes_2]    Script Date: 15.04.2024 14:03:45 ******/
+/****** Object:  Index [IX__dependencies__schemes_2]    Script Date: 29.04.2024 13:21:01 ******/
 CREATE NONCLUSTERED INDEX [IX__dependencies__schemes_2] ON [dbo].[_dependencies]
 (
 	[_id_scheme_2] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 GO
-/****** Object:  Index [PK__functions]    Script Date: 15.04.2024 14:03:45 ******/
+/****** Object:  Index [PK__functions]    Script Date: 29.04.2024 13:21:01 ******/
 ALTER TABLE [dbo].[_functions] ADD  CONSTRAINT [PK__functions] PRIMARY KEY NONCLUSTERED 
 (
 	[_id] ASC
@@ -767,63 +871,69 @@ ALTER TABLE [dbo].[_functions] ADD  CONSTRAINT [PK__functions] PRIMARY KEY NONCL
 GO
 SET ANSI_PADDING ON
 GO
-/****** Object:  Index [IX__functions_scheme_name]    Script Date: 15.04.2024 14:03:45 ******/
+/****** Object:  Index [IX__functions_scheme_name]    Script Date: 29.04.2024 13:21:01 ******/
 ALTER TABLE [dbo].[_functions] ADD  CONSTRAINT [IX__functions_scheme_name] UNIQUE NONCLUSTERED 
 (
 	[_id_scheme] ASC,
 	[_name] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 GO
-/****** Object:  Index [IX__functions__schemes]    Script Date: 15.04.2024 14:03:45 ******/
+/****** Object:  Index [IX__functions__schemes]    Script Date: 29.04.2024 13:21:01 ******/
 CREATE NONCLUSTERED INDEX [IX__functions__schemes] ON [dbo].[_functions]
 (
 	[_id_scheme] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 GO
-/****** Object:  Index [IX__links]    Script Date: 15.04.2024 14:03:45 ******/
+/****** Object:  Index [PK__links]    Script Date: 29.04.2024 13:21:01 ******/
+ALTER TABLE [dbo].[_links] ADD  CONSTRAINT [PK__links] PRIMARY KEY NONCLUSTERED 
+(
+	[_id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+GO
+/****** Object:  Index [IX__links]    Script Date: 29.04.2024 13:21:01 ******/
 CREATE UNIQUE NONCLUSTERED INDEX [IX__links] ON [dbo].[_links]
 (
 	[_id_1] ASC,
 	[_id_2] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 GO
-/****** Object:  Index [PK__list_items]    Script Date: 15.04.2024 14:03:45 ******/
+/****** Object:  Index [PK__list_items]    Script Date: 29.04.2024 13:21:01 ******/
 ALTER TABLE [dbo].[_list_items] ADD  CONSTRAINT [PK__list_items] PRIMARY KEY NONCLUSTERED 
 (
 	[_id] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 GO
-/****** Object:  Index [IX__list_items__id_list]    Script Date: 15.04.2024 14:03:45 ******/
+/****** Object:  Index [IX__list_items__id_list]    Script Date: 29.04.2024 13:21:01 ******/
 CREATE NONCLUSTERED INDEX [IX__list_items__id_list] ON [dbo].[_list_items]
 (
 	[_id_list] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 GO
-/****** Object:  Index [IX__list_items__objects]    Script Date: 15.04.2024 14:03:45 ******/
+/****** Object:  Index [IX__list_items__objects]    Script Date: 29.04.2024 13:21:01 ******/
 CREATE NONCLUSTERED INDEX [IX__list_items__objects] ON [dbo].[_list_items]
 (
 	[_id_object] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 GO
-/****** Object:  Index [PK__lists]    Script Date: 15.04.2024 14:03:45 ******/
+/****** Object:  Index [PK__lists]    Script Date: 29.04.2024 13:21:01 ******/
 ALTER TABLE [dbo].[_lists] ADD  CONSTRAINT [PK__lists] PRIMARY KEY NONCLUSTERED 
 (
 	[_id] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 GO
-/****** Object:  Index [PK__objects]    Script Date: 15.04.2024 14:03:45 ******/
+/****** Object:  Index [PK__objects]    Script Date: 29.04.2024 13:21:01 ******/
 ALTER TABLE [dbo].[_objects] ADD  CONSTRAINT [PK__objects] PRIMARY KEY NONCLUSTERED 
 (
 	[_id] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 GO
-/****** Object:  Index [IX__objects__code_guid]    Script Date: 15.04.2024 14:03:45 ******/
+/****** Object:  Index [IX__objects__code_guid]    Script Date: 29.04.2024 13:21:01 ******/
 CREATE NONCLUSTERED INDEX [IX__objects__code_guid] ON [dbo].[_objects]
 (
 	[_code_guid] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 GO
-/****** Object:  Index [IX__objects__code_int]    Script Date: 15.04.2024 14:03:45 ******/
+/****** Object:  Index [IX__objects__code_int]    Script Date: 29.04.2024 13:21:01 ******/
 CREATE NONCLUSTERED INDEX [IX__objects__code_int] ON [dbo].[_objects]
 (
 	[_code_int] ASC
@@ -831,19 +941,19 @@ CREATE NONCLUSTERED INDEX [IX__objects__code_int] ON [dbo].[_objects]
 GO
 SET ANSI_PADDING ON
 GO
-/****** Object:  Index [IX__objects__code_string]    Script Date: 15.04.2024 14:03:45 ******/
+/****** Object:  Index [IX__objects__code_string]    Script Date: 29.04.2024 13:21:01 ******/
 CREATE NONCLUSTERED INDEX [IX__objects__code_string] ON [dbo].[_objects]
 (
 	[_code_string] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 GO
-/****** Object:  Index [IX__objects__date_create]    Script Date: 15.04.2024 14:03:45 ******/
+/****** Object:  Index [IX__objects__date_create]    Script Date: 29.04.2024 13:21:01 ******/
 CREATE NONCLUSTERED INDEX [IX__objects__date_create] ON [dbo].[_objects]
 (
 	[_date_create] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 GO
-/****** Object:  Index [IX__objects__date_modify]    Script Date: 15.04.2024 14:03:45 ******/
+/****** Object:  Index [IX__objects__date_modify]    Script Date: 29.04.2024 13:21:01 ******/
 CREATE NONCLUSTERED INDEX [IX__objects__date_modify] ON [dbo].[_objects]
 (
 	[_date_modify] ASC
@@ -851,7 +961,7 @@ CREATE NONCLUSTERED INDEX [IX__objects__date_modify] ON [dbo].[_objects]
 GO
 SET ANSI_PADDING ON
 GO
-/****** Object:  Index [IX__objects__hash]    Script Date: 15.04.2024 14:03:45 ******/
+/****** Object:  Index [IX__objects__hash]    Script Date: 29.04.2024 13:21:01 ******/
 CREATE NONCLUSTERED INDEX [IX__objects__hash] ON [dbo].[_objects]
 (
 	[_hash] ASC
@@ -859,37 +969,43 @@ CREATE NONCLUSTERED INDEX [IX__objects__hash] ON [dbo].[_objects]
 GO
 SET ANSI_PADDING ON
 GO
-/****** Object:  Index [IX__objects__name]    Script Date: 15.04.2024 14:03:45 ******/
+/****** Object:  Index [IX__objects__name]    Script Date: 29.04.2024 13:21:01 ******/
 CREATE NONCLUSTERED INDEX [IX__objects__name] ON [dbo].[_objects]
 (
 	[_name] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 GO
-/****** Object:  Index [IX__objects__objects]    Script Date: 15.04.2024 14:03:45 ******/
+/****** Object:  Index [IX__objects__objects]    Script Date: 29.04.2024 13:21:01 ******/
 CREATE NONCLUSTERED INDEX [IX__objects__objects] ON [dbo].[_objects]
 (
 	[_id_parent] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 GO
-/****** Object:  Index [IX__objects__schemes]    Script Date: 15.04.2024 14:03:45 ******/
+/****** Object:  Index [IX__objects__schemes]    Script Date: 29.04.2024 13:21:01 ******/
 CREATE NONCLUSTERED INDEX [IX__objects__schemes] ON [dbo].[_objects]
 (
 	[_id_scheme] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 GO
-/****** Object:  Index [IX__objects__users1]    Script Date: 15.04.2024 14:03:45 ******/
+/****** Object:  Index [IX__objects__users1]    Script Date: 29.04.2024 13:21:01 ******/
 CREATE NONCLUSTERED INDEX [IX__objects__users1] ON [dbo].[_objects]
 (
 	[_id_owner] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 GO
-/****** Object:  Index [IX__objects__users2]    Script Date: 15.04.2024 14:03:45 ******/
+/****** Object:  Index [IX__objects__users2]    Script Date: 29.04.2024 13:21:01 ******/
 CREATE NONCLUSTERED INDEX [IX__objects__users2] ON [dbo].[_objects]
 (
 	[_id_who_change] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 GO
-/****** Object:  Index [IX__permissions]    Script Date: 15.04.2024 14:03:45 ******/
+/****** Object:  Index [PK__object_permissions]    Script Date: 29.04.2024 13:21:01 ******/
+ALTER TABLE [dbo].[_permissions] ADD  CONSTRAINT [PK__object_permissions] PRIMARY KEY NONCLUSTERED 
+(
+	[_id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+GO
+/****** Object:  Index [IX__permissions]    Script Date: 29.04.2024 13:21:01 ******/
 CREATE UNIQUE NONCLUSTERED INDEX [IX__permissions] ON [dbo].[_permissions]
 (
 	[_id_ref] ASC,
@@ -901,19 +1017,19 @@ CREATE UNIQUE NONCLUSTERED INDEX [IX__permissions] ON [dbo].[_permissions]
 	[_id_user] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 GO
-/****** Object:  Index [IX__permissions__roles]    Script Date: 15.04.2024 14:03:45 ******/
+/****** Object:  Index [IX__permissions__roles]    Script Date: 29.04.2024 13:21:01 ******/
 CREATE NONCLUSTERED INDEX [IX__permissions__roles] ON [dbo].[_permissions]
 (
 	[_id_role] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 GO
-/****** Object:  Index [IX__permissions__users]    Script Date: 15.04.2024 14:03:45 ******/
+/****** Object:  Index [IX__permissions__users]    Script Date: 29.04.2024 13:21:01 ******/
 CREATE NONCLUSTERED INDEX [IX__permissions__users] ON [dbo].[_permissions]
 (
 	[_id_user] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 GO
-/****** Object:  Index [PK__roles]    Script Date: 15.04.2024 14:03:45 ******/
+/****** Object:  Index [PK__roles]    Script Date: 29.04.2024 13:21:01 ******/
 ALTER TABLE [dbo].[_roles] ADD  CONSTRAINT [PK__roles] PRIMARY KEY NONCLUSTERED 
 (
 	[_id] ASC
@@ -921,27 +1037,33 @@ ALTER TABLE [dbo].[_roles] ADD  CONSTRAINT [PK__roles] PRIMARY KEY NONCLUSTERED
 GO
 SET ANSI_PADDING ON
 GO
-/****** Object:  Index [IX__roles]    Script Date: 15.04.2024 14:03:45 ******/
+/****** Object:  Index [IX__roles]    Script Date: 29.04.2024 13:21:01 ******/
 CREATE UNIQUE NONCLUSTERED INDEX [IX__roles] ON [dbo].[_roles]
 (
 	[_name] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 GO
+/****** Object:  Index [PK__schemes]    Script Date: 29.04.2024 13:21:01 ******/
+ALTER TABLE [dbo].[_schemes] ADD  CONSTRAINT [PK__schemes] PRIMARY KEY NONCLUSTERED 
+(
+	[_id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+GO
 SET ANSI_PADDING ON
 GO
-/****** Object:  Index [IX__schemes]    Script Date: 15.04.2024 14:03:45 ******/
+/****** Object:  Index [IX__schemes]    Script Date: 29.04.2024 13:21:01 ******/
 CREATE UNIQUE NONCLUSTERED INDEX [IX__schemes] ON [dbo].[_schemes]
 (
 	[_name] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 GO
-/****** Object:  Index [IX__schemes__schemes]    Script Date: 15.04.2024 14:03:45 ******/
+/****** Object:  Index [IX__schemes__schemes]    Script Date: 29.04.2024 13:21:01 ******/
 CREATE NONCLUSTERED INDEX [IX__schemes__schemes] ON [dbo].[_schemes]
 (
 	[_id_parent] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 GO
-/****** Object:  Index [PK__structure]    Script Date: 15.04.2024 14:03:45 ******/
+/****** Object:  Index [PK__structure]    Script Date: 29.04.2024 13:21:01 ******/
 ALTER TABLE [dbo].[_structures] ADD  CONSTRAINT [PK__structure] PRIMARY KEY NONCLUSTERED 
 (
 	[_id] ASC
@@ -949,109 +1071,127 @@ ALTER TABLE [dbo].[_structures] ADD  CONSTRAINT [PK__structure] PRIMARY KEY NONC
 GO
 SET ANSI_PADDING ON
 GO
-/****** Object:  Index [IX__structures]    Script Date: 15.04.2024 14:03:45 ******/
+/****** Object:  Index [IX__structures]    Script Date: 29.04.2024 13:21:01 ******/
 CREATE UNIQUE NONCLUSTERED INDEX [IX__structures] ON [dbo].[_structures]
 (
 	[_id_scheme] ASC,
 	[_name] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 GO
-/****** Object:  Index [IX__structures__lists]    Script Date: 15.04.2024 14:03:45 ******/
+/****** Object:  Index [IX__structures__lists]    Script Date: 29.04.2024 13:21:01 ******/
 CREATE NONCLUSTERED INDEX [IX__structures__lists] ON [dbo].[_structures]
 (
 	[_id_list] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 GO
-/****** Object:  Index [IX__structures__schemes]    Script Date: 15.04.2024 14:03:45 ******/
+/****** Object:  Index [IX__structures__schemes]    Script Date: 29.04.2024 13:21:01 ******/
 CREATE NONCLUSTERED INDEX [IX__structures__schemes] ON [dbo].[_structures]
 (
 	[_id_scheme] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 GO
-/****** Object:  Index [IX__structures__structures]    Script Date: 15.04.2024 14:03:45 ******/
+/****** Object:  Index [IX__structures__structures]    Script Date: 29.04.2024 13:21:01 ******/
 CREATE NONCLUSTERED INDEX [IX__structures__structures] ON [dbo].[_structures]
 (
 	[_id_parent] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 GO
-/****** Object:  Index [IX__structures__types]    Script Date: 15.04.2024 14:03:45 ******/
+/****** Object:  Index [IX__structures__types]    Script Date: 29.04.2024 13:21:01 ******/
 CREATE NONCLUSTERED INDEX [IX__structures__types] ON [dbo].[_structures]
 (
 	[_id_type] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 GO
+/****** Object:  Index [PK__types]    Script Date: 29.04.2024 13:21:01 ******/
+ALTER TABLE [dbo].[_types] ADD  CONSTRAINT [PK__types] PRIMARY KEY NONCLUSTERED 
+(
+	[_id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+GO
 SET ANSI_PADDING ON
 GO
-/****** Object:  Index [IX__types]    Script Date: 15.04.2024 14:03:45 ******/
+/****** Object:  Index [IX__types]    Script Date: 29.04.2024 13:21:01 ******/
 CREATE UNIQUE NONCLUSTERED INDEX [IX__types] ON [dbo].[_types]
 (
 	[_name] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 GO
+/****** Object:  Index [PK__users]    Script Date: 29.04.2024 13:21:01 ******/
+ALTER TABLE [dbo].[_users] ADD  CONSTRAINT [PK__users] PRIMARY KEY NONCLUSTERED 
+(
+	[_id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+GO
 SET ANSI_PADDING ON
 GO
-/****** Object:  Index [IX__users]    Script Date: 15.04.2024 14:03:45 ******/
+/****** Object:  Index [IX__users]    Script Date: 29.04.2024 13:21:01 ******/
 CREATE UNIQUE NONCLUSTERED INDEX [IX__users] ON [dbo].[_users]
 (
 	[_login] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 GO
-/****** Object:  Index [IX__users_roles]    Script Date: 15.04.2024 14:03:45 ******/
+/****** Object:  Index [PK__users_roles]    Script Date: 29.04.2024 13:21:01 ******/
+ALTER TABLE [dbo].[_users_roles] ADD  CONSTRAINT [PK__users_roles] PRIMARY KEY NONCLUSTERED 
+(
+	[_id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+GO
+/****** Object:  Index [IX__users_roles]    Script Date: 29.04.2024 13:21:01 ******/
 CREATE UNIQUE NONCLUSTERED INDEX [IX__users_roles] ON [dbo].[_users_roles]
 (
 	[_id_role] ASC,
 	[_id_user] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 GO
-/****** Object:  Index [IX__users_roles__roles]    Script Date: 15.04.2024 14:03:45 ******/
+/****** Object:  Index [IX__users_roles__roles]    Script Date: 29.04.2024 13:21:01 ******/
 CREATE NONCLUSTERED INDEX [IX__users_roles__roles] ON [dbo].[_users_roles]
 (
 	[_id_role] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 GO
-/****** Object:  Index [IX__users_roles__users]    Script Date: 15.04.2024 14:03:45 ******/
+/****** Object:  Index [IX__users_roles__users]    Script Date: 29.04.2024 13:21:01 ******/
 CREATE NONCLUSTERED INDEX [IX__users_roles__users] ON [dbo].[_users_roles]
 (
 	[_id_user] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 GO
-/****** Object:  Index [PK__values]    Script Date: 15.04.2024 14:03:45 ******/
+/****** Object:  Index [PK__values]    Script Date: 29.04.2024 13:21:01 ******/
 ALTER TABLE [dbo].[_values] ADD  CONSTRAINT [PK__values] PRIMARY KEY NONCLUSTERED 
 (
 	[_id] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 GO
-/****** Object:  Index [IX__values__Boolean]    Script Date: 15.04.2024 14:03:45 ******/
+/****** Object:  Index [IX__values__Boolean]    Script Date: 29.04.2024 13:21:01 ******/
 CREATE NONCLUSTERED INDEX [IX__values__Boolean] ON [dbo].[_values]
 (
 	[_Boolean] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 GO
-/****** Object:  Index [IX__values__DateTime]    Script Date: 15.04.2024 14:03:45 ******/
+/****** Object:  Index [IX__values__DateTime]    Script Date: 29.04.2024 13:21:01 ******/
 CREATE NONCLUSTERED INDEX [IX__values__DateTime] ON [dbo].[_values]
 (
 	[_DateTime] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 GO
-/****** Object:  Index [IX__values__Double]    Script Date: 15.04.2024 14:03:45 ******/
+/****** Object:  Index [IX__values__Double]    Script Date: 29.04.2024 13:21:01 ******/
 CREATE NONCLUSTERED INDEX [IX__values__Double] ON [dbo].[_values]
 (
 	[_Double] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 GO
-/****** Object:  Index [IX__values__Guid]    Script Date: 15.04.2024 14:03:45 ******/
+/****** Object:  Index [IX__values__Guid]    Script Date: 29.04.2024 13:21:01 ******/
 CREATE NONCLUSTERED INDEX [IX__values__Guid] ON [dbo].[_values]
 (
 	[_Guid] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 GO
-/****** Object:  Index [IX__values__Long]    Script Date: 15.04.2024 14:03:45 ******/
+/****** Object:  Index [IX__values__Long]    Script Date: 29.04.2024 13:21:01 ******/
 CREATE NONCLUSTERED INDEX [IX__values__Long] ON [dbo].[_values]
 (
 	[_Long] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 GO
-/****** Object:  Index [IX__values__objects]    Script Date: 15.04.2024 14:03:45 ******/
+/****** Object:  Index [IX__values__objects]    Script Date: 29.04.2024 13:21:01 ******/
 CREATE NONCLUSTERED INDEX [IX__values__objects] ON [dbo].[_values]
 (
 	[_id_object] ASC
@@ -1059,24 +1199,26 @@ CREATE NONCLUSTERED INDEX [IX__values__objects] ON [dbo].[_values]
 GO
 SET ANSI_PADDING ON
 GO
-/****** Object:  Index [IX__values__String]    Script Date: 15.04.2024 14:03:45 ******/
+/****** Object:  Index [IX__values__String]    Script Date: 29.04.2024 13:21:01 ******/
 CREATE NONCLUSTERED INDEX [IX__values__String] ON [dbo].[_values]
 (
 	[_String] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 GO
-/****** Object:  Index [IX__values__structures]    Script Date: 15.04.2024 14:03:45 ******/
+/****** Object:  Index [IX__values__structures]    Script Date: 29.04.2024 13:21:01 ******/
 CREATE NONCLUSTERED INDEX [IX__values__structures] ON [dbo].[_values]
 (
 	[_id_structure] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 GO
-/****** Object:  Index [IX__values_SO]    Script Date: 15.04.2024 14:03:45 ******/
+/****** Object:  Index [IX__values_SO]    Script Date: 29.04.2024 13:21:01 ******/
 CREATE UNIQUE NONCLUSTERED INDEX [IX__values_SO] ON [dbo].[_values]
 (
 	[_id_structure] ASC,
 	[_id_object] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+GO
+ALTER TABLE [dbo].[_deleted_objects] ADD  CONSTRAINT [DF__deleted_objects__date_delete]  DEFAULT (getdate()) FOR [_date_delete]
 GO
 ALTER TABLE [dbo].[_objects] ADD  CONSTRAINT [DF__objects__date_create]  DEFAULT (getdate()) FOR [_date_create]
 GO
@@ -1107,7 +1249,6 @@ ALTER TABLE [dbo].[_functions] CHECK CONSTRAINT [FK__functions__schemes]
 GO
 ALTER TABLE [dbo].[_list_items]  WITH CHECK ADD  CONSTRAINT [FK__list_items__id_objects] FOREIGN KEY([_id_object])
 REFERENCES [dbo].[_objects] ([_id])
-ON DELETE SET NULL
 GO
 ALTER TABLE [dbo].[_list_items] CHECK CONSTRAINT [FK__list_items__id_objects]
 GO
@@ -1125,8 +1266,6 @@ ALTER TABLE [dbo].[_objects] CHECK CONSTRAINT [FK__objects__objects]
 GO
 ALTER TABLE [dbo].[_objects]  WITH CHECK ADD  CONSTRAINT [FK__objects__schemes] FOREIGN KEY([_id_scheme])
 REFERENCES [dbo].[_schemes] ([_id])
-ON UPDATE CASCADE
-ON DELETE CASCADE
 GO
 ALTER TABLE [dbo].[_objects] CHECK CONSTRAINT [FK__objects__schemes]
 GO
@@ -1140,7 +1279,7 @@ REFERENCES [dbo].[_users] ([_id])
 GO
 ALTER TABLE [dbo].[_objects] CHECK CONSTRAINT [FK__objects__users2]
 GO
-ALTER TABLE [dbo].[_permissions]  WITH CHECK ADD  CONSTRAINT [FK__permissions__roles] FOREIGN KEY([_id_user])
+ALTER TABLE [dbo].[_permissions]  WITH CHECK ADD  CONSTRAINT [FK__permissions__roles] FOREIGN KEY([_id_role])
 REFERENCES [dbo].[_roles] ([_id])
 GO
 ALTER TABLE [dbo].[_permissions] CHECK CONSTRAINT [FK__permissions__roles]
@@ -1170,10 +1309,10 @@ REFERENCES [dbo].[_structures] ([_id])
 GO
 ALTER TABLE [dbo].[_structures] CHECK CONSTRAINT [FK__structures__structures]
 GO
-ALTER TABLE [dbo].[_structures]  WITH NOCHECK ADD  CONSTRAINT [FK__structures__types] FOREIGN KEY([_id_type])
+ALTER TABLE [dbo].[_structures]  WITH CHECK ADD  CONSTRAINT [FK__structures__types] FOREIGN KEY([_id_type])
 REFERENCES [dbo].[_types] ([_id])
 GO
-ALTER TABLE [dbo].[_structures] NOCHECK CONSTRAINT [FK__structures__types]
+ALTER TABLE [dbo].[_structures] CHECK CONSTRAINT [FK__structures__types]
 GO
 ALTER TABLE [dbo].[_users_roles]  WITH CHECK ADD  CONSTRAINT [FK__users_roles__roles] FOREIGN KEY([_id_role])
 REFERENCES [dbo].[_roles] ([_id])
@@ -1189,8 +1328,6 @@ ALTER TABLE [dbo].[_users_roles] CHECK CONSTRAINT [FK__users_roles__users]
 GO
 ALTER TABLE [dbo].[_values]  WITH CHECK ADD  CONSTRAINT [FK__values__objects] FOREIGN KEY([_id_object])
 REFERENCES [dbo].[_objects] ([_id])
-ON UPDATE CASCADE
-ON DELETE CASCADE
 GO
 ALTER TABLE [dbo].[_values] CHECK CONSTRAINT [FK__values__objects]
 GO
@@ -1209,7 +1346,7 @@ ALTER TABLE [dbo].[_permissions]  WITH CHECK ADD  CONSTRAINT [CK__permissions_us
 GO
 ALTER TABLE [dbo].[_permissions] CHECK CONSTRAINT [CK__permissions_users_roles]
 GO
-/****** Object:  StoredProcedure [dbo].[sp_GetChildObjects]    Script Date: 15.04.2024 14:03:45 ******/
+/****** Object:  StoredProcedure [dbo].[sp_GetChildObjects]    Script Date: 29.04.2024 13:21:01 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -1256,17 +1393,50 @@ select * from cte
 
 END
 GO
+/****** Object:  Trigger [dbo].[TR__objects__deleted_objects]    Script Date: 29.04.2024 13:21:01 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE     TRIGGER [dbo].[TR__objects__deleted_objects]
+ON [dbo].[_objects]
+instead of delete
+AS
+begin
+   insert into _deleted_objects 
+   select *,getdate(),dbo.ToUTF8(cast((
+   select _v.*,_s._name,_t._db_type from _values _v 
+   join _structures _s on _s._id = _v._id_structure
+   join _types _t on _t._id = _s._id_type
+   where _v._id_object=_o._id 
+   for json path) as nvarchar(max))) from deleted _o
+   delete from _values where _id_object in (select _id from deleted)
+   delete from _objects where _id in (select _id from deleted)
+end
+GO
+ALTER TABLE [dbo].[_objects] ENABLE TRIGGER [TR__objects__deleted_objects]
+GO
 
-/****** Object:  Sequence [dbo].[global_identity]    Script Date: 18.01.2024 14:37:50 ******/
+USE [redb]
+GO
+
+USE [redb]
+GO
+
+/****** Object:  Sequence [dbo].[global_identity]    Script Date: 29.04.2024 13:23:20 ******/
 DROP SEQUENCE [dbo].[global_identity]
 GO
 
-/****** Object:  Sequence [dbo].[global_identity]    Script Date: 18.01.2024 14:37:50 ******/
+USE [redb]
+GO
+
+/****** Object:  Sequence [dbo].[global_identity]    Script Date: 29.04.2024 13:23:20 ******/
 CREATE SEQUENCE [dbo].[global_identity] 
  AS [bigint]
- START WITH -9223372036854769999
+ START WITH -9223372036854770000
  INCREMENT BY 1
  MINVALUE -9223372036854775808
  MAXVALUE 9223372036854775807
  NO CACHE 
 GO
+
