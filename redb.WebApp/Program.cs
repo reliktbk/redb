@@ -1,13 +1,12 @@
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using redb.Core.Models;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 using redb.Core;
-using System;
+using redb.Core.Utils;
 using System.Globalization;
-using System.Data;
+using System.Reflection;
+using System.Runtime.CompilerServices;
 
 namespace redb.WebApp
 {
@@ -15,86 +14,47 @@ namespace redb.WebApp
     {
         public static async Task Main(string[] args)
         {
-            String? DB_TYPE = Environment.GetEnvironmentVariable("DB_TYPE")?.ToLower();
-            String sqlInstance = "SQLite";
-            sqlInstance = "MSSql".ToLower().Equals(DB_TYPE) ? "MSSql" : "Postgres".ToLower().Equals(DB_TYPE) ? "Postgres" : "SQLite";
+            String? DB_TYPE = Environment.GetEnvironmentVariable("DB_TYPE") ?? "UseSqlite";
 
             CultureInfo.DefaultThreadCurrentCulture = new CultureInfo("ru-Ru");
 
             WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
-            String IdentityConnectionString = builder.Configuration.GetConnectionString($"Identity{sqlInstance}Connection") ?? throw new InvalidOperationException("Connection string IdentitySQLiteConnection not found.");
-            String RedbConnectionString = builder.Configuration.GetConnectionString($"Redb{sqlInstance}Connection") ?? throw new InvalidOperationException("Connection string RedbSQLiteConnection not found.");
-            switch (sqlInstance)
+            String IdentityConnectionString = builder.Configuration.GetConnectionString($"Identity{DB_TYPE}Connection") ?? throw new InvalidOperationException("Connection string IdentitySQLiteConnection not found.");
+            String RedbConnectionString = builder.Configuration.GetConnectionString($"Redb{DB_TYPE}Connection") ?? throw new InvalidOperationException("Connection string RedbSQLiteConnection not found.");
+            switch (DB_TYPE)
             {
-                case "SQLite":
-                    builder.Services
-                        .AddScoped<RedbContext, Core.SQLite.RedbContext>()
-                        .AddScoped<IRedbService, Core.SQLite.RedbService>()
-                        .AddDbContext<Core.SQLite.RedbContext>(options =>
-                        {
-                            options.UseLazyLoadingProxies().UseSqlite(RedbConnectionString);
-                            options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
-                        })
-                        .AddDbContext<IdentityDbContext>(options => options.UseSqlite(IdentityConnectionString));
+                case "UseSqlite":
+                    SelectDBInstance<Core.SQLite.RedbContext, Core.SQLite.RedbService>()
+                    .AddDbContext<IdentityDbContext>(options => options.UseSqlite(IdentityConnectionString));
                     break;
-                case "MSSql":
-                    builder.Services
-                        .AddScoped<RedbContext, Core.MSSql.RedbContext>()
-                        .AddScoped<IRedbService, Core.MSSql.RedbService>()
-                        .AddDbContext<Core.MSSql.RedbContext>(options =>
-                        {
-                            options.UseLazyLoadingProxies().UseSqlServer(RedbConnectionString);
-                            options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
-                        })
-                        .AddDbContext<IdentityDbContext>(options => options.UseSqlServer(IdentityConnectionString));
+                case "UseSqlServer":
+                    SelectDBInstance<Core.MSSql.RedbContext, Core.MSSql.RedbService>()
+                    .AddDbContext<IdentityDbContext>(options => options.UseSqlServer(IdentityConnectionString));
                     break;
-                case "Postgres":
-                    builder.Services
-                        .AddScoped<RedbContext, Core.Postgres.RedbContext>()
-                        .AddScoped<IRedbService, Core.Postgres.RedbService>()
-                        .AddDbContext<Core.Postgres.RedbContext>(options =>
-                        {
-                            options.UseLazyLoadingProxies().UseNpgsql(RedbConnectionString);
-                            options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
-                        })
-                        .AddDbContext<IdentityDbContext>(options => options.UseNpgsql(IdentityConnectionString));
+                case "UseNpgsql":
+                    SelectDBInstance<Core.Postgres.RedbContext, Core.Postgres.RedbService>()
+                    .AddDbContext<IdentityDbContext>(options => options.UseNpgsql(IdentityConnectionString));
                     break;
             }
 
             builder.Services
-               .AddDefaultIdentity<IdentityUser>(options =>
-                {
-                    options.SignIn.RequireConfirmedAccount = true;
-                    //options.Password.RequireDigit = false;
-                    //options.Password.RequireNonAlphanumeric = false;
-                    //options.Password.RequiredLength = 5;
-                    //options.Password.RequireUppercase = false;
-                })
-                .AddEntityFrameworkStores<IdentityDbContext>();
+               .AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
+               .AddEntityFrameworkStores<IdentityDbContext>();
+
             builder.Services.AddMvc();
-            builder.Services.AddRazorPages(options =>
-            {
-                options.Conventions.AuthorizeFolder("/pageItems");
-            });
+            builder.Services.AddRazorPages(options => options.Conventions.AuthorizeFolder("/pageItems"));
 
-            builder.Services.Configure<ForwardedHeadersOptions>(options =>
-            {
-                options.ForwardedHeaders =
-                    ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
-            });
-
-            //CreateRoles(builder.Services.BuildServiceProvider());
+            builder.Services.Configure<ForwardedHeadersOptions>(options => options.ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto);
 
             WebApplication app = builder.Build();
-            app.Environment.EnvironmentName = "Prodaction";
+
             app.Use((context, next) =>
             {
                 context.Request.Scheme = "https";
                 return next(context);
-            });
-            app.UseForwardedHeaders();
+            }).UseForwardedHeaders();
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
@@ -123,52 +83,41 @@ namespace redb.WebApp
             app.MapRazorPages();
 
             app.Run();
+
+            IServiceCollection SelectDBInstance<T, V>() where T : RedbContext where V : class, IRedbService =>
+                builder
+                .Services
+                .AddScoped<RedbContext, T>()
+                .AddScoped<IRedbService, V>()
+                .AddDbContext<T>(options =>
+                {
+                    MethodInfo? mi = null;
+                    ((Type[])
+                    [typeof(SqlServerDbContextOptionsExtensions),
+                 typeof(NpgsqlDbContextOptionsBuilderExtensions),
+                 typeof(SqliteDbContextOptionsBuilderExtensions)
+                    ]).forEach<Type>(t =>
+                    {
+                        if (t.GetMethods().Any(n => n.Name == DB_TYPE))
+                        {
+                            foreach (var m in t.GetMethods())
+                            {
+                                var p = m.GetParameters();
+                                if (p.Length == 3 && p[0].Name == "optionsBuilder" && p[1].Name == "connectionString")
+                                {
+                                    mi = m;
+                                    return;
+                                }
+                            }
+                        }
+                    });
+
+                    (mi ?? throw new ArgumentException(DB_TYPE)).Invoke(options, [options, RedbConnectionString, null]);
+
+                    options.UseLazyLoadingProxies();
+                    options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
+                });
         }
-
-        //static private async void CreateRoles(IServiceProvider serviceProvider)
-        //{
-        //    //initializing custom roles 
-        //    //var RoleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
-        //    var UserManager = serviceProvider.GetRequiredService<UserManager<IdentityUser>>();
-        //    //string[] roleNames = { "Admin", "Store-Manager", "Member" };
-        //    //IdentityResult roleResult;
-
-        //    //foreach (var roleName in roleNames)
-        //    //{
-        //    //    var roleExist = await RoleManager.RoleExistsAsync(roleName);
-        //    //    // ensure that the role does not exist
-        //    //    if (!roleExist)
-        //    //    {
-        //    //        //create the roles and seed them to the database: 
-        //    //        roleResult = await RoleManager.CreateAsync(new IdentityRole(roleName));
-        //    //    }
-        //    //}
-
-        //    // find the user with the admin email 
-        //    var _user = await UserManager.FindByEmailAsync("admin@email.com");
-
-        //    // check if the user exists
-        //    if (_user == null)
-        //    {
-        //        //Here you could create the super admin who will maintain the web app
-        //        var poweruser = new IdentityUser
-        //        {
-        //            UserName = "admin",
-        //            Email = "admin@email.com",
-        //            EmailConfirmed = true
-
-        //        };
-        //        string adminPassword = "admin";
-
-        //        var createPowerUser = await UserManager.CreateAsync(poweruser, adminPassword);
-        //        if (createPowerUser.Succeeded)
-        //        {
-        //            //here we tie the new user to the role
-        //            //await UserManager.AddToRoleAsync(poweruser, "Admin");
-
-        //        }
-        //    }
-        //}
     }
 }
 
