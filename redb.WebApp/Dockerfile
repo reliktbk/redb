@@ -1,7 +1,7 @@
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
 USER root
 WORKDIR /app
-ENV DB_TYPE=UseNpgsql
+ENV DB_TYPE=UseSqlite
 EXPOSE 8080
 EXPOSE 8081
 RUN apt-get -y update 

@@ -12,6 +12,9 @@ namespace redb.WebApp
 {
     public class Program
     {
+        static Type[] tExt = [typeof(SqlServerDbContextOptionsExtensions),
+                              typeof(NpgsqlDbContextOptionsBuilderExtensions),
+                              typeof(SqliteDbContextOptionsBuilderExtensions)];
         public static async Task Main(string[] args)
         {
             String? DB_TYPE = Environment.GetEnvironmentVariable("DB_TYPE") ?? "UseSqlite";
@@ -85,38 +88,33 @@ namespace redb.WebApp
             app.Run();
 
             IServiceCollection SelectDBInstance<T, V>() where T : RedbContext where V : class, IRedbService =>
-                builder
-                .Services
-                .AddScoped<RedbContext, T>()
-                .AddScoped<IRedbService, V>()
-                .AddDbContext<T>(options =>
-                {
-                    MethodInfo? mi = null;
-                    ((Type[])
-                    [typeof(SqlServerDbContextOptionsExtensions),
-                 typeof(NpgsqlDbContextOptionsBuilderExtensions),
-                 typeof(SqliteDbContextOptionsBuilderExtensions)
-                    ]).forEach<Type>(t =>
-                    {
-                        if (t.GetMethods().Any(n => n.Name == DB_TYPE))
-                        {
-                            foreach (var m in t.GetMethods())
-                            {
-                                var p = m.GetParameters();
-                                if (p.Length == 3 && p[0].Name == "optionsBuilder" && p[1].Name == "connectionString")
-                                {
-                                    mi = m;
-                                    return;
-                                }
-                            }
-                        }
-                    });
+            builder.Services
+               .AddScoped<RedbContext, T>()
+               .AddScoped<IRedbService, V>()
+               .AddDbContext<T>(options =>
+               {
+                   MethodInfo? mi = null;
+                   tExt.forEach<Type>(t =>
+                   {
+                       if (t.GetMethods().Any(n => n.Name == DB_TYPE))
+                       {
+                           foreach (var m in t.GetMethods())
+                           {
+                               var p = m.GetParameters();
+                               if (p.Length == 3 && p[0].ParameterType == typeof(DbContextOptionsBuilder) && p[1].Name == "connectionString")
+                               {
+                                   mi = m;
+                                   return;
+                               }
+                           }
+                       }
+                   });
 
-                    (mi ?? throw new ArgumentException(DB_TYPE)).Invoke(options, [options, RedbConnectionString, null]);
+                   (mi ?? throw new ArgumentException(DB_TYPE)).Invoke(options, [options, RedbConnectionString, null]);
 
-                    options.UseLazyLoadingProxies();
-                    options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
-                });
+                   options.UseLazyLoadingProxies();
+                   options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
+               });
         }
     }
 }
