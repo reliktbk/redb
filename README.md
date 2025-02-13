@@ -50,8 +50,11 @@ redb использует относительно простую, но эффективную архитектуру, состоящую из н
  
  # SQL схемы базы данных   
 [redb Postgre sql code](https://github.com/reliktbk/redb/blob/master/redb.Core.Postgres/sql/redbPostgre.sql)
+
 [redb MSSQL sql code](https://github.com/reliktbk/redb/blob/master/redb.Core.MSSql/sql/redbMSSQL.sql)
+
 [redb sqlitesql code](https://github.com/reliktbk/redb/blob/master/redb.Core.SQLite/sql/redbsqlite.sql)
+
 
 Этот SQL код описывает создание сложной схемы базы данных, предназначенной для хранения иерархических данных с поддержкой контроля доступа и аудита.  Схема включает в себя механизмы для отслеживания изменений и управления правами.
 
