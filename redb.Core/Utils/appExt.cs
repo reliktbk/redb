@@ -17,7 +17,7 @@ namespace redb.Core.Utils
         //    d.forEach<object>(i => { Func<string, object> getV = (name) => i.GetType().GetProperty(name).GetValue(i); a((K)getV("Key"), (V?)getV("Value")); });
 
         public static void forEach<K, V>(this IDictionary source, Action<K, V?> action) => 
-            source.forEach<DictionaryEntry>(i=>action((K)i.Key,(V)i.Value));
+            source.forEach<DictionaryEntry>(i=>action((K)i.Key,(V?)i.Value));
         public static IQueryable<T> Filter<T>(this IQueryable<T> query, string propertyName, object propertyValue)
         => query.Where(e => Equals(EF.Property<object>(e, propertyName), propertyValue));
 #pragma warning restore CS8600, CS8602, CS8603 , CS8604
